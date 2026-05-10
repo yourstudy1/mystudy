@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700;800&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0c14;
+    --card: rgba(255,255,255,0.055);
+    --card-border: rgba(255,255,255,0.10);
+    --card-hover: rgba(255,255,255,0.09);
+    --text: #f0f0f8;
+    --text-muted: rgba(240,240,248,0.5);
+    --accent: #f5c842;
+    --accent2: #3de88a;
+    --accent3: #5bc8f5;
+    --danger: #ff5e5e;
+    --blur: blur(20px);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    color: var(--text);
+    overflow-x: hidden;
+    background: var(--bg);
+  }
+
+  #wallpaper {
+    position: fixed; inset: 0; z-index: 0;
+    background-size: cover;
+    background-position: center;
+    transition: opacity 2s ease;
+  }
+
+  #wallpaper-next {
+    position: fixed; inset: 0; z-index: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 2s ease;
+  }
+
+  .overlay {
+    position: fixed; inset: 0; z-index: 1;
+    background: linear-gradient(135deg, rgba(8,8,20,0.72) 0%, rgba(5,5,18,0.65) 100%);
+  }
+
+  .main-wrap {
+    position: relative; z-index: 2;
+    min-height: 100vh;
+    padding: 18px 22px 36px;
+    max-width: 1360px;
+    margin: 0 auto;
+  }
+
+  /* HEADER */
+  .header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 18px;
+    flex-wrap: wrap; gap: 10px;
+  }
+
+  .brand {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    text-shadow: 0 0 24px rgba(245,200,66,0.4);
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .brand-dot {
+    width: 8px; height: 8px;
+    background: var(--accent2);
+    border-radius: 50%;
+    animation: blink 2s infinite;
+  }
+
+  .btn {
+    padding: 8px 18px;
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    background: var(--card);
+    color: var(--text);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    backdrop-filter: var(--blur);
+    transition: all 0.2s;
+    font-weight: 500;
+  }
+  .btn:hover { background: var(--card-hover); border-color: var(--accent); color: var(--accent); }
+
+  /* CLOCK */
+  .clock-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    backdrop-filter: var(--blur);
+    padding: 18px 26px;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .time-display {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(2.2rem, 7vw, 4.2rem);
+    font-weight: 700;
+    color: var(--accent);
+    text-shadow: 0 0 28px rgba(245,200,66,0.35);
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+
+  .time-seconds {
+    font-size: 0.46em;
+    opacity: 0.65;
+    margin-left: 3px;
+  }
+
+  .date-info {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text);
+    opacity: 0.85;
+    margin-top: 6px;
+  }
+
+  .temp-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--accent3);
+  }
+
+  .weather-icon { font-size: 2rem; }
+  .weather-desc { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+
+  /* CURRENT CLASS BANNER */
+  .current-class-banner {
+    background: linear-gradient(135deg, rgba(245,200,66,0.13) 0%, rgba(245,200,66,0.05) 100%);
+    border: 1.5px solid rgba(245,200,66,0.4);
+    border-radius: 18px;
+    padding: 16px 22px;
+    margin-bottom: 16px;
+    backdrop-filter: var(--blur);
+    box-shadow: 0 0 28px rgba(245,200,66,0.12);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .current-badge {
+    background: var(--accent);
+    color: #000;
+    font-weight: 800;
+    font-size: 0.72rem;
+    padding: 4px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+    animation: pulse-badge 2.5s infinite;
+  }
+
+  @keyframes pulse-badge {
+    0%,100% { box-shadow: 0 0 0 0 rgba(245,200,66,0.45); }
+    50% { box-shadow: 0 0 0 8px rgba(245,200,66,0); }
+  }
+
+  .current-subject {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.25rem, 4vw, 2rem);
+    font-weight: 800;
+    color: var(--accent);
+  }
+
+  .current-time-info { font-size: 0.85rem; color: var(--text-muted); }
+
+  .next-up { margin-left: auto; text-align: right; }
+  .next-up-label { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 2px; }
+  .next-up-sub { font-size: 0.95rem; font-weight: 600; color: var(--accent2); }
+
+  /* MAIN GRID */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+  }
+
+  @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 580px) { .main-grid { grid-template-columns: 1fr; } }
+
+  /* ROUTINE CARD */
+  .routine-card {
+    grid-column: 1 / -1;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    backdrop-filter: var(--blur);
+    padding: 20px;
+    overflow-x: auto;
+  }
+
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  .routine-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.87rem;
+    min-width: 400px;
+  }
+
+  .routine-table th {
+    background: rgba(245,200,66,0.09);
+    color: var(--accent);
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 1px solid var(--card-border);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.5px;
+  }
+
+  .routine-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.045);
+    transition: background 0.2s;
+  }
+
+  .routine-table tr:hover td { background: rgba(255,255,255,0.04); }
+
+  .routine-table tr.current-row td {
+    background: rgba(245,200,66,0.1);
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .routine-table tr.past-row td {
+    opacity: 0.38;
+    text-decoration: line-through;
+    text-decoration-color: rgba(255,255,255,0.25);
+  }
+
+  .subject-pill {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+
+  /* MINI CARDS */
+  .mini-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 18px;
+    backdrop-filter: var(--blur);
+    padding: 18px;
+    transition: all 0.25s;
+  }
+  .mini-card:hover { background: var(--card-hover); border-color: rgba(255,255,255,0.18); transform: translateY(-2px); }
+
+  /* COUNTDOWN */
+  .countdown-grid {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .countdown-unit {
+    text-align: center;
+    background: rgba(255,255,255,0.055);
+    border-radius: 10px;
+    padding: 10px 5px;
+  }
+
+  .countdown-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent2);
+    display: block;
+    line-height: 1;
+  }
+
+  .countdown-label { font-size: 0.65rem; color: var(--text-muted); margin-top: 4px; }
+
+  /* NOTES */
+  .notes-area {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.87rem;
+    padding: 10px 12px;
+    resize: vertical;
+    min-height: 90px;
+    margin-top: 10px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .notes-area:focus { border-color: var(--accent); }
+
+  /* PROGRESS */
+  .progress-wrap {
+    background: rgba(255,255,255,0.08);
+    border-radius: 100px;
+    height: 6px;
+    margin-top: 8px;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    border-radius: 100px;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+    transition: width 1s ease;
+  }
+
+  /* SUBJECT COLORS */
+  .color-0 { background: rgba(245,200,66,0.18); color: #f5c842; }
+  .color-1 { background: rgba(61,232,138,0.18); color: #3de88a; }
+  .color-2 { background: rgba(91,200,245,0.18); color: #5bc8f5; }
+  .color-3 { background: rgba(255,94,94,0.18); color: #ff5e5e; }
+  .color-4 { background: rgba(185,143,250,0.18); color: #b98ffa; }
+  .color-5 { background: rgba(255,160,72,0.18); color: #ffa048; }
+  .color-6 { background: rgba(100,230,250,0.18); color: #64e6fa; }
+
+  /* DAY TABS */
+  .day-tabs { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+  .day-tab {
+    padding: 5px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--card-border);
+    background: rgba(255,255,255,0.04);
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+  }
+  .day-tab.active { background: rgba(245,200,66,0.15); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+
+  .no-class { text-align: center; padding: 28px; color: var(--text-muted); font-size: 0.88rem; }
+
+  /* EXAM */
+  .exam-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .exam-item:last-child { border-bottom: none; }
+  .exam-date-box {
+    background: rgba(245,200,66,0.13);
+    border-radius: 10px;
+    padding: 6px 10px;
+    text-align: center;
+    min-width: 46px;
+    font-family: 'Space Mono', monospace;
+  }
+  .exam-day { font-size: 1.2rem; font-weight: 700; color: var(--accent); line-height: 1; }
+  .exam-mon { font-size: 0.62rem; color: var(--text-muted); }
+  .exam-subject { font-weight: 600; font-size: 0.88rem; }
+  .exam-time { font-size: 0.73rem; color: var(--text-muted); }
+  .exam-del { margin-left: auto; background: none; border: none; color: var(--danger); cursor: pointer; font-size: 1rem; opacity: 0.45; transition: opacity 0.2s; }
+  .exam-del:hover { opacity: 1; }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(0,0,0,0.78);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: rgba(10,10,22,0.97);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 26px;
+    width: min(94vw, 580px);
+    max-height: 88vh;
+    overflow-y: auto;
+    backdrop-filter: blur(24px);
+    transform: translateY(20px);
+    transition: transform 0.3s;
+  }
+  .modal-overlay.open .modal { transform: translateY(0); }
+
+  .modal-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .close-btn {
+    background: rgba(255,255,255,0.08);
+    border: none; color: var(--text);
+    font-size: 1.1rem; cursor: pointer;
+    border-radius: 50%; width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .close-btn:hover { background: rgba(255,94,94,0.2); color: var(--danger); }
+
+  .form-group { margin-bottom: 12px; }
+  .form-label { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 5px; display: block; letter-spacing: 0.3px; }
+
+  .form-input {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--card-border);
+    border-radius: 9px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.87rem;
+    padding: 9px 12px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-input:focus { border-color: var(--accent); }
+
+  .routine-entry {
+    display: grid;
+    grid-template-columns: 1fr 80px 80px auto;
+    gap: 6px;
+    align-items: center;
+    background: rgba(255,255,255,0.03);
+    border-radius: 9px;
+    padding: 7px 10px;
+    margin-bottom: 6px;
+  }
+
+  .del-btn {
+    background: rgba(255,94,94,0.12);
+    border: none; color: var(--danger);
+    cursor: pointer; border-radius: 7px;
+    padding: 5px 9px; font-size: 0.82rem;
+    transition: background 0.2s;
+  }
+  .del-btn:hover { background: rgba(255,94,94,0.28); }
+
+  .save-btn {
+    background: linear-gradient(135deg, rgba(245,200,66,0.22), rgba(245,200,66,0.10));
+    border: 1.5px solid var(--accent);
+    color: var(--accent);
+    padding: 11px 22px;
+    border-radius: 11px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+    transition: all 0.2s;
+    width: 100%;
+  }
+  .save-btn:hover { background: rgba(245,200,66,0.22); }
+
+  /* SECTION DIVIDER in modal */
+  .section-head {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 18px 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-head::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--card-border);
+  }
+
+  .info-box {
+    background: rgba(61,232,138,0.07);
+    border: 1px solid rgba(61,232,138,0.2);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.79rem;
+    color: var(--accent2);
+    margin-bottom: 12px;
+    line-height: 1.6;
+  }
+
+  .warn-box {
+    background: rgba(245,200,66,0.07);
+    border: 1px solid rgba(245,200,66,0.2);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.79rem;
+    color: var(--accent);
+    margin-bottom: 12px;
+    line-height: 1.6;
+  }
+
+  /* JSON paste area */
+  .json-paste-area {
+    width: 100%;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    color: var(--accent2);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.78rem;
+    padding: 12px;
+    resize: vertical;
+    min-height: 120px;
+    outline: none;
+    transition: border-color 0.2s;
+    line-height: 1.7;
+  }
+  .json-paste-area:focus { border-color: var(--accent2); }
+
+  /* WP COUNTER */
+  .wp-counter {
+    position: fixed;
+    bottom: 14px; right: 16px;
+    z-index: 10;
+    background: rgba(11,12,20,0.7);
+    border: 1px solid var(--card-border);
+    border-radius: 100px;
+    padding: 6px 14px;
+    font-size: 0.73rem;
+    color: var(--text-muted);
+    backdrop-filter: var(--blur);
+    display: flex; align-items: center; gap: 6px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .wp-counter:hover { border-color: var(--accent2); }
+
+  .wp-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); animation: blink 2s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    top: 18px; right: 18px;
+    z-index: 999;
+    background: rgba(61,232,138,0.15);
+    border: 1px solid var(--accent2);
+    color: var(--accent2);
+    padding: 11px 18px;
+    border-radius: 11px;
+    font-size: 0.86rem;
+    font-weight: 600;
+    backdrop-filter: var(--blur);
+    opacity: 0; transform: translateX(30px);
+    transition: all 0.3s;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateX(0); }
+
+  /* API KEY INPUT STYLING */
+  .api-key-wrap {
+    position: relative;
+  }
+  .api-key-wrap input {
+    padding-right: 36px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.5px;
+  }
+  .api-key-icon {
+    position: absolute;
+    right: 10px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    opacity: 0.4;
+  }
+body{
+    transform: scaleY(0.9);
+    transform-origin: top;
+}
+  .radio-row { display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 12px; }
+  .radio-label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.83rem; }
+</style>
+</head>
+<body>
+
+<div id="wallpaper"></div>
+<div id="wallpaper-next"></div>
+<div class="overlay"></div>
+
+<div class="main-wrap">
+
+  
+
+  <!-- CLOCK + WEATHER -->
+  <div class="clock-card">
+    <div>
+      <div class="time-display" id="clock-display">00:00<span class="time-seconds">:00</span></div>
+      <div class="date-info" id="date-display">Loading...</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px;">
+      <div class="temp-display">
+        <span class="weather-icon" id="weather-icon">🌤️</span>
+        <span id="temp-val">--°C</span>
+      </div>
+      <div class="weather-desc" id="weather-desc">Loading weather...</div>
+      <div class="weather-desc" id="weather-loc">📍 Burdwan, West Bengal</div>
+    </div>
+  </div>
+
+  <!-- CURRENT CLASS BANNER -->
+  <div class="current-class-banner" id="current-banner">
+    <div class="current-badge" id="current-badge">▶ NOW RUNNING</div>
+    <div>
+      <div class="current-subject" id="current-subject-name">No active class</div>
+      <div class="current-time-info" id="current-time-info">Check today's schedule below</div>
+    </div>
+    <div class="next-up" id="next-up-wrap">
+      <div class="next-up-label">UP NEXT</div>
+      <div class="next-up-sub" id="next-subject">—</div>
+    </div>
+  </div>
+
+  <!-- MAIN GRID -->
+  <div class="main-grid">
+
+    <!-- ROUTINE TABLE -->
+    <div class="routine-card">
+      <div class="card-title">📅 Today's Schedule</div>
+      <div class="day-tabs" id="day-tabs"></div>
+      <div id="routine-table-wrap">
+        <div class="no-class">📭 No routine added yet. Go to <b>⚙ Settings</b> → <b>Add Class</b> or paste JSON.</div>
+      </div>
+    </div>
+
+    <!-- COUNTDOWN -->
+    <div class="mini-card">
+      <div class="card-title">⏳ Class Countdown</div>
+      <div class="countdown-grid">
+        <div class="countdown-unit"><span class="countdown-num" id="cd-h">--</span><div class="countdown-label">HR</div></div>
+        <div class="countdown-unit"><span class="countdown-num" id="cd-m">--</span><div class="countdown-label">MIN</div></div>
+        <div class="countdown-unit"><span class="countdown-num" id="cd-s">--</span><div class="countdown-label">SEC</div></div>
+        <div class="countdown-unit"><span class="countdown-num" id="cd-pct">--</span><div class="countdown-label">%</div></div>
+      </div>
+      <div style="margin-top:14px;">
+        <div style="font-size:0.76rem;color:var(--text-muted);margin-bottom:4px;">Day Progress</div>
+        <div class="progress-wrap"><div class="progress-bar" id="day-progress" style="width:0%"></div></div>
+        <div style="font-size:0.72rem;color:var(--text-muted);margin-top:4px;" id="day-progress-text">0 of 0 classes done</div>
+      </div>
+    </div>
+
+    <!-- NOTES -->
+    <div class="mini-card">
+      <div class="card-title">📝 Quick Notes</div>
+      <textarea class="notes-area" id="quick-notes" placeholder="Jot something down..." oninput="saveNotes()"></textarea>
+    </div>
+
+    <!-- EXAM SCHEDULE -->
+    <div class="mini-card">
+      <div class="card-title">📋 Exam Schedule</div>
+      <div id="exam-list">
+        <div class="no-class" style="padding:14px;">No exams added yet.</div>
+      </div>
+      <button class="btn" style="width:100%;margin-top:10px;" onclick="openExamModal()">+ Add Exam</button>
+    </div>
+<!-- WP COUNTER -->
+<div class="wp-counter" onclick="nextWallpaper();startWpTimer();">
+  <div class="wp-dot"></div>
+  <span id="wp-info">Loading...</span>
+  <span id="wp-timer-txt">5:00</span>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✓ Saved!</div>
+
+<!-- ===== SETTINGS MODAL ===== -->
+<div class="modal-overlay" id="admin-modal">
+  <div class="modal">
+    <div class="modal-title">
+      <span>⚙ Settings</span>
+      <button class="close-btn" onclick="closeModal('admin-modal')">✕</button>
+    </div>
+<input type="text" id="user-name-input" placeholder="Your name...">
+<button onclick="saveUserName()">Save Name</button>
+    <!-- ─── ADD CLASS ─── -->
+    <div class="section-head">Add a Class</div>
+    <div class="form-group">
+      <label class="form-label">Day</label>
+      <select class="form-input" id="admin-day">
+        <option>Sunday</option><option>Monday</option><option>Tuesday</option>
+        <option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option>
+      </select>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="form-group">
+        <label class="form-label">Subject</label>
+        <input class="form-input" type="text" id="admin-subject" placeholder="e.g. Mathematics">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Teacher (optional)</label>
+        <input class="form-input" type="text" id="admin-teacher" placeholder="e.g. Mr. Roy">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Start Time</label>
+        <input class="form-input" type="time" id="admin-start">
+      </div>
+      <div class="form-group">
+        <label class="form-label">End Time</label>
+        <input class="form-input" type="time" id="admin-end">
+      </div>
+    </div>
+    <button class="save-btn" onclick="addClass()" style="margin-bottom:4px;">+ Add Class</button>
+
+    <!-- ─── CURRENT ROUTINE ─── -->
+    <div class="section-head">Current Routine</div>
+    <div id="admin-routine-list" style="max-height:180px;overflow-y:auto;"></div>
+
+    <!-- ─── JSON IMPORT ─── -->
+    <div class="section-head">Import JSON Routine</div>
+    <div class="info-box">
+      Paste your JSON routine below. Format example:<br>
+      <code style="font-family:'Space Mono',monospace;font-size:0.74rem;">{"Monday":[{"subject":"Math","start":"08:00","end":"09:00","teacher":"Mr. Roy"}]}</code>
+    </div>
+    <div class="radio-row">
+      <label class="radio-label">
+        <input type="radio" name="import-mode" value="replace" checked style="accent-color:var(--danger)">
+        <span style="color:var(--danger)">Replace existing</span>
+      </label>
+      <label class="radio-label">
+        <input type="radio" name="import-mode" value="append" style="accent-color:var(--accent2)">
+        <span style="color:var(--accent2)">Merge with existing</span>
+      </label>
+    </div>
+    <textarea class="json-paste-area" id="json-input" placeholder='{"Monday":[{"subject":"Physics","start":"09:00","end":"10:00","teacher":"Dr. Sen"}],"Tuesday":[...]}'></textarea>
+    <button class="save-btn" onclick="importJSON()" style="margin-top:10px;margin-bottom:4px;">📥 Import JSON</button>
+
+    <!-- Also CSV paste -->
+    <div class="section-head">Import CSV Routine</div>
+    <div class="info-box">
+      One class per line: <code style="font-family:'Space Mono',monospace;font-size:0.74rem;">Day, Subject, HH:MM, HH:MM, Teacher</code>
+    </div>
+    <textarea class="json-paste-area" id="csv-input" rows="4" placeholder="Monday, Mathematics, 08:00, 09:00, Mr. Roy&#10;Monday, Physics, 09:00, 10:00, Dr. Sen"></textarea>
+    <button class="save-btn" onclick="importCSV()" style="margin-top:10px;margin-bottom:4px;">📥 Import CSV</button>
+
+    <!-- ─── WEATHER API ─── -->
+    <div class="section-head">🌡 Weather API</div>
+    <div class="warn-box">
+      <b>Open-Meteo</b> — 100% free, no key needed.<br>
+      <b>OpenWeatherMap</b> — free key from <code>openweathermap.org</code> → My API Keys.
+    </div>
+    <div class="radio-row">
+      <label class="radio-label">
+        <input type="radio" name="wsrc" value="openmeteo" style="accent-color:var(--accent2)"> Open-Meteo (free, no key)
+      </label>
+      <label class="radio-label">
+        <input type="radio" name="wsrc" value="openweathermap" style="accent-color:var(--accent)"> OpenWeatherMap
+      </label>
+    </div>
+    <div class="form-group">
+      <label class="form-label">OpenWeatherMap API Key <span style="color:var(--text-muted);font-size:0.72rem;">(only needed if using OWM)</span></label>
+      <div class="api-key-wrap">
+        <input class="form-input" type="text" id="owm-key" placeholder="Paste your OWM API key here (leave blank for Open-Meteo)">
+        <span class="api-key-icon">🔑</span>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="form-group">
+        <label class="form-label">Latitude <span style="color:var(--text-muted);font-size:0.72rem;">(default: Burdwan 23.2324)</span></label>
+        <input class="form-input" type="text" id="w-lat" placeholder="23.2324">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Longitude <span style="color:var(--text-muted);font-size:0.72rem;">(default: 87.8615)</span></label>
+        <input class="form-input" type="text" id="w-lon" placeholder="87.8615">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Display City Name</label>
+      <input class="form-input" type="text" id="w-city" placeholder="Burdwan, West Bengal">
+    </div>
+    <button class="save-btn" onclick="saveWeatherSettings()" style="margin-bottom:4px;">💾 Save Weather Settings</button>
+
+    <!-- ─── WALLPAPER ─── -->
+    <div class="section-head">🖼 Wallpaper (Unsplash)</div>
+    <div class="warn-box">
+      Without a key, <b>Picsum Photos</b> is used (free, always works).<br>
+      For Unsplash, get a free key at <code>unsplash.com/developers</code>.
+    </div>
+    <div class="form-group">
+      <label class="form-label">Unsplash Access Key <span style="color:var(--text-muted);font-size:0.72rem;">(optional)</span></label>
+      <div class="api-key-wrap">
+        <input class="form-input" type="text" id="unsplash-key-input" placeholder="Leave blank to use Picsum (free, no key needed)">
+        <span class="api-key-icon">🔑</span>
+      </div>
+    </div>
+    <button class="save-btn" onclick="saveUnsplashKey()" style="margin-bottom:4px;">💾 Save Wallpaper Settings</button>
+
+    <!-- ─── DANGER ZONE ─── -->
+    <div class="section-head" style="color:var(--danger);">Danger Zone</div>
+    <button class="btn" style="border-color:var(--danger);color:var(--danger);width:100%;" onclick="clearAll()">🗑 Delete All Routine Data</button>
+  </div>
+</div>
+
+<!-- ===== EXAM MODAL ===== -->
+<div class="modal-overlay" id="exam-modal">
+  <div class="modal">
+    <div class="modal-title">
+      <span>📋 Add Exam</span>
+      <button class="close-btn" onclick="closeModal('exam-modal')">✕</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Subject</label>
+      <input class="form-input" type="text" id="exam-sub" placeholder="Exam subject">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="form-group">
+        <label class="form-label">Date</label>
+        <input class="form-input" type="date" id="exam-date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Time</label>
+        <input class="form-input" type="time" id="exam-time-in">
+      </div>
+    </div>
+    <button class="save-btn" onclick="addExam()">💾 Save Exam</button>
+  </div>
+</div>
+<!-- HEADER -->
+  <div class="header">
+    <div class="brand">
+      <div class="brand-dot"></div>
+     <span id="brand-name">STUDY DASHBOARD</span>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn" onclick="openAdminModal()">⚙ Settings</button>
+    </div>
+  </div>
+<script>
+// ========== STATE ==========
+const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+// ========== ROUTINE CONFIG ==========
+// ✏️  EDIT YOUR ROUTINE HERE directly in the HTML file.
+// Change subjects, times, days below and save the file.
+// Format: {"Day":[{"subject":"Name","start":"HH:MM","end":"HH:MM","teacher":"optional"}]}
+// If you have saved a routine via the dashboard UI, that takes priority over this.
+const DEFAULT_ROUTINE = {
+  "Monday":    [{"subject":"Wake Up & Fresh","start":"06:00","end":"06:30","teacher":""},{"subject":"Morning Exercise","start":"06:30","end":"07:00","teacher":""},{"subject":"Breakfast","start":"07:00","end":"07:30","teacher":""},{"subject":"Vocabulary Practice","start":"07:30","end":"08:15","teacher":""},{"subject":"Black Book Reading","start":"08:15","end":"08:45","teacher":""},{"subject":"Tiffin","start":"08:45","end":"09:30","teacher":""},{"subject":"Online Class","start":"09:30","end":"11:15","teacher":""},{"subject":"Coaching","start":"11:15","end":"13:30","teacher":""},{"subject":"Lunch & Rest","start":"13:30","end":"16:00","teacher":""},{"subject":"Newspaper Reading","start":"16:00","end":"17:30","teacher":""},{"subject":"GS Notes","start":"17:30","end":"18:00","teacher":""},{"subject":"Tea Break","start":"18:00","end":"18:30","teacher":""},{"subject":"Practice Batch","start":"18:30","end":"19:30","teacher":""},{"subject":"English Basic","start":"19:30","end":"20:30","teacher":""},{"subject":"Running","start":"20:30","end":"21:00","teacher":""},{"subject":"Dinner","start":"21:00","end":"22:00","teacher":""},{"subject":"English Practice","start":"22:00","end":"23:00","teacher":""},{"subject":"Math + Reasoning Practice","start":"23:00","end":"00:00","teacher":""}],
+
+  "Tuesday":   [{"subject":"Wake Up & Fresh","start":"06:00","end":"06:30","teacher":""},{"subject":"Morning Exercise","start":"06:30","end":"07:00","teacher":""},{"subject":"Breakfast","start":"07:00","end":"07:30","teacher":""},{"subject":"Vocabulary Practice","start":"07:30","end":"08:15","teacher":""},{"subject":"Black Book Reading","start":"08:15","end":"08:45","teacher":""},{"subject":"Tiffin","start":"08:45","end":"09:30","teacher":""},{"subject":"Online Class","start":"09:30","end":"11:15","teacher":""},{"subject":"Coaching","start":"11:15","end":"13:30","teacher":""},{"subject":"Lunch & Rest","start":"13:30","end":"16:00","teacher":""},{"subject":"Newspaper Reading","start":"16:00","end":"17:30","teacher":""},{"subject":"GS Questions","start":"17:30","end":"18:00","teacher":""},{"subject":"Tea Break","start":"18:00","end":"18:30","teacher":""},{"subject":"Practice Batch","start":"18:30","end":"19:30","teacher":""},{"subject":"Math Practice","start":"19:30","end":"20:30","teacher":""},{"subject":"Running","start":"20:30","end":"21:00","teacher":""},{"subject":"Dinner","start":"21:00","end":"22:00","teacher":""},{"subject":"Reasoning Practice","start":"22:00","end":"23:00","teacher":""},{"subject":"English Mock Test","start":"23:00","end":"00:00","teacher":""}],
+
+  "Wednesday": [{"subject":"Wake Up & Fresh","start":"06:00","end":"06:30","teacher":""},{"subject":"Morning Exercise","start":"06:30","end":"07:00","teacher":""},{"subject":"Breakfast","start":"07:00","end":"07:30","teacher":""},{"subject":"Vocabulary Practice","start":"07:30","end":"08:15","teacher":""},{"subject":"Black Book Reading","start":"08:15","end":"08:45","teacher":""},{"subject":"Tiffin","start":"08:45","end":"09:30","teacher":""},{"subject":"Online Class","start":"09:30","end":"11:15","teacher":""},{"subject":"Coaching","start":"11:15","end":"13:30","teacher":""},{"subject":"Lunch & Rest","start":"13:30","end":"16:00","teacher":""},{"subject":"Newspaper Reading","start":"16:00","end":"17:30","teacher":""},{"subject":"GS Notes","start":"17:30","end":"18:00","teacher":""},{"subject":"Tea Break","start":"18:00","end":"18:30","teacher":""},{"subject":"Practice Batch","start":"18:30","end":"19:30","teacher":""},{"subject":"English Grammar","start":"19:30","end":"20:30","teacher":""},{"subject":"Running","start":"20:30","end":"21:00","teacher":""},{"subject":"Dinner","start":"21:00","end":"22:00","teacher":""},{"subject":"Math PYQ","start":"22:00","end":"23:00","teacher":""},{"subject":"Reasoning Puzzle","start":"23:00","end":"00:00","teacher":""}],
+
+  "Thursday":  [{"subject":"Wake Up & Fresh","start":"06:00","end":"06:30","teacher":""},{"subject":"Morning Exercise","start":"06:30","end":"07:00","teacher":""},{"subject":"Breakfast","start":"07:00","end":"07:30","teacher":""},{"subject":"Vocabulary Practice","start":"07:30","end":"08:15","teacher":""},{"subject":"Black Book Reading","start":"08:15","end":"08:45","teacher":""},{"subject":"Tiffin","start":"08:45","end":"09:30","teacher":""},{"subject":"Online Class","start":"09:30","end":"11:15","teacher":""},{"subject":"Coaching","start":"11:15","end":"13:30","teacher":""},{"subject":"Lunch & Rest","start":"13:30","end":"16:00","teacher":""},{"subject":"Newspaper Reading","start":"16:00","end":"17:30","teacher":""},{"subject":"GS Questions","start":"17:30","end":"18:00","teacher":""},{"subject":"Tea Break","start":"18:00","end":"18:30","teacher":""},{"subject":"Practice Batch","start":"18:30","end":"19:30","teacher":""},{"subject":"Math Speed Test","start":"19:30","end":"20:30","teacher":""},{"subject":"Running","start":"20:30","end":"21:00","teacher":""},{"subject":"Dinner","start":"21:00","end":"22:00","teacher":""},{"subject":"English Practice","start":"22:00","end":"23:00","teacher":""},{"subject":"Reasoning + GS","start":"23:00","end":"00:00","teacher":""}],
+
+  "Friday":    [{"subject":"Wake Up & Fresh","start":"06:00","end":"06:30","teacher":""},{"subject":"Morning Exercise","start":"06:30","end":"07:00","teacher":""},{"subject":"Breakfast","start":"07:00","end":"07:30","teacher":""},{"subject":"Vocabulary Revision","start":"07:30","end":"08:15","teacher":""},{"subject":"Black Book Reading","start":"08:15","end":"08:45","teacher":""},{"subject":"Tiffin","start":"08:45","end":"09:30","teacher":""},{"subject":"Online Class","start":"09:30","end":"11:15","teacher":""},{"subject":"Coaching","start":"11:15","end":"13:30","teacher":""},{"subject":"Lunch & Rest","start":"13:30","end":"16:00","teacher":""},{"subject":"Newspaper Reading","start":"16:00","end":"17:30","teacher":""},{"subject":"GS Notes","start":"17:30","end":"18:00","teacher":""},{"subject":"Tea Break","start":"18:00","end":"18:30","teacher":""},{"subject":"Practice Batch","start":"18:30","end":"19:30","teacher":""},{"subject":"Reasoning Practice","start":"19:30","end":"20:30","teacher":""},{"subject":"Running","start":"20:30","end":"21:00","teacher":""},{"subject":"Dinner","start":"21:00","end":"22:00","teacher":""},{"subject":"English Mock Test","start":"22:00","end":"23:00","teacher":""},{"subject":"Math + GS Revision","start":"23:00","end":"00:00","teacher":""}],
+
+  "Saturday":  [{"subject":"Wake Up & Fresh","start":"06:00","end":"06:30","teacher":""},{"subject":"Morning Exercise","start":"06:30","end":"07:00","teacher":""},{"subject":"Breakfast","start":"07:00","end":"07:30","teacher":""},{"subject":"Weekly Revision","start":"07:30","end":"09:00","teacher":""},{"subject":"Tiffin","start":"09:00","end":"09:30","teacher":""},{"subject":"Mock Test","start":"09:30","end":"11:30","teacher":""},{"subject":"Error Analysis","start":"11:30","end":"13:00","teacher":""},{"subject":"Lunch & Rest","start":"13:00","end":"16:00","teacher":""},{"subject":"Current Affairs","start":"16:00","end":"17:30","teacher":""},{"subject":"GS Notes","start":"17:30","end":"18:00","teacher":""},{"subject":"Tea Break","start":"18:00","end":"18:30","teacher":""},{"subject":"English Revision","start":"18:30","end":"19:30","teacher":""},{"subject":"Math Revision","start":"19:30","end":"20:30","teacher":""},{"subject":"Running","start":"20:30","end":"21:00","teacher":""},{"subject":"Dinner","start":"21:00","end":"22:00","teacher":""},{"subject":"Reasoning Revision","start":"22:00","end":"23:00","teacher":""},{"subject":"Light Study","start":"23:00","end":"00:00","teacher":""}],
+
+  "Sunday":    [{"subject":"Wake Up & Fresh","start":"06:00","end":"07:00","teacher":""},{"subject":"Morning Walk","start":"07:00","end":"07:30","teacher":""},{"subject":"Breakfast","start":"07:30","end":"08:00","teacher":""},{"subject":"Weekly Full Revision","start":"08:00","end":"10:00","teacher":""},{"subject":"Mock Test","start":"10:00","end":"12:00","teacher":""},{"subject":"Lunch & Rest","start":"12:00","end":"16:00","teacher":""},{"subject":"Current Affairs","start":"16:00","end":"17:00","teacher":""},{"subject":"GS Notes","start":"17:00","end":"18:00","teacher":""},{"subject":"Tea Break","start":"18:00","end":"18:30","teacher":""},{"subject":"English Practice","start":"18:30","end":"19:30","teacher":""},{"subject":"Math Practice","start":"19:30","end":"20:30","teacher":""},{"subject":"Running","start":"20:30","end":"21:00","teacher":""},{"subject":"Dinner","start":"21:00","end":"22:00","teacher":""},{"subject":"Reasoning Practice","start":"22:00","end":"23:00","teacher":""},{"subject":"Plan Next Week","start":"23:00","end":"00:00","teacher":""}]
+};
+
+// Load from localStorage if exists, else use DEFAULT_ROUTINE above
+const _savedRoutine = localStorage.getItem('routine');
+let routine = (_savedRoutine && _savedRoutine !== '{}') ? JSON.parse(_savedRoutine) : JSON.parse(JSON.stringify(DEFAULT_ROUTINE));
+let exams   = JSON.parse(localStorage.getItem('exams')   || '[]');
+let viewDay = null;
+let wpIndex = 0, wpCountdown = 300, wpTimer = null;
+
+const COLORS = ['color-0','color-1','color-2','color-3','color-4','color-5','color-6'];
+let subjectColorMap = {}, colorIdx = 0;
+
+function getSubjectColor(subject) {
+  if (!subjectColorMap[subject]) { subjectColorMap[subject] = COLORS[colorIdx % COLORS.length]; colorIdx++; }
+  return subjectColorMap[subject];
+}
+
+// ========== CLOCK ==========
+function updateClock() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  const s = String(now.getSeconds()).padStart(2,'0');
+  document.getElementById('clock-display').innerHTML = `${h}:${m}<span class="time-seconds">:${s}</span>`;
+
+  const day = DAYS[now.getDay()];
+  const date = now.getDate();
+  const month = MONTHS[now.getMonth()];
+  const year = now.getFullYear();
+  document.getElementById('date-display').textContent = `${day}, ${date} ${month} ${year}`;
+
+  updateCurrentClass(now);
+}
+
+function timeToMin(t) {
+  if (!t) return -1;
+  const [h,m] = t.split(':').map(Number);
+  return h*60+m;
+}
+
+function updateCurrentClass(now) {
+  const dayName = DAYS[now.getDay()];
+  const classes = (routine[dayName]||[]).slice().sort((a,b)=>timeToMin(a.start)-timeToMin(b.start));
+  const curMin = now.getHours()*60+now.getMinutes();
+
+  let currentClass = null, nextClass = null;
+  for (let i=0;i<classes.length;i++) {
+    const s = timeToMin(classes[i].start), e = timeToMin(classes[i].end);
+    if (curMin >= s && curMin < e) { currentClass = classes[i]; nextClass = classes[i+1]||null; break; }
+    if (curMin < s) { nextClass = classes[i]; break; }
+  }
+
+  if (currentClass) {
+    document.getElementById('current-subject-name').textContent = currentClass.subject;
+    document.getElementById('current-time-info').textContent = `${currentClass.start} — ${currentClass.end}`;
+    document.getElementById('current-badge').textContent = '▶ NOW RUNNING';
+    document.getElementById('current-banner').style.borderColor = 'rgba(245,200,66,0.55)';
+  } else {
+    document.getElementById('current-subject-name').textContent = nextClass ? 'Waiting for next class' : 'All done for today 🎉';
+    document.getElementById('current-time-info').textContent = '';
+    document.getElementById('current-badge').textContent = '○ NO ACTIVE CLASS';
+    document.getElementById('current-banner').style.borderColor = 'rgba(255,255,255,0.10)';
+  }
+
+  document.getElementById('next-subject').textContent = nextClass ? `${nextClass.subject} (${nextClass.start})` : '—';
+
+  // countdown
+  if (nextClass) {
+    const diff = (timeToMin(nextClass.start) - curMin)*60 - now.getSeconds();
+    if (diff > 0) {
+      document.getElementById('cd-h').textContent = String(Math.floor(diff/3600)).padStart(2,'0');
+      document.getElementById('cd-m').textContent = String(Math.floor((diff%3600)/60)).padStart(2,'0');
+      document.getElementById('cd-s').textContent = String(diff%60).padStart(2,'0');
+      document.getElementById('cd-pct').textContent = Math.max(0,Math.round((1-diff/(12*3600))*100));
+    }
+  } else if (currentClass) {
+    const diff = (timeToMin(currentClass.end) - curMin)*60 - now.getSeconds();
+    if (diff > 0) {
+      document.getElementById('cd-h').textContent = String(Math.floor(diff/3600)).padStart(2,'0');
+      document.getElementById('cd-m').textContent = String(Math.floor((diff%3600)/60)).padStart(2,'0');
+      document.getElementById('cd-s').textContent = String(diff%60).padStart(2,'0');
+      document.getElementById('cd-pct').textContent = '—';
+    }
+  } else {
+    ['cd-h','cd-m','cd-s','cd-pct'].forEach(id => document.getElementById(id).textContent = '--');
+  }
+
+  const done = classes.filter(c => timeToMin(c.end) <= curMin).length;
+  const total = classes.length;
+  document.getElementById('day-progress').style.width = total>0 ? Math.round(done/total*100)+'%' : '0%';
+  document.getElementById('day-progress-text').textContent = `${done} of ${total} class${total!==1?'es':''} done`;
+}
+
+// ========== ROUTINE TABLE ==========
+function buildDayTabs() {
+  const container = document.getElementById('day-tabs');
+  container.innerHTML = '';
+  DAYS.forEach(day => {
+    if (!(routine[day]||[]).length) return;
+    const btn = document.createElement('button');
+    btn.className = 'day-tab' + (day === viewDay ? ' active' : '');
+    btn.textContent = `${day} (${routine[day].length})`;
+    btn.onclick = () => { viewDay = day; buildDayTabs(); renderRoutineTable(); };
+    container.appendChild(btn);
+  });
+}
+
+function renderRoutineTable() {
+  const wrap = document.getElementById('routine-table-wrap');
+  if (!viewDay || !(routine[viewDay]||[]).length) {
+    wrap.innerHTML = '<div class="no-class">📭 No classes scheduled for this day.</div>';
+    return;
+  }
+  const classes = (routine[viewDay]||[]).slice().sort((a,b)=>timeToMin(a.start)-timeToMin(b.start));
+  const now = new Date();
+  const curMin = now.getHours()*60+now.getMinutes();
+  const isToday = viewDay === DAYS[now.getDay()];
+
+  let html = `<table class="routine-table"><thead><tr>
+    <th>#</th><th>TIME</th><th>SUBJECT</th><th>TEACHER</th><th>STATUS</th>
+  </tr></thead><tbody>`;
+
+  classes.forEach((c,i) => {
+    const s = timeToMin(c.start), e = timeToMin(c.end);
+    let rowClass = '', status = '⏳ Upcoming';
+    if (isToday) {
+      if (curMin>=s && curMin<e) { rowClass='current-row'; status='▶ In Progress'; }
+      else if (curMin>=e) { rowClass='past-row'; status='✓ Done'; }
+    }
+    const color = getSubjectColor(c.subject);
+    html += `<tr class="${rowClass}">
+      <td style="color:var(--text-muted);font-size:0.78rem">${i+1}</td>
+      <td style="font-family:'Space Mono',monospace;font-size:0.82rem;white-space:nowrap">${c.start} – ${c.end}</td>
+      <td><span class="subject-pill ${color}">${c.subject}</span></td>
+      <td style="color:var(--text-muted);font-size:0.8rem">${c.teacher||'—'}</td>
+      <td style="font-size:0.78rem">${status}</td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+}
+
+function refreshRoutine() {
+  if (!viewDay) viewDay = DAYS[new Date().getDay()];
+  buildDayTabs();
+  renderRoutineTable();
+  renderAdminList();
+}
+
+// ========== ADMIN ==========
+function openAdminModal() {
+  renderAdminList();
+  document.getElementById('owm-key').value = owmKey;
+  document.getElementById('w-lat').value = weatherLat;
+  document.getElementById('w-lon').value = weatherLon;
+  document.getElementById('w-city').value = weatherCity;
+  document.getElementById('unsplash-key-input').value = unsplashKey;
+  document.querySelectorAll('input[name="wsrc"]').forEach(r => r.checked = r.value===weatherSource);
+  openModal('admin-modal');
+}
+
+function renderAdminList() {
+  const el = document.getElementById('admin-routine-list');
+  let html = '';
+  DAYS.forEach(day => {
+    const classes = routine[day]||[];
+    if (!classes.length) return;
+    html += `<div style="font-size:0.76rem;color:var(--accent);font-weight:700;margin:8px 0 4px;font-family:'Syne',sans-serif;">${day.toUpperCase()}</div>`;
+    classes.slice().sort((a,b)=>timeToMin(a.start)-timeToMin(b.start)).forEach((c,i) => {
+      html += `<div class="routine-entry">
+        <span style="font-size:0.84rem">${c.subject}</span>
+        <span style="font-size:0.78rem;color:var(--text-muted);font-family:'Space Mono',monospace">${c.start}</span>
+        <span style="font-size:0.78rem;color:var(--text-muted);font-family:'Space Mono',monospace">${c.end}</span>
+        <button class="del-btn" onclick="deleteClass('${day}',${i})">✕</button>
+      </div>`;
+    });
+  });
+  el.innerHTML = html || '<div style="color:var(--text-muted);font-size:0.83rem;padding:8px 0;">No classes added yet.</div>';
+}
+
+function addClass() {
+  const day     = document.getElementById('admin-day').value;
+  const subject = document.getElementById('admin-subject').value.trim();
+  const start   = document.getElementById('admin-start').value;
+  const end     = document.getElementById('admin-end').value;
+  const teacher = document.getElementById('admin-teacher').value.trim();
+  if (!subject || !start || !end) { showToast('⚠ Please fill in subject and time.', true); return; }
+  if (!routine[day]) routine[day] = [];
+  routine[day].push({subject, start, end, teacher});
+  saveRoutine(); renderAdminList(); refreshRoutine();
+  document.getElementById('admin-subject').value='';
+  document.getElementById('admin-start').value='';
+  document.getElementById('admin-end').value='';
+  document.getElementById('admin-teacher').value='';
+  showToast('✓ Class added!');
+}
+
+function deleteClass(day, idx) {
+  routine[day].splice(idx,1);
+  if (!routine[day].length) delete routine[day];
+  saveRoutine(); renderAdminList(); refreshRoutine();
+  showToast('🗑 Class removed.');
+}
+
+function clearAll() {
+  if (!confirm('Delete all routine data? This cannot be undone.')) return;
+  routine = {}; saveRoutine(); refreshRoutine();
+  closeModal('admin-modal');
+  showToast('🗑 All routine data cleared.');
+}
+
+function saveRoutine() { localStorage.setItem('routine', JSON.stringify(routine)); }
+
+// ========== INLINE JSON EDITOR ==========
+function applyInlineJSON() {
+  const raw = document.getElementById('inline-json-input').value.trim();
+  if (!raw) { showToast('⚠ Paste a JSON routine first.', true); return; }
+  try {
+    const imported = JSON.parse(raw);
+    const normalised = normaliseImported(imported);
+    const mode = document.querySelector('input[name="inline-mode"]:checked')?.value || 'replace';
+    if (mode === 'replace') {
+      routine = normalised;
+    } else {
+      Object.keys(normalised).forEach(day => {
+        if (!routine[day]) routine[day] = [];
+        routine[day] = routine[day].concat(normalised[day]);
+      });
+    }
+    saveRoutine(); refreshRoutine();
+    document.getElementById('inline-json-input').value = '';
+    const total = Object.values(routine).reduce((a,b)=>a+b.length,0);
+    showToast('✓ Routine updated! ' + total + ' classes loaded.');
+  } catch(e) {
+    showToast('❌ Invalid JSON — check your format.', true);
+  }
+}
+
+function showCurrentJSON() {
+  const el = document.getElementById('inline-json-input');
+  el.value = JSON.stringify(routine, null, 2);
+  el.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function clearAll2() {
+  if (!confirm('Clear all routine data?')) return;
+  routine = {}; saveRoutine(); refreshRoutine();
+  document.getElementById('inline-json-input').value = '';
+  showToast('🗑 All routine data cleared.');
+}
+
+// ========== JSON IMPORT ==========
+// Convert "7:30 PM" → "19:30"
+function to24hr(t) {
+  if (!t) return '00:00';
+  t = t.trim();
+  // already 24hr like "07:30 pm"
+  if (/^\d{1,2}:\d{2}$/.test(t) && !t.match(/AM|PM/i)) return t.padStart(5,'0').slice(-5);
+  const m = t.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+  if (!m) return t;
+  let h = parseInt(m[1]), min = m[2], period = m[3].toUpperCase();
+  if (period==='PM' && h!==12) h += 12;
+  if (period==='AM' && h===12) h = 0;
+  return String(h).padStart(2,'0') + ':' + min;
+}
+
+// Parse "7:30 PM - 8:30 PM" → {start:"19:30", end:"20:30"}
+function parseTimeRange(str) {
+  const parts = str.split('-').map(s=>s.trim());
+  return { start: to24hr(parts[0]), end: to24hr(parts[1]||parts[0]) };
+}
+
+// Normalise any supported JSON format into internal format
+function normaliseImported(imported) {
+  // Format A (dashboard native): {"Monday":[{subject,start,end,teacher}]}
+  if (!imported.days && !imported.title) {
+    const out = {};
+    Object.keys(imported).forEach(day => {
+      out[day] = (imported[day]||[]).map(c => {
+        if (c.time && !c.start) {
+          const {start,end} = parseTimeRange(c.time);
+          return {subject: c.subject||c.name||'Class', start, end, teacher: c.teacher||''};
+        }
+        return c;
+      });
+    });
+    return out;
+  }
+  // Format B (user's format): {title, days:[{day, routine:[{time,subject}]}]}
+  const out = {};
+  (imported.days||[]).forEach(d => {
+    const dayName = d.day;
+    out[dayName] = (d.routine||[]).map(c => {
+      const {start, end} = parseTimeRange(c.time||'');
+      return {subject: c.subject||'Class', start, end, teacher: c.teacher||''};
+    });
+  });
+  return out;
+}
+
+function importJSON() {
+  const raw = document.getElementById('json-input').value.trim();
+  if (!raw) { showToast('⚠ Paste some JSON first.', true); return; }
+  try {
+    const imported = JSON.parse(raw);
+    const normalised = normaliseImported(imported);
+    const mode = document.querySelector('input[name="import-mode"]:checked')?.value || 'append';
+    if (mode === 'replace') {
+      routine = normalised;
+    } else {
+      Object.keys(normalised).forEach(day => {
+        if (!routine[day]) routine[day] = [];
+        routine[day] = routine[day].concat(normalised[day]);
+      });
+    }
+    saveRoutine(); refreshRoutine();
+    document.getElementById('json-input').value = '';
+    const total = Object.values(routine).reduce((a,b)=>a+b.length,0);
+    showToast(`✓ Routine imported! ${total} classes loaded.`);
+  } catch(e) {
+    showToast('❌ Invalid JSON. Check format.', true);
+  }
+}
+
+// ========== CSV IMPORT ==========
+function importCSV() {
+  const raw = document.getElementById('csv-input').value.trim();
+  if (!raw) { showToast('⚠ Paste some CSV first.', true); return; }
+  const mode = document.querySelector('input[name="import-mode"]:checked')?.value || 'append';
+  if (mode === 'replace') routine = {};
+  let count = 0;
+  raw.split('\n').forEach(line => {
+    const parts = line.split(',').map(s=>s.trim());
+    if (parts.length >= 4) {
+      const [day, subject, start, end] = parts;
+      const teacher = parts[4] || '';
+      if (!routine[day]) routine[day] = [];
+      routine[day].push({subject, start, end, teacher});
+      count++;
+    }
+  });
+  saveRoutine(); refreshRoutine();
+  document.getElementById('csv-input').value='';
+  showToast(`✓ ${count} class${count!==1?'es':''} imported from CSV.`);
+}
+
+// ========== EXAMS ==========
+function openExamModal() { openModal('exam-modal'); }
+
+function addExam() {
+  const sub  = document.getElementById('exam-sub').value.trim();
+  const date = document.getElementById('exam-date').value;
+  const time = document.getElementById('exam-time-in').value;
+  if (!sub || !date) { showToast('⚠ Fill in subject and date.', true); return; }
+  exams.push({sub, date, time});
+  exams.sort((a,b)=>new Date(a.date)-new Date(b.date));
+  localStorage.setItem('exams', JSON.stringify(exams));
+  renderExams(); closeModal('exam-modal');
+  showToast('✓ Exam added!');
+}
+
+function deleteExam(i) {
+  exams.splice(i,1);
+  localStorage.setItem('exams', JSON.stringify(exams));
+  renderExams();
+}
+
+function renderExams() {
+  const el = document.getElementById('exam-list');
+  if (!exams.length) { el.innerHTML = '<div class="no-class" style="padding:12px;">No exams added yet.</div>'; return; }
+  const now = new Date();
+  el.innerHTML = exams.map((ex,i) => {
+    const d = new Date(ex.date+'T00:00:00');
+    const isPast = d < now && d.toDateString()!==now.toDateString();
+    return `<div class="exam-item" style="${isPast?'opacity:0.38;text-decoration:line-through':''}">
+      <div class="exam-date-box">
+        <div class="exam-day">${d.getDate()}</div>
+        <div class="exam-mon">${MONTHS[d.getMonth()]}</div>
+      </div>
+      <div>
+        <div class="exam-subject">${ex.sub}</div>
+        <div class="exam-time">${ex.time||'Time TBD'}</div>
+      </div>
+      <button class="exam-del" onclick="deleteExam(${i})">✕</button>
+    </div>`;
+  }).join('');
+}
+
+// ========== NOTES ==========
+function saveNotes() { localStorage.setItem('quick-notes', document.getElementById('quick-notes').value); }
+
+// ========== WEATHER ==========
+let weatherSource = localStorage.getItem('weatherSource') || 'openmeteo';
+let owmKey        = localStorage.getItem('owmKey')        || '';
+let weatherLat    = parseFloat(localStorage.getItem('weatherLat') || '23.2324');
+let weatherLon    = parseFloat(localStorage.getItem('weatherLon') || '87.8615');
+let weatherCity   = localStorage.getItem('weatherCity')   || 'Burdwan, West Bengal';
+
+async function fetchWeather() {
+  try {
+    let temp, code, wind, humidity='—';
+    if (weatherSource==='openweathermap' && owmKey) {
+      const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${weatherLat}&lon=${weatherLon}&appid=${owmKey}&units=metric`);
+      if (!res.ok) throw new Error();
+      const d = await res.json();
+      temp = Math.round(d.main.temp); wind = d.wind.speed; humidity = d.main.humidity+'%';
+      const id = d.weather[0].id;
+      code = id===800?0:id<810?2:id<700?61:id<600?45:id>=200&&id<300?95:3;
+    } else {
+      const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${weatherLat}&longitude=${weatherLon}&current=temperature_2m,weathercode,windspeed_10m,relative_humidity_2m&timezone=Asia/Kolkata`);
+      const d = await res.json();
+      temp = Math.round(d.current.temperature_2m); code = d.current.weathercode;
+      wind = d.current.windspeed_10m; humidity = d.current.relative_humidity_2m+'%';
+    }
+    document.getElementById('temp-val').textContent = `${temp}°C`;
+    const {icon, desc} = getWeatherInfo(code);
+    document.getElementById('weather-icon').textContent = icon;
+    document.getElementById('weather-desc').textContent = `${desc} · Humidity: ${humidity}`;
+    document.getElementById('weather-loc').textContent = `📍 ${weatherCity} · 💨 ${wind} km/h`;
+  } catch {
+    document.getElementById('temp-val').textContent = 'N/A';
+    document.getElementById('weather-desc').textContent = 'Weather unavailable';
+    document.getElementById('weather-loc').textContent = '⚠ API connection failed';
+  }
+}
+
+function saveWeatherSettings() {
+  const src  = document.querySelector('input[name="wsrc"]:checked').value;
+  const key  = document.getElementById('owm-key').value.trim();
+  const lat  = document.getElementById('w-lat').value.trim();
+  const lon  = document.getElementById('w-lon').value.trim();
+  const city = document.getElementById('w-city').value.trim();
+  weatherSource = src; owmKey = key;
+  weatherLat = parseFloat(lat)||23.2324;
+  weatherLon = parseFloat(lon)||87.8615;
+  weatherCity = city||'Burdwan';
+  localStorage.setItem('weatherSource', weatherSource);
+  localStorage.setItem('owmKey', owmKey);
+  localStorage.setItem('weatherLat', weatherLat);
+  localStorage.setItem('weatherLon', weatherLon);
+  localStorage.setItem('weatherCity', weatherCity);
+  fetchWeather();
+  showToast('✓ Weather settings saved!');
+}
+
+function getWeatherInfo(code) {
+  if (code===0) return {icon:'☀️',desc:'Clear sky'};
+  if (code<=3)  return {icon:'⛅',desc:'Partly cloudy'};
+  if (code<=49) return {icon:'🌫️',desc:'Foggy'};
+  if (code<=69) return {icon:'🌧️',desc:'Rainy'};
+  if (code<=79) return {icon:'❄️',desc:'Snowy'};
+  if (code<=99) return {icon:'⛈️',desc:'Thunderstorm'};
+  return {icon:'🌤️',desc:'Weather'};
+}
+
+// ========== WALLPAPER ==========
+let unsplashKey = localStorage.getItem('unsplashKey') || '';
+const WP_QUERIES = [
+  'nature landscape','mountain sunrise','ocean sunset','forest morning',
+  'galaxy stars night','cherry blossom spring','rainy city night',
+  'autumn leaves','snow mountain','tropical beach'
+];
+let wpList = [];
+
+async function fetchWallpapers() {
+  wpList = [];
+  document.getElementById('wp-info').textContent = 'Loading...';
+  for (let i=0;i<WP_QUERIES.length;i++) {
+    const q = WP_QUERIES[i];
+    try {
+      if (unsplashKey) {
+        const res = await fetch(`https://api.unsplash.com/photos/random?query=${encodeURIComponent(q)}&orientation=landscape&client_id=${unsplashKey}`);
+        if (res.ok) { wpList.push((await res.json()).urls.regular); continue; }
+      }
+      wpList.push(`https://picsum.photos/seed/${q.replace(/ /g,'')}${i}/1920/1080`);
+    } catch { wpList.push(`https://picsum.photos/seed/${i}${Date.now()}/1920/1080`); }
+  }
+  if (wpList.length) setWallpaper(wpList[0]);
+}
+
+function setWallpaper(url) {
+  const next = document.getElementById('wallpaper-next');
+  const cur  = document.getElementById('wallpaper');
+  next.style.backgroundImage = `url('${url}')`;
+  next.style.opacity = '1';
+  setTimeout(() => {
+    cur.style.backgroundImage = `url('${url}')`;
+    next.style.opacity = '0';
+    document.getElementById('wp-info').textContent = `Photo ${wpIndex+1}/${wpList.length}`;
+  }, 2000);
+}
+
+function nextWallpaper() {
+  if (!wpList.length) return;
+  wpIndex = (wpIndex+1) % wpList.length;
+  setWallpaper(wpList[wpIndex]);
+}
+
+function startWpTimer() {
+  wpCountdown = 300;
+  clearInterval(wpTimer);
+  wpTimer = setInterval(() => {
+    wpCountdown--;
+    const m = Math.floor(wpCountdown/60), s = wpCountdown%60;
+    document.getElementById('wp-timer-txt').textContent = `${m}:${String(s).padStart(2,'0')}`;
+    if (wpCountdown<=0) { nextWallpaper(); wpCountdown=300; }
+  }, 1000);
+}
+
+function saveUnsplashKey() {
+  unsplashKey = document.getElementById('unsplash-key-input').value.trim();
+  localStorage.setItem('unsplashKey', unsplashKey);
+  fetchWallpapers();
+  showToast('✓ Wallpaper settings saved!');
+}
+
+// ========== MODAL ==========
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', function(e) { if (e.target===this) closeModal(this.id); });
+});
+
+// ========== TOAST ==========
+let toastTimer;
+function showToast(msg, isError=false) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.borderColor = isError ? 'var(--danger)' : 'var(--accent2)';
+  el.style.color        = isError ? 'var(--danger)' : 'var(--accent2)';
+  el.style.background   = isError ? 'rgba(255,94,94,0.15)' : 'rgba(61,232,138,0.12)';
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// ========== INIT ==========
+function init() {
+  const saved = localStorage.getItem('quick-notes');
+  if (saved) document.getElementById('quick-notes').value = saved;
+
+  viewDay = DAYS[new Date().getDay()];
+
+  updateClock();
+  setInterval(updateClock, 1000);
+  setInterval(refreshRoutine, 60000);
+
+  refreshRoutine();
+  renderExams();
+  fetchWeather();
+  setInterval(fetchWeather, 10*60*1000);
+  fetchWallpapers();
+  startWpTimer();
+}
+init();
+document.addEventListener("keydown", function (e) {
+    // Press F → Fullscreen ON
+    if (e.key.toLowerCase() === "f") {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+        }
+    }
+
+    // Press ESC → Fullscreen OFF
+    if (e.key === "Escape") {
+        if (document.fullscreenElement) {
+            document.exitFullscreen();
+        }
+    }
+});
+function saveUserName() {
+  const name = document.getElementById('user-name-input').value.trim();
+  if (!name) { alert('Enter a name first!'); return; }
+  localStorage.setItem('userName', name);
+  document.getElementById('brand-name').textContent = name.toUpperCase() + "'S DASHBOARD";
+}
+
+// Page load 
+window.addEventListener('DOMContentLoaded', function() {
+  const savedName = localStorage.getItem('userName');
+  if (savedName) {
+    document.getElementById('brand-name').textContent = savedName.toUpperCase() + "'S DASHBOARD";
+  }
+});
+</script>
+</body>
+</html>
