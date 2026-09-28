@@ -1,1508 +1,1503 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Study Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700;800&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<title>SSC QUIZ — Practice • Learn • Improve</title>
+<meta name="description" content="SSC exam practice quiz — per-question timers, negative marking, mock tests and instant explanations. Runs entirely in your browser.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='10' cy='10' r='5' fill='none' stroke='%23F0A63C' stroke-width='2.5'/%3E%3Ccircle cx='22' cy='10' r='5' fill='%23F0A63C'/%3E%3Ccircle cx='10' cy='22' r='5' fill='none' stroke='%23F0A63C' stroke-width='2.5'/%3E%3Ccircle cx='22' cy='22' r='5' fill='none' stroke='%23F0A63C' stroke-width='2.5'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0b0c14;
-    --card: rgba(255,255,255,0.055);
-    --card-border: rgba(255,255,255,0.10);
-    --card-hover: rgba(255,255,255,0.09);
-    --text: #f0f0f8;
-    --text-muted: rgba(240,240,248,0.5);
-    --accent: #f5c842;
-    --accent2: #3de88a;
-    --accent3: #5bc8f5;
-    --danger: #ff5e5e;
-    --blur: blur(20px);
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    color: var(--text);
-    overflow-x: hidden;
-    background: var(--bg);
-  }
-
-  #wallpaper {
-    position: fixed; inset: 0; z-index: 0;
-    background-size: cover;
-    background-position: center;
-    transition: opacity 2s ease;
-  }
-
-  #wallpaper-next {
-    position: fixed; inset: 0; z-index: 0;
-    background-size: cover;
-    background-position: center;
-    opacity: 0;
-    transition: opacity 2s ease;
-  }
-
-  .overlay {
-    position: fixed; inset: 0; z-index: 1;
-    background: linear-gradient(135deg, rgba(8,8,20,0.72) 0%, rgba(5,5,18,0.65) 100%);
-  }
-
-  .main-wrap {
-    position: relative; z-index: 2;
-    min-height: 100vh;
-    padding: 18px 22px 36px;
-    max-width: 1360px;
-    margin: 0 auto;
-  }
-
-  /* HEADER */
-  .header {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 18px;
-    flex-wrap: wrap; gap: 10px;
-  }
-
-  .brand {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.25rem;
-    font-weight: 800;
-    letter-spacing: 1.5px;
-    color: var(--accent);
-    text-shadow: 0 0 24px rgba(245,200,66,0.4);
-    display: flex; align-items: center; gap: 10px;
-  }
-
-  .brand-dot {
-    width: 8px; height: 8px;
-    background: var(--accent2);
-    border-radius: 50%;
-    animation: blink 2s infinite;
-  }
-
-  .btn {
-    padding: 8px 18px;
-    border: 1px solid var(--card-border);
-    border-radius: 10px;
-    background: var(--card);
-    color: var(--text);
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.82rem;
-    backdrop-filter: var(--blur);
-    transition: all 0.2s;
-    font-weight: 500;
-  }
-  .btn:hover { background: var(--card-hover); border-color: var(--accent); color: var(--accent); }
-
-  /* CLOCK */
-  .clock-card {
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    border-radius: 20px;
-    backdrop-filter: var(--blur);
-    padding: 18px 26px;
-    display: flex;
-    align-items: center;
-    gap: 28px;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-  }
-
-  .time-display {
-    font-family: 'Space Mono', monospace;
-    font-size: clamp(2.2rem, 7vw, 4.2rem);
-    font-weight: 700;
-    color: var(--accent);
-    text-shadow: 0 0 28px rgba(245,200,66,0.35);
-    letter-spacing: 2px;
-    line-height: 1;
-  }
-
-  .time-seconds {
-    font-size: 0.46em;
-    opacity: 0.65;
-    margin-left: 3px;
-  }
-
-  .date-info {
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: var(--text);
-    opacity: 0.85;
-    margin-top: 6px;
-  }
-
-  .temp-display {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 1.45rem;
-    font-weight: 700;
-    color: var(--accent3);
-  }
-
-  .weather-icon { font-size: 2rem; }
-  .weather-desc { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
-
-  /* CURRENT CLASS BANNER */
-  .current-class-banner {
-    background: linear-gradient(135deg, rgba(245,200,66,0.13) 0%, rgba(245,200,66,0.05) 100%);
-    border: 1.5px solid rgba(245,200,66,0.4);
-    border-radius: 18px;
-    padding: 16px 22px;
-    margin-bottom: 16px;
-    backdrop-filter: var(--blur);
-    box-shadow: 0 0 28px rgba(245,200,66,0.12);
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-
-  .current-badge {
-    background: var(--accent);
-    color: #000;
-    font-weight: 800;
-    font-size: 0.72rem;
-    padding: 4px 12px;
-    border-radius: 20px;
-    white-space: nowrap;
-    letter-spacing: 0.5px;
-    animation: pulse-badge 2.5s infinite;
-  }
-
-  @keyframes pulse-badge {
-    0%,100% { box-shadow: 0 0 0 0 rgba(245,200,66,0.45); }
-    50% { box-shadow: 0 0 0 8px rgba(245,200,66,0); }
-  }
-
-  .current-subject {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(1.25rem, 4vw, 2rem);
-    font-weight: 800;
-    color: var(--accent);
-  }
-
-  .current-time-info { font-size: 0.85rem; color: var(--text-muted); }
-
-  .next-up { margin-left: auto; text-align: right; }
-  .next-up-label { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 2px; }
-  .next-up-sub { font-size: 0.95rem; font-weight: 600; color: var(--accent2); }
-
-  /* MAIN GRID */
-  .main-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 14px;
-  }
-
-  @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 580px) { .main-grid { grid-template-columns: 1fr; } }
-
-  /* ROUTINE CARD */
-  .routine-card {
-    grid-column: 1 / -1;
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    border-radius: 20px;
-    backdrop-filter: var(--blur);
-    padding: 20px;
-    overflow-x: auto;
-  }
-
-  .card-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 700;
-    margin-bottom: 14px;
-    color: var(--accent);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    letter-spacing: 0.5px;
-  }
-
-  .routine-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.87rem;
-    min-width: 400px;
-  }
-
-  .routine-table th {
-    background: rgba(245,200,66,0.09);
-    color: var(--accent);
-    padding: 10px 14px;
-    text-align: left;
-    font-weight: 600;
-    border-bottom: 1px solid var(--card-border);
-    font-family: 'Syne', sans-serif;
-    font-size: 0.78rem;
-    letter-spacing: 0.5px;
-  }
-
-  .routine-table td {
-    padding: 10px 14px;
-    border-bottom: 1px solid rgba(255,255,255,0.045);
-    transition: background 0.2s;
-  }
-
-  .routine-table tr:hover td { background: rgba(255,255,255,0.04); }
-
-  .routine-table tr.current-row td {
-    background: rgba(245,200,66,0.1);
-    font-weight: 700;
-    color: var(--accent);
-  }
-
-  .routine-table tr.past-row td {
-    opacity: 0.38;
-    text-decoration: line-through;
-    text-decoration-color: rgba(255,255,255,0.25);
-  }
-
-  .subject-pill {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 0.78rem;
-    font-weight: 600;
-  }
-
-  /* MINI CARDS */
-  .mini-card {
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    border-radius: 18px;
-    backdrop-filter: var(--blur);
-    padding: 18px;
-    transition: all 0.25s;
-  }
-  .mini-card:hover { background: var(--card-hover); border-color: rgba(255,255,255,0.18); transform: translateY(-2px); }
-
-  /* COUNTDOWN */
-  .countdown-grid {
-    display: grid;
-    grid-template-columns: repeat(4,1fr);
-    gap: 8px;
-    margin-top: 12px;
-  }
-
-  .countdown-unit {
-    text-align: center;
-    background: rgba(255,255,255,0.055);
-    border-radius: 10px;
-    padding: 10px 5px;
-  }
-
-  .countdown-num {
-    font-family: 'Space Mono', monospace;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--accent2);
-    display: block;
-    line-height: 1;
-  }
-
-  .countdown-label { font-size: 0.65rem; color: var(--text-muted); margin-top: 4px; }
-
-  /* NOTES */
-  .notes-area {
-    width: 100%;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--card-border);
-    border-radius: 10px;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.87rem;
-    padding: 10px 12px;
-    resize: vertical;
-    min-height: 90px;
-    margin-top: 10px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  .notes-area:focus { border-color: var(--accent); }
-
-  /* PROGRESS */
-  .progress-wrap {
-    background: rgba(255,255,255,0.08);
-    border-radius: 100px;
-    height: 6px;
-    margin-top: 8px;
-    overflow: hidden;
-  }
-  .progress-bar {
-    height: 100%;
-    border-radius: 100px;
-    background: linear-gradient(90deg, var(--accent2), var(--accent));
-    transition: width 1s ease;
-  }
-
-  /* SUBJECT COLORS */
-  .color-0 { background: rgba(245,200,66,0.18); color: #f5c842; }
-  .color-1 { background: rgba(61,232,138,0.18); color: #3de88a; }
-  .color-2 { background: rgba(91,200,245,0.18); color: #5bc8f5; }
-  .color-3 { background: rgba(255,94,94,0.18); color: #ff5e5e; }
-  .color-4 { background: rgba(185,143,250,0.18); color: #b98ffa; }
-  .color-5 { background: rgba(255,160,72,0.18); color: #ffa048; }
-  .color-6 { background: rgba(100,230,250,0.18); color: #64e6fa; }
-
-  /* DAY TABS */
-  .day-tabs { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
-  .day-tab {
-    padding: 5px 14px;
-    border-radius: 20px;
-    border: 1px solid var(--card-border);
-    background: rgba(255,255,255,0.04);
-    color: var(--text-muted);
-    cursor: pointer;
-    font-size: 0.8rem;
-    font-family: 'DM Sans', sans-serif;
-    transition: all 0.2s;
-  }
-  .day-tab.active { background: rgba(245,200,66,0.15); border-color: var(--accent); color: var(--accent); font-weight: 600; }
-
-  .no-class { text-align: center; padding: 28px; color: var(--text-muted); font-size: 0.88rem; }
-
-  /* EXAM */
-  .exam-item {
-    display: flex; align-items: center; gap: 10px;
-    padding: 8px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-  }
-  .exam-item:last-child { border-bottom: none; }
-  .exam-date-box {
-    background: rgba(245,200,66,0.13);
-    border-radius: 10px;
-    padding: 6px 10px;
-    text-align: center;
-    min-width: 46px;
-    font-family: 'Space Mono', monospace;
-  }
-  .exam-day { font-size: 1.2rem; font-weight: 700; color: var(--accent); line-height: 1; }
-  .exam-mon { font-size: 0.62rem; color: var(--text-muted); }
-  .exam-subject { font-weight: 600; font-size: 0.88rem; }
-  .exam-time { font-size: 0.73rem; color: var(--text-muted); }
-  .exam-del { margin-left: auto; background: none; border: none; color: var(--danger); cursor: pointer; font-size: 1rem; opacity: 0.45; transition: opacity 0.2s; }
-  .exam-del:hover { opacity: 1; }
-
-  /* MODAL */
-  .modal-overlay {
-    position: fixed; inset: 0; z-index: 100;
-    background: rgba(0,0,0,0.78);
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.3s;
-  }
-  .modal-overlay.open { opacity: 1; pointer-events: all; }
-
-  .modal {
-    background: rgba(10,10,22,0.97);
-    border: 1px solid var(--card-border);
-    border-radius: 20px;
-    padding: 26px;
-    width: min(94vw, 580px);
-    max-height: 88vh;
-    overflow-y: auto;
-    backdrop-filter: blur(24px);
-    transform: translateY(20px);
-    transition: transform 0.3s;
-  }
-  .modal-overlay.open .modal { transform: translateY(0); }
-
-  .modal-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--accent);
-    margin-bottom: 20px;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-
-  .close-btn {
-    background: rgba(255,255,255,0.08);
-    border: none; color: var(--text);
-    font-size: 1.1rem; cursor: pointer;
-    border-radius: 50%; width: 30px; height: 30px;
-    display: flex; align-items: center; justify-content: center;
-    transition: background 0.2s;
-  }
-  .close-btn:hover { background: rgba(255,94,94,0.2); color: var(--danger); }
-
-  .form-group { margin-bottom: 12px; }
-  .form-label { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 5px; display: block; letter-spacing: 0.3px; }
-
-  .form-input {
-    width: 100%;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid var(--card-border);
-    border-radius: 9px;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.87rem;
-    padding: 9px 12px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  .form-input:focus { border-color: var(--accent); }
-
-  .routine-entry {
-    display: grid;
-    grid-template-columns: 1fr 80px 80px auto;
-    gap: 6px;
-    align-items: center;
-    background: rgba(255,255,255,0.03);
-    border-radius: 9px;
-    padding: 7px 10px;
-    margin-bottom: 6px;
-  }
-
-  .del-btn {
-    background: rgba(255,94,94,0.12);
-    border: none; color: var(--danger);
-    cursor: pointer; border-radius: 7px;
-    padding: 5px 9px; font-size: 0.82rem;
-    transition: background 0.2s;
-  }
-  .del-btn:hover { background: rgba(255,94,94,0.28); }
-
-  .save-btn {
-    background: linear-gradient(135deg, rgba(245,200,66,0.22), rgba(245,200,66,0.10));
-    border: 1.5px solid var(--accent);
-    color: var(--accent);
-    padding: 11px 22px;
-    border-radius: 11px;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 700;
-    font-size: 0.88rem;
-    transition: all 0.2s;
-    width: 100%;
-  }
-  .save-btn:hover { background: rgba(245,200,66,0.22); }
-
-  /* SECTION DIVIDER in modal */
-  .section-head {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.82rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin: 18px 0 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .section-head::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--card-border);
-  }
-
-  .info-box {
-    background: rgba(61,232,138,0.07);
-    border: 1px solid rgba(61,232,138,0.2);
-    border-radius: 10px;
-    padding: 10px 14px;
-    font-size: 0.79rem;
-    color: var(--accent2);
-    margin-bottom: 12px;
-    line-height: 1.6;
-  }
-
-  .warn-box {
-    background: rgba(245,200,66,0.07);
-    border: 1px solid rgba(245,200,66,0.2);
-    border-radius: 10px;
-    padding: 10px 14px;
-    font-size: 0.79rem;
-    color: var(--accent);
-    margin-bottom: 12px;
-    line-height: 1.6;
-  }
-
-  /* JSON paste area */
-  .json-paste-area {
-    width: 100%;
-    background: rgba(0,0,0,0.3);
-    border: 1px solid var(--card-border);
-    border-radius: 10px;
-    color: var(--accent2);
-    font-family: 'Space Mono', monospace;
-    font-size: 0.78rem;
-    padding: 12px;
-    resize: vertical;
-    min-height: 120px;
-    outline: none;
-    transition: border-color 0.2s;
-    line-height: 1.7;
-  }
-  .json-paste-area:focus { border-color: var(--accent2); }
-
-  /* WP COUNTER */
-  .wp-counter {
-    position: fixed;
-    bottom: 14px; right: 16px;
-    z-index: 10;
-    background: rgba(11,12,20,0.7);
-    border: 1px solid var(--card-border);
-    border-radius: 100px;
-    padding: 6px 14px;
-    font-size: 0.73rem;
-    color: var(--text-muted);
-    backdrop-filter: var(--blur);
-    display: flex; align-items: center; gap: 6px;
-    cursor: pointer;
-    transition: border-color 0.2s;
-  }
-  .wp-counter:hover { border-color: var(--accent2); }
-
-  .wp-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); animation: blink 2s infinite; }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-  /* TOAST */
-  .toast {
-    position: fixed;
-    top: 18px; right: 18px;
-    z-index: 999;
-    background: rgba(61,232,138,0.15);
-    border: 1px solid var(--accent2);
-    color: var(--accent2);
-    padding: 11px 18px;
-    border-radius: 11px;
-    font-size: 0.86rem;
-    font-weight: 600;
-    backdrop-filter: var(--blur);
-    opacity: 0; transform: translateX(30px);
-    transition: all 0.3s;
-    pointer-events: none;
-  }
-  .toast.show { opacity: 1; transform: translateX(0); }
-
-  /* API KEY INPUT STYLING */
-  .api-key-wrap {
-    position: relative;
-  }
-  .api-key-wrap input {
-    padding-right: 36px;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.78rem;
-    letter-spacing: 0.5px;
-  }
-  .api-key-icon {
-    position: absolute;
-    right: 10px; top: 50%;
-    transform: translateY(-50%);
-    font-size: 0.85rem;
-    opacity: 0.4;
-  }
-  #fullscreenBtn{
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    width: 45px;
-    height: 45px;
-    border: none;
-    border-radius: 10px;
-    background: #000;
-    color: #fff;
-    font-size: 22px;
-    cursor: pointer;
-    z-index: 9999;
+/* ============ DESIGN TOKENS ============ */
+:root{
+  --bg:#0A0F1B; --bg2:#0D1424; --card:#111A2D; --card2:#16223A;
+  --line:rgba(157,180,214,.14); --line2:rgba(157,180,214,.26);
+  --text:#EDF2F9; --body:#C7D2E3; --muted:#8CA0BE;
+  --accent:#F0A63C; --accent-ink:#F5B45C; --accent-bg:rgba(240,166,60,.13); --on-accent:#231503;
+  --green:#41C98E; --green-bg:rgba(65,201,142,.12); --on-green:#04150d;
+  --red:#F2696F;   --red-bg:rgba(242,105,111,.12);   --on-red:#2a0709;
+  --orange:#F88A4B;--orange-bg:rgba(248,138,75,.13); --on-orange:#2a1204;
+  --shadow:0 14px 40px rgba(1,5,15,.5);
+  --head:rgba(10,15,27,.82);
 }
-body{
-    transform: scaleY(0.8);
-    transform-origin: top;
+html[data-theme="light"]{
+  --bg:#F5F2EA; --bg2:#EDE8DC; --card:#FFFFFF; --card2:#FAF7F0;
+  --line:rgba(28,38,58,.13); --line2:rgba(28,38,58,.25);
+  --text:#131B29; --body:#33405A; --muted:#68758D;
+  --accent:#E29A26; --accent-ink:#9A6206; --accent-bg:rgba(226,154,38,.13); --on-accent:#231503;
+  --green:#178F62; --green-bg:rgba(23,143,98,.10); --on-green:#ffffff;
+  --red:#D64850;   --red-bg:rgba(214,72,80,.09);   --on-red:#ffffff;
+  --orange:#D9661F;--orange-bg:rgba(217,102,31,.10);--on-orange:#ffffff;
+  --shadow:0 12px 30px rgba(60,48,20,.10);
+  --head:rgba(245,242,234,.86);
 }
-  .radio-row { display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 12px; }
-  .radio-label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.83rem; }
+/* ============ BASE ============ */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Bricolage Grotesque','Segoe UI',sans-serif;background:var(--bg);color:var(--text);
+  min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.5}
+body.locked{overflow:hidden}
+.mono{font-family:'JetBrains Mono',monospace}
+.muted{color:var(--muted)} .small{font-size:12.5px}
+::selection{background:var(--accent);color:var(--on-accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:var(--line2);border-radius:8px}
+.container{width:100%;max-width:1120px;margin:0 auto;padding:0 20px}
+code{font-family:'JetBrains Mono',monospace;font-size:.9em;background:var(--bg2);padding:1px 6px;border-radius:5px}
+/* ============ HEADER ============ */
+.top{position:sticky;top:0;z-index:50;background:var(--head);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top-in{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0}
+.brand{display:flex;align-items:center;gap:12px;cursor:pointer;background:none;border:0;color:inherit;font:inherit;padding:4px}
+.brand-mark{width:36px;height:36px;flex:none}
+.brand-txt b{display:block;font-weight:800;font-size:19px;letter-spacing:-.02em;line-height:1.1}
+.brand-txt small{display:block;font-family:'JetBrains Mono',monospace;font-weight:500;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-top:3px}
+.top-actions{display:flex;align-items:center;gap:10px}
+.bank-status{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:11px;color:var(--muted);display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);padding:7px 11px;border-radius:999px}
+.dot-live{width:7px;height:7px;border-radius:50%;background:var(--green);flex:none}
+.dot-live.warn{background:var(--orange)}
+@media(max-width:640px){.bank-status{display:none}.brand-txt small{display:none}}
+/* ============ BUTTONS / CHIPS / PILLS ============ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:inherit;font-weight:600;font-size:14.5px;
+  padding:10px 18px;border-radius:11px;border:1px solid var(--line);cursor:pointer;transition:.18s;
+  color:var(--text);background:var(--card2);white-space:nowrap;text-decoration:none}
+.btn:hover:not([disabled]){border-color:var(--line2);transform:translateY(-1px)}
+.btn:active:not([disabled]){transform:translateY(0)}
+.btn-primary{background:var(--accent);color:var(--on-accent);border-color:transparent;font-weight:700}
+.btn-primary:hover:not([disabled]){filter:brightness(1.07);border-color:transparent}
+.btn-ghost{background:transparent}
+.btn-danger{background:var(--red-bg);border-color:transparent;color:var(--red)}
+.btn-lg{padding:14px 26px;font-size:16px;border-radius:13px}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.icon-btn{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:var(--card2);border:1px solid var(--line);color:var(--body);cursor:pointer;transition:.18s}
+.icon-btn:hover{border-color:var(--line2);color:var(--text)}
+.ic{width:18px;height:18px;flex:none}
+.kicker{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-ink)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font:inherit;font-weight:600;font-size:13.5px;padding:9px 16px;border-radius:999px;border:1px solid var(--line);
+  background:var(--card);color:var(--body);cursor:pointer;transition:.15s}
+.chip:hover{border-color:var(--line2)}
+.chip.on{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:700}
+.pill{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:11.5px;
+  padding:5px 10px;border-radius:999px;background:var(--bg2);border:1px solid var(--line);color:var(--body)}
+.pill .ic{width:13px;height:13px}
+.pill-a{background:var(--accent-bg);border-color:transparent;color:var(--accent-ink)}
+.badge{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:4px 9px;border-radius:6px}
+.badge.ok{background:var(--green-bg);color:var(--green)}
+.badge.bad{background:var(--red-bg);color:var(--red)}
+.badge.ski{background:var(--orange-bg);color:var(--orange)}
+.badge.neu{background:var(--bg2);color:var(--muted);border:1px solid var(--line)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px}
+.view{animation:rise .4s cubic-bezier(.2,.7,.3,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes fade{from{opacity:0}}
+/* ============ SCOREBOARD STRIP ============ */
+.scoreboard{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.sb{background:var(--card);padding:20px 22px}
+.sb .n{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:28px;letter-spacing:-.02em}
+.sb .n.g{color:var(--green)} .sb .n.r{color:var(--red)} .sb .n.o{color:var(--orange)}
+.sb .l{font-size:10.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+@media(max-width:760px){.scoreboard{grid-template-columns:1fr 1fr}}
+/* ============ HOME ============ */
+.banner{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;border:1px solid var(--red);border-radius:14px;padding:14px 16px;margin-top:20px;font-size:14px;color:var(--body)}
+.banner .ic{color:var(--red);margin-top:2px}
+.banner ul{margin:6px 0 0 18px}
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:center;padding:48px 0 40px}
+.hero h1{font-size:clamp(34px,4.6vw,54px);font-weight:800;line-height:1.06;letter-spacing:-.03em;margin-top:16px}
+.hero h1 em{font-style:normal;color:var(--accent-ink)}
+.hero p.sub{color:var(--body);font-size:16.5px;line-height:1.65;margin:18px 0 26px;max-width:52ch}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap}
+.hero-note{margin-top:16px;font-size:11.5px;color:var(--muted)}
+/* OMR specimen (decorative) */
+.specimen-wrap{perspective:900px}
+.specimen{transform:rotate(-2.5deg);background:var(--card2);border:1px solid var(--line2);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);position:relative;animation:floaty 6s ease-in-out infinite alternate}
+@keyframes floaty{from{transform:rotate(-2.5deg) translateY(0)}to{transform:rotate(-1.5deg) translateY(-8px)}}
+.spec-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--line);font-size:11px}
+.spec-time{display:inline-flex;gap:6px;align-items:center;color:var(--accent-ink)}
+.spec-time .ic{width:13px;height:13px}
+.spec-cols{display:flex;align-items:center;gap:12px;padding:2px 0 6px}
+.spec-cols .qn{width:22px}
+.bl{width:17px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)}
+.spec-row{display:flex;align-items:center;gap:12px;padding:7px 0;border-top:1px dashed var(--line)}
+.spec-row .qn{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:11px;color:var(--muted);width:22px}
+.bubbles{display:flex;gap:9px}
+.bb{width:17px;height:17px;border-radius:50%;border:1.5px solid var(--line2)}
+.bb.g{background:var(--green);border-color:var(--green)}
+.bb.r{background:var(--red);border-color:var(--red)}
+.bb.a{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg)}
+.spec-foot{margin-top:12px;padding-top:10px;border-top:1px solid var(--line);font-family:'JetBrains Mono',monospace;font-weight:500;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between}
+@media(max-width:920px){.hero{grid-template-columns:1fr;padding:34px 0}.specimen-wrap{display:none}}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin:36px 0 16px}
+.sec-head h2{font-size:24px;font-weight:800;letter-spacing:-.02em}
+.sec-head .cnt{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:12px;color:var(--muted)}
+.subj-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:640px){.subj-grid{grid-template-columns:1fr}}
+.subj{position:relative;text-align:left;padding:22px;border-radius:16px;background:var(--card);border:1px solid var(--line);cursor:pointer;transition:.2s;overflow:hidden;color:inherit;font:inherit;display:flex;flex-direction:column;gap:12px}
+.subj:hover{border-color:var(--accent);transform:translateY(-2px)}
+.subj .idx{position:absolute;top:8px;right:16px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:46px;color:var(--text);opacity:.06;pointer-events:none}
+.subj-top{display:flex;align-items:center;gap:12px}
+.subj-ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--accent-bg);color:var(--accent-ink);flex:none}
+.subj-ic .ic{width:21px;height:21px}
+.subj h3{font-size:18.5px;font-weight:700;letter-spacing:-.01em}
+.subj .desc{font-size:13px;color:var(--muted);margin-top:2px}
+.subj-meta{display:flex;gap:8px;flex-wrap:wrap}
+.subj-foot{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:6px}
+.subj-foot .go{font-weight:700;font-size:13.5px;color:var(--accent-ink);display:inline-flex;gap:6px;align-items:center;transition:transform .2s}
+.subj:hover .go{transform:translateX(3px)}
+.quick{display:flex;gap:10px;flex-wrap:wrap;margin:28px 0 8px}
+.data-line{text-align:center;font-size:11px;color:var(--muted);padding:26px 0 6px;letter-spacing:.02em}
+/* ============ SETUP ============ */
+.setup{padding:32px 0 54px;max-width:780px;margin:0 auto}
+.backlink{display:inline-flex;gap:8px;align-items:center;color:var(--muted);font-weight:600;font-size:13.5px;background:none;border:0;cursor:pointer;font-family:inherit;padding:4px 2px;transition:.15s}
+.backlink:hover{color:var(--accent-ink)}
+.setup-title{font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:-.02em;margin-top:10px}
+.setup-sub{color:var(--muted);font-size:14px;margin:8px 0 22px}
+.fgroup{margin-top:28px}
+.flabel{display:block;font-weight:700;font-size:14.5px;margin-bottom:4px}
+.fhint{font-size:12.5px;color:var(--muted);margin-bottom:12px}
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){.mode-grid{grid-template-columns:1fr}}
+.mode-card{text-align:left;padding:16px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);cursor:pointer;font:inherit;color:inherit;transition:.15s}
+.mode-card.on{border-color:var(--accent);background:var(--accent-bg)}
+.mode-card b{display:block;font-size:15px;margin-bottom:4px}
+.mode-card span{font-size:12.5px;color:var(--muted);line-height:1.5;display:block}
+.setup-summary{margin-top:30px;padding:14px 16px;border-radius:12px;background:var(--bg2);border:1px dashed var(--line2);font-family:'JetBrains Mono',monospace;font-weight:500;font-size:12.5px;color:var(--body)}
+.setup-start{margin-top:18px}
+/* ============ QUIZ ============ */
+.quiz{padding:22px 0 44px}
+.quiz-top{padding:16px 20px;display:flex;flex-direction:column;gap:14px}
+.quiz-top-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.qcount{margin-left:auto;font-weight:700;font-size:15px}
+.pal-toggle{display:none}
+.timer{position:relative;width:58px;height:58px;flex:none;margin-left:4px}
+.timer svg{transform:rotate(-90deg);display:block}
+.tring-bg{fill:none;stroke:var(--line2);stroke-width:4}
+.tring-fg{fill:none;stroke:var(--accent);stroke-width:4;stroke-linecap:round;stroke-dasharray:163.36;transition:stroke-dashoffset .9s linear,stroke .3s}
+.tnum{position:absolute;inset:0;display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:16px}
+.tnum .ic{width:18px;height:18px}
+.timer.danger .tring-fg{stroke:var(--red)}
+.timer.danger .tnum{color:var(--red);animation:pulse 1s infinite}
+.timer.idle .tring-fg{stroke:var(--green)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.progress{height:6px;background:var(--line);border-radius:99px;overflow:hidden}
+.progress i{display:block;height:100%;width:0;background:var(--accent);border-radius:99px;transition:width .35s ease}
+.quiz-grid{display:grid;grid-template-columns:1fr 300px;gap:16px;margin-top:16px;align-items:start}
+@media(max-width:960px){
+  .quiz-grid{grid-template-columns:1fr}
+  .pal-toggle{display:inline-flex}
+  .side{display:none}
+  .side.open{display:block;animation:rise .3s both}
+}
+.qpanel{padding:26px}
+@media(max-width:560px){.qpanel{padding:20px 16px}}
+.q-badges{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.q-text{font-size:20px;font-weight:700;line-height:1.5;letter-spacing:-.01em;margin-bottom:22px}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:13px 16px;border-radius:13px;border:1.5px solid var(--line);
+  background:var(--card2);color:var(--body);font:inherit;font-size:15px;cursor:pointer;transition:.15s;min-height:54px}
+.opt:hover:not([disabled]){border-color:var(--line2)}
+.opt .key{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:12.5px;border:1.5px solid var(--line2);color:var(--muted);transition:.15s}
+.opt .otxt{flex:1}
+.opt .mk{display:flex}
+.opt .mk .ic{width:18px;height:18px}
+.opt.selected{border-color:var(--accent);background:var(--accent-bg);color:var(--text)}
+.opt.selected .key{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.opt.correct{border-color:var(--green);background:var(--green-bg);color:var(--text)}
+.opt.correct .key{background:var(--green);border-color:var(--green);color:var(--on-green)}
+.opt.correct .mk{color:var(--green)}
+.opt.wrong{border-color:var(--red);background:var(--red-bg);color:var(--text)}
+.opt.wrong .key{background:var(--red);border-color:var(--red);color:var(--on-red)}
+.opt.wrong .mk{color:var(--red)}
+.opt[disabled]{cursor:default}
+.expl{margin-top:20px;padding:16px 18px;border-radius:13px;background:var(--bg2);border:1px solid var(--line);border-left:3px solid var(--accent);animation:rise .3s both}
+.expl .el{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:7px;display:flex;gap:7px;align-items:center}
+.expl .el .ic{width:14px;height:14px}
+.expl p{font-size:14.5px;color:var(--body);line-height:1.65}
+.pal-card{padding:18px}
+.pal-card-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+.pal-card-h b{font-size:15px}
+.pal-legend{display:flex;gap:14px;margin-bottom:14px;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:11.5px;color:var(--muted);flex-wrap:wrap}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:5px}
+.pal{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:8px}
+.pal button{aspect-ratio:1;border-radius:10px;border:1px solid var(--line);background:var(--bg2);font-family:'JetBrains Mono',monospace;font-weight:600;font-size:13px;color:var(--body);cursor:pointer;transition:.12s}
+.pal button:hover{border-color:var(--line2)}
+.pal button.ans{background:var(--green);border-color:var(--green);color:var(--on-green);font-weight:700}
+.pal button.ski{background:var(--orange);border-color:var(--orange);color:var(--on-orange);font-weight:700}
+.pal button.cur{outline:2px solid var(--accent);outline-offset:2px}
+.quiz-nav{margin-top:16px;padding:14px 16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.nav3{display:flex;gap:10px;flex:1}
+.nav3 .btn{flex:1}
+.btn-submit{margin-left:auto}
+@media(max-width:640px){
+  .quiz-nav{position:sticky;bottom:10px;z-index:30}
+  .btn-submit{order:-1;width:100%;margin-left:0}
+}
+/* ============ RESULT ============ */
+.result{padding:34px 0 54px;max-width:880px;margin:0 auto}
+.res-hero{display:flex;gap:30px;align-items:center;padding:30px;flex-wrap:wrap}
+.res-hero .kicker{display:block;margin-bottom:10px}
+.score-line{display:flex;align-items:baseline;gap:10px}
+.score-line .n{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:54px;letter-spacing:-.04em}
+.score-line .d{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:22px;color:var(--muted)}
+.res-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.donut{position:relative;width:130px;height:130px;margin-left:auto;flex:none}
+.donut svg{transform:rotate(-90deg);display:block}
+.donut .dv{position:absolute;inset:0;display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:21px}
+@media(max-width:760px){.donut{margin:8px auto 0}}
+.res-stats{margin-top:16px;grid-template-columns:repeat(6,1fr)}
+@media(max-width:900px){.res-stats{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.res-stats{grid-template-columns:repeat(2,1fr)}}
+.res-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+/* ============ REVIEW ============ */
+.review{padding:30px 0 54px;max-width:880px;margin:0 auto}
+.review h2{font-size:26px;font-weight:800;margin-top:10px}
+.rev-filters{display:flex;gap:8px;margin:18px 0;flex-wrap:wrap}
+.rev-item{padding:20px 22px;margin-bottom:14px;border-left:4px solid var(--line)}
+.rev-item.ok{border-left-color:var(--green)}
+.rev-item.bad{border-left-color:var(--red)}
+.rev-item.ski{border-left-color:var(--orange)}
+.rev-head{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.rev-no{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px;color:var(--muted)}
+.rev-q{font-size:16.5px;font-weight:700;margin-bottom:12px;line-height:1.55}
+.rev-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.ropt{display:flex;gap:10px;align-items:center;padding:10px 14px;border-radius:10px;border:1px solid var(--line);font-size:14px;color:var(--body)}
+.ropt .key{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:11px;border:1px solid var(--line2);color:var(--muted)}
+.ropt.correct{border-color:var(--green);background:var(--green-bg);color:var(--text)}
+.ropt.correct .key{background:var(--green);border-color:var(--green);color:var(--on-green)}
+.ropt.mine-wrong{border-color:var(--red);background:var(--red-bg);color:var(--text)}
+.ropt.mine-wrong .key{background:var(--red);border-color:var(--red);color:var(--on-red)}
+.ropt .tag{margin-left:auto;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);flex:none}
+.ropt.correct .tag{color:var(--green)} .ropt.mine-wrong .tag{color:var(--red)}
+.rev-na{font-size:13px;color:var(--muted);font-style:italic;margin-bottom:12px}
+/* ============ BANK ============ */
+.bank{padding:32px 0 54px}
+.bank h2,.hist h2,.stats h2{font-size:clamp(26px,3.6vw,34px);font-weight:800;letter-spacing:-.02em;margin-top:10px}
+.page-sub{color:var(--muted);font-size:14px;margin:8px 0 6px}
+.imp-card{margin-top:28px;padding:24px}
+.imp-head{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap}
+.imp-head h3{font-size:17px;margin-bottom:4px}
+.imp-head p{font-size:13px;color:var(--muted);max-width:56ch}
+.imp-head .pill{margin-left:auto}
+.imp-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.import-log{margin-top:16px;font-size:13px;color:var(--body);background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:none}
+.import-log.show{display:block;animation:rise .3s both}
+.import-log b{display:block;margin-bottom:6px}
+.import-log ul{margin-left:18px;color:var(--muted)}
+.bview{padding:30px 0 54px;max-width:880px;margin:0 auto}
+.bview h2{font-size:26px;font-weight:800;margin-top:8px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.bq{padding:20px 22px;margin-bottom:14px}
+.bq .rev-no{display:inline-flex;gap:10px;align-items:center;flex-wrap:wrap}
+.bq-q{font-size:16px;font-weight:700;margin:10px 0 12px;line-height:1.55}
+.loadmore-wrap{text-align:center;margin-top:6px}
+/* ============ HISTORY / STATS ============ */
+.hist,.stats{padding:32px 0 54px}
+.hist-card{margin-top:20px;overflow:hidden}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:760px}
+th{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:left;padding:13px 14px;border-bottom:1px solid var(--line2)}
+td{padding:12px 14px;border-bottom:1px solid var(--line);color:var(--body)}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:var(--bg2)}
+td b{color:var(--text)}
+.c-g{color:var(--green);font-weight:700}.c-r{color:var(--red);font-weight:700}.c-o{color:var(--orange);font-weight:700}
+@media(max-width:760px){
+  .hist-card{background:transparent;border:0;box-shadow:none;overflow:visible}
+  .hist-table thead{display:none}
+  .hist-table, .hist-table tbody{display:block}
+  .hist-table tr{display:block;border:1px solid var(--line);border-radius:12px;margin-bottom:10px;background:var(--card);overflow:hidden}
+  .hist-table td{display:flex;justify-content:space-between;align-items:center;gap:10px;border:0;border-bottom:1px solid var(--line);padding:9px 14px}
+  .hist-table tr td:last-child{border-bottom:0}
+  .hist-table td::before{content:attr(data-l);font-family:'JetBrains Mono',monospace;font-weight:600;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+}
+.stats-scoreboard{margin-top:20px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.sbars{margin-top:30px;max-width:640px}
+.sbar{margin-bottom:16px}
+.sbar-top{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;font-weight:600;margin-bottom:7px}
+.sbar-top .mono{color:var(--muted);font-size:12px}
+.sbar-track{height:8px;background:var(--bg2);border:1px solid var(--line);border-radius:99px;overflow:hidden}
+.sbar-fill{height:100%;width:0;background:var(--accent);border-radius:99px;transition:width .8s ease}
+/* ============ EMPTY / BOOT / TOAST / MODAL ============ */
+.empty{text-align:center;padding:64px 20px;color:var(--muted)}
+.empty .ic{width:40px;height:40px;margin-bottom:14px;opacity:.55}
+.empty h3{color:var(--text);font-size:18px;margin-bottom:6px}
+.empty p{font-size:14px;margin-bottom:20px}
+.boot{padding:110px 20px;text-align:center;color:var(--muted)}
+.spinner{width:34px;height:34px;border:3px solid var(--line2);border-top-color:var(--accent);border-radius:50%;margin:0 auto 18px;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.toasts{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:100;display:flex;flex-direction:column;gap:8px;align-items:center;width:min(92vw,500px);pointer-events:none}
+.toast{display:flex;gap:10px;align-items:center;background:var(--card);border:1px solid var(--line2);color:var(--text);padding:11px 16px;border-radius:12px;box-shadow:var(--shadow);font-size:13.5px;font-weight:600;animation:rise .25s both;max-width:100%}
+.toast .ic{width:16px;height:16px;flex:none}
+.t-success .ic{color:var(--green)} .t-error .ic{color:var(--red)} .t-warn .ic{color:var(--orange)} .t-info .ic{color:var(--accent-ink)}
+.toast.out{opacity:0;transform:translateY(8px);transition:.3s}
+.modal-ov{position:fixed;inset:0;background:rgba(4,8,18,.62);backdrop-filter:blur(4px);z-index:90;display:grid;place-items:center;padding:20px;animation:fade .2s both}
+html[data-theme="light"] .modal-ov{background:rgba(40,32,16,.35)}
+.modal{max-width:460px;width:100%;padding:24px;animation:rise .25s both}
+.modal h3{font-size:19px;margin-bottom:8px}
+.modal-body{color:var(--body);font-size:14px;line-height:1.65}
+.modal-body b{color:var(--text)}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;flex-wrap:wrap}
+.foot{padding:28px 20px 36px;color:var(--muted);font-size:12px;border-top:1px solid var(--line);margin-top:34px;text-align:center;font-family:'JetBrains Mono',monospace;letter-spacing:.03em}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
 
-<div id="wallpaper"></div>
-<div id="wallpaper-next"></div>
-<div class="overlay"></div>
-
-<div class="main-wrap">
-
-  
-
-  <!-- CLOCK + WEATHER -->
-  <div class="clock-card">
-    <div>
-      <div class="time-display" id="clock-display">00:00<span class="time-seconds">:00</span></div>
-      <div class="date-info" id="date-display">Loading...</div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:5px;">
-      <div class="temp-display">
-        <span class="weather-icon" id="weather-icon">🌤️</span>
-        <span id="temp-val">--°C</span>
-      </div>
-      <div class="weather-desc" id="weather-desc">Loading weather...</div>
-      <div class="weather-desc" id="weather-loc">📍 Burdwan, West Bengal</div>
+<header class="top">
+  <div class="container top-in">
+    <button class="brand" id="brandHome" aria-label="Go to SSC Quiz home">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+        <circle cx="10" cy="10" r="5.5" fill="none" stroke="currentColor" stroke-width="2.4"/>
+        <circle cx="22" cy="10" r="5.5" fill="var(--accent)"/>
+        <circle cx="10" cy="22" r="5.5" fill="none" stroke="currentColor" stroke-width="2.4"/>
+        <circle cx="22" cy="22" r="5.5" fill="none" stroke="currentColor" stroke-width="2.4"/>
+      </svg>
+      <span class="brand-txt"><b>SSC QUIZ</b><small>Practice • Learn • Improve</small></span>
+    </button>
+    <div class="top-actions">
+      <span class="bank-status" id="bankStatus"></span>
+      <button class="icon-btn" id="themeBtn" aria-label="Toggle dark / light theme"></button>
     </div>
   </div>
+</header>
 
-  <!-- CURRENT CLASS BANNER -->
-  <div class="current-class-banner" id="current-banner">
-    <div class="current-badge" id="current-badge">▶ NOW RUNNING</div>
-    <div>
-      <div class="current-subject" id="current-subject-name">No active class</div>
-      <div class="current-time-info" id="current-time-info">Check today's schedule below</div>
-    </div>
-    <div class="next-up" id="next-up-wrap">
-      <div class="next-up-label">UP NEXT</div>
-      <div class="next-up-sub" id="next-subject">—</div>
-    </div>
-  </div>
+<main id="view" class="container"></main>
 
-  <!-- MAIN GRID -->
-  <div class="main-grid">
+<footer class="foot">SSC QUIZ · questions load from <code>question bank/*.json</code> · all your data stays in this browser</footer>
 
-    <!-- ROUTINE TABLE -->
-    <div class="routine-card">
-      <div class="card-title">📅 Today's Schedule</div>
-      <div class="day-tabs" id="day-tabs"></div>
-      <div id="routine-table-wrap">
-        <div class="no-class">📭 No routine added yet. Go to <b>⚙ Settings</b> → <b>Add Class</b> or paste JSON.</div>
-      </div>
-    </div>
+<div id="toasts" class="toasts" aria-live="polite"></div>
+<noscript><p style="text-align:center;padding:40px">Please enable JavaScript to use SSC QUIZ.</p></noscript>
 
-    <!-- COUNTDOWN -->
-    <div class="mini-card">
-      <div class="card-title">⏳ Class Countdown</div>
-      <div class="countdown-grid">
-        <div class="countdown-unit"><span class="countdown-num" id="cd-h">--</span><div class="countdown-label">HR</div></div>
-        <div class="countdown-unit"><span class="countdown-num" id="cd-m">--</span><div class="countdown-label">MIN</div></div>
-        <div class="countdown-unit"><span class="countdown-num" id="cd-s">--</span><div class="countdown-label">SEC</div></div>
-        <div class="countdown-unit"><span class="countdown-num" id="cd-pct">--</span><div class="countdown-label">%</div></div>
-      </div>
-      <div style="margin-top:14px;">
-        <div style="font-size:0.76rem;color:var(--text-muted);margin-bottom:4px;">Day Progress</div>
-        <div class="progress-wrap"><div class="progress-bar" id="day-progress" style="width:0%"></div></div>
-        <div style="font-size:0.72rem;color:var(--text-muted);margin-top:4px;" id="day-progress-text">0 of 0 classes done</div>
-      </div>
-    </div>
-
-    <!-- NOTES -->
-    <div class="mini-card">
-      <div class="card-title">📝 Quick Notes</div>
-      <textarea class="notes-area" id="quick-notes" placeholder="Jot something down..." oninput="saveNotes()"></textarea>
-    </div>
-
-    <!-- EXAM SCHEDULE -->
-    <div class="mini-card">
-      <div class="card-title">📋 Exam Schedule</div>
-      <div id="exam-list">
-        <div class="no-class" style="padding:14px;">No exams added yet.</div>
-      </div>
-      <button class="btn" style="width:100%;margin-top:10px;" onclick="openExamModal()">+ Add Exam</button>
-    </div>
-<!-- WP COUNTER -->
-<div class="wp-counter" onclick="nextWallpaper();startWpTimer();">
-  <div class="wp-dot"></div>
-  <span id="wp-info">Loading...</span>
-  <span id="wp-timer-txt">5:00</span>
-</div>
-
-<!-- TOAST -->
-<div class="toast" id="toast">✓ Saved!</div>
-
-<!-- ===== SETTINGS MODAL ===== -->
-<div class="modal-overlay" id="admin-modal">
-  <div class="modal">
-    <div class="modal-title">
-      <span>⚙ Settings</span>
-      <button class="close-btn" onclick="closeModal('admin-modal')">✕</button>
-    </div>
-<input type="text" id="user-name-input" placeholder="Your name...">
-<button onclick="saveUserName()">Save Name</button>
-    <!-- ─── ADD CLASS ─── -->
-    <div class="section-head">Add a Class</div>
-    <div class="form-group">
-      <label class="form-label">Day</label>
-      <select class="form-input" id="admin-day">
-        <option>Sunday</option><option>Monday</option><option>Tuesday</option>
-        <option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option>
-      </select>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-      <div class="form-group">
-        <label class="form-label">Subject</label>
-        <input class="form-input" type="text" id="admin-subject" placeholder="e.g. Mathematics">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Teacher (optional)</label>
-        <input class="form-input" type="text" id="admin-teacher" placeholder="e.g. Mr. Roy">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Start Time</label>
-        <input class="form-input" type="time" id="admin-start">
-      </div>
-      <div class="form-group">
-        <label class="form-label">End Time</label>
-        <input class="form-input" type="time" id="admin-end">
-      </div>
-    </div>
-    <button class="save-btn" onclick="addClass()" style="margin-bottom:4px;">+ Add Class</button>
-
-    <!-- ─── CURRENT ROUTINE ─── -->
-    <div class="section-head">Current Routine</div>
-    <div id="admin-routine-list" style="max-height:180px;overflow-y:auto;"></div>
-
-    <!-- ─── JSON IMPORT ─── -->
-    <div class="section-head">Import JSON Routine</div>
-    <div class="info-box">
-      Paste your JSON routine below. Format example:<br>
-      <code style="font-family:'Space Mono',monospace;font-size:0.74rem;">{"Monday":[{"subject":"Math","start":"08:00","end":"09:00","teacher":"Mr. Roy"}]}</code>
-    </div>
-    <div class="radio-row">
-      <label class="radio-label">
-        <input type="radio" name="import-mode" value="replace" checked style="accent-color:var(--danger)">
-        <span style="color:var(--danger)">Replace existing</span>
-      </label>
-      <label class="radio-label">
-        <input type="radio" name="import-mode" value="append" style="accent-color:var(--accent2)">
-        <span style="color:var(--accent2)">Merge with existing</span>
-      </label>
-    </div>
-    <textarea class="json-paste-area" id="json-input" placeholder='{"Monday":[{"subject":"Physics","start":"09:00","end":"10:00","teacher":"Dr. Sen"}],"Tuesday":[...]}'></textarea>
-    <button class="save-btn" onclick="importJSON()" style="margin-top:10px;margin-bottom:4px;">📥 Import JSON</button>
-
-    <!-- Also CSV paste -->
-    <div class="section-head">Import CSV Routine</div>
-    <div class="info-box">
-      One class per line: <code style="font-family:'Space Mono',monospace;font-size:0.74rem;">Day, Subject, HH:MM, HH:MM, Teacher</code>
-    </div>
-    <textarea class="json-paste-area" id="csv-input" rows="4" placeholder="Monday, Mathematics, 08:00, 09:00, Mr. Roy&#10;Monday, Physics, 09:00, 10:00, Dr. Sen"></textarea>
-    <button class="save-btn" onclick="importCSV()" style="margin-top:10px;margin-bottom:4px;">📥 Import CSV</button>
-
-    <!-- ─── WEATHER API ─── -->
-    <div class="section-head">🌡 Weather API</div>
-    <div class="warn-box">
-      <b>Open-Meteo</b> — 100% free, no key needed.<br>
-      <b>OpenWeatherMap</b> — free key from <code>openweathermap.org</code> → My API Keys.
-    </div>
-    <div class="radio-row">
-      <label class="radio-label">
-        <input type="radio" name="wsrc" value="openmeteo" style="accent-color:var(--accent2)"> Open-Meteo (free, no key)
-      </label>
-      <label class="radio-label">
-        <input type="radio" name="wsrc" value="openweathermap" style="accent-color:var(--accent)"> OpenWeatherMap
-      </label>
-    </div>
-    <div class="form-group">
-      <label class="form-label">OpenWeatherMap API Key <span style="color:var(--text-muted);font-size:0.72rem;">(only needed if using OWM)</span></label>
-      <div class="api-key-wrap">
-        <input class="form-input" type="text" id="owm-key" placeholder="Paste your OWM API key here (leave blank for Open-Meteo)">
-        <span class="api-key-icon">🔑</span>
-      </div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-      <div class="form-group">
-        <label class="form-label">Latitude <span style="color:var(--text-muted);font-size:0.72rem;">(default: Burdwan 23.2324)</span></label>
-        <input class="form-input" type="text" id="w-lat" placeholder="23.2324">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Longitude <span style="color:var(--text-muted);font-size:0.72rem;">(default: 87.8615)</span></label>
-        <input class="form-input" type="text" id="w-lon" placeholder="87.8615">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Display City Name</label>
-      <input class="form-input" type="text" id="w-city" placeholder="Burdwan, West Bengal">
-    </div>
-    <button class="save-btn" onclick="saveWeatherSettings()" style="margin-bottom:4px;">💾 Save Weather Settings</button>
-
-    <!-- ─── WALLPAPER ─── -->
-    <div class="section-head">🖼 Wallpaper (Unsplash)</div>
-    <div class="warn-box">
-      Without a key, <b>Picsum Photos</b> is used (free, always works).<br>
-      For Unsplash, get a free key at <code>unsplash.com/developers</code>.
-    </div>
-    <div class="form-group">
-      <label class="form-label">Unsplash Access Key <span style="color:var(--text-muted);font-size:0.72rem;">(optional)</span></label>
-      <div class="api-key-wrap">
-        <input class="form-input" type="text" id="unsplash-key-input" placeholder="Leave blank to use Picsum (free, no key needed)">
-        <span class="api-key-icon">🔑</span>
-      </div>
-    </div>
-    <button class="save-btn" onclick="saveUnsplashKey()" style="margin-bottom:4px;">💾 Save Wallpaper Settings</button>
-
-    <!-- ─── DANGER ZONE ─── -->
-    <div class="section-head" style="color:var(--danger);">Danger Zone</div>
-    <button class="btn" style="border-color:var(--danger);color:var(--danger);width:100%;" onclick="clearAll()">🗑 Delete All Routine Data</button>
-  </div>
-</div>
-
-<!-- ===== EXAM MODAL ===== -->
-<div class="modal-overlay" id="exam-modal">
-  <div class="modal">
-    <div class="modal-title">
-      <span>📋 Add Exam</span>
-      <button class="close-btn" onclick="closeModal('exam-modal')">✕</button>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Subject</label>
-      <input class="form-input" type="text" id="exam-sub" placeholder="Exam subject">
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-      <div class="form-group">
-        <label class="form-label">Date</label>
-        <input class="form-input" type="date" id="exam-date">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Time</label>
-        <input class="form-input" type="time" id="exam-time-in">
-      </div>
-    </div>
-    <button class="save-btn" onclick="addExam()">💾 Save Exam</button>
-  </div>
-</div>
-<!-- HEADER -->
-  <div class="header">
-    <div class="brand">
-      <div class="brand-dot"></div>
-     <span id="brand-name">STUDY DASHBOARD</span>
-    </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <button class="btn" onclick="openAdminModal()">⚙ Settings</button>
-    </div>
-  </div>
-    <button id="fullscreenBtn">⛶</button>
 <script>
-// ========== STATE ==========
-const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+'use strict';
+/* =====================================================================
+   SSC QUIZ — single-file app
+   Questions are NEVER hardcoded: they are fetched from question bank/*.json
+   ===================================================================== */
 
-// ========== ROUTINE CONFIG ==========
-// ✏️  EDIT YOUR ROUTINE HERE directly in the HTML file.
-// Change subjects, times, days below and save the file.
-// Format: {"Day":[{"subject":"Name","start":"HH:MM","end":"HH:MM","teacher":"optional"}]}
-// If you have saved a routine via the dashboard UI, that takes priority over this.
-const DEFAULT_ROUTINE = {
-  "Monday":    [{"subject":"Wake Up & Fresh","start":"06:00","end":"06:30","teacher":""},{"subject":"Morning Exercise","start":"06:30","end":"07:00","teacher":""},{"subject":"Breakfast","start":"07:00","end":"07:30","teacher":""},{"subject":"Vocabulary Practice","start":"07:30","end":"08:15","teacher":""},{"subject":"Black Book Reading","start":"08:15","end":"08:45","teacher":""},{"subject":"Tiffin","start":"08:45","end":"09:30","teacher":""},{"subject":"Online Class","start":"09:30","end":"11:15","teacher":""},{"subject":"Coaching","start":"11:15","end":"13:30","teacher":""},{"subject":"Lunch & Rest","start":"13:30","end":"16:00","teacher":""},{"subject":"Newspaper Reading","start":"16:00","end":"17:30","teacher":""},{"subject":"GS Notes","start":"17:30","end":"18:00","teacher":""},{"subject":"Tea Break","start":"18:00","end":"18:30","teacher":""},{"subject":"Practice Batch","start":"18:30","end":"19:30","teacher":""},{"subject":"English Basic","start":"19:30","end":"20:30","teacher":""},{"subject":"Running","start":"20:30","end":"21:00","teacher":""},{"subject":"Dinner","start":"21:00","end":"22:00","teacher":""},{"subject":"English Practice","start":"22:00","end":"23:00","teacher":""},{"subject":"Math + Reasoning Practice","start":"23:00","end":"00:00","teacher":""}],
+/* ---------- tiny DOM + format helpers ---------- */
+const el = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad2 = n => String(n).padStart(2,'0');
+const fmtScore = n => String(parseFloat((Number(n)||0).toFixed(2)));          // 18.5 -> "18.5", 18 -> "18"
+const fmtTime = sec => { sec=Math.max(0,Math.round(sec)); const h=Math.floor(sec/3600), m=Math.floor((sec%3600)/60), s=sec%60;
+  return h ? `${h}:${pad2(m)}:${pad2(s)}` : `${pad2(m)}:${pad2(s)}`; };
+const fmtDate = iso => { try { return new Date(iso).toLocaleString(undefined,{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}); } catch { return '—'; } };
+const shuffleArray = arr => { const a = Array.from(arr); for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
 
-  "Tuesday":   [{"subject":"Wake Up & Fresh","start":"06:00","end":"06:30","teacher":""},{"subject":"Morning Exercise","start":"06:30","end":"07:00","teacher":""},{"subject":"Breakfast","start":"07:00","end":"07:30","teacher":""},{"subject":"Vocabulary Practice","start":"07:30","end":"08:15","teacher":""},{"subject":"Black Book Reading","start":"08:15","end":"08:45","teacher":""},{"subject":"Tiffin","start":"08:45","end":"09:30","teacher":""},{"subject":"Online Class","start":"09:30","end":"11:15","teacher":""},{"subject":"Coaching","start":"11:15","end":"13:30","teacher":""},{"subject":"Lunch & Rest","start":"13:30","end":"16:00","teacher":""},{"subject":"Newspaper Reading","start":"16:00","end":"17:30","teacher":""},{"subject":"GS Questions","start":"17:30","end":"18:00","teacher":""},{"subject":"Tea Break","start":"18:00","end":"18:30","teacher":""},{"subject":"Practice Batch","start":"18:30","end":"19:30","teacher":""},{"subject":"Math Practice","start":"19:30","end":"20:30","teacher":""},{"subject":"Running","start":"20:30","end":"21:00","teacher":""},{"subject":"Dinner","start":"21:00","end":"22:00","teacher":""},{"subject":"Reasoning Practice","start":"22:00","end":"23:00","teacher":""},{"subject":"English Mock Test","start":"23:00","end":"00:00","teacher":""}],
+/* ---------- inline SVG icon set (no external icon libraries) ---------- */
+const ICONS = {
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
+  check:'<path d="M4.5 12.5l5 5L19.5 6.5"/>',
+  x:'<path d="M6 6l12 12M18 6L6 18"/>',
+  chevL:'<path d="M14.5 5.5L8 12l6.5 6.5"/>',
+  chevR:'<path d="M9.5 5.5L16 12l-6.5 6.5"/>',
+  play:'<path d="M7.5 4.5v15L19.5 12z"/>',
+  shuffle:'<path d="M16 3h5v5"/><path d="M4 20L21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/>',
+  book:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',
+  history:'<path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1L3.5 8.4"/><path d="M3.5 3.5v5h5"/><path d="M12 7.5V12l3 2"/>',
+  chart:'<path d="M5 20v-6"/><path d="M12 20V7"/><path d="M19 20v-9"/><path d="M3 20h18"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  moon:'<path d="M20.5 13.5A8.5 8.5 0 1 1 10.5 3.5a7 7 0 0 0 10 10z"/>',
+  upload:'<path d="M12 15V4"/><path d="M7.5 8.5L12 4l4.5 4.5"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/>',
+  download:'<path d="M12 4v11"/><path d="M7.5 10.5L12 15l4.5-4.5"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/>',
+  trash:'<path d="M4 7h16"/><path d="M9.5 7V4.5h5V7"/><path d="M6.5 7l1 13h9l1-13"/>',
+  alert:'<path d="M12 4L2.5 20h19z"/><path d="M12 10v4"/><path d="M12 16.8v.4"/>',
+  skip:'<path d="M6 5.5v13L15 12z"/><path d="M18.5 5.5v13"/>',
+  refresh:'<path d="M20.5 12a8.5 8.5 0 1 1-2.5-6"/><path d="M20.5 3.5V9H15"/>',
+  eye:'<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/>',
+  home:'<path d="M4.5 10.5L12 4l7.5 6.5"/><path d="M6.5 9.5V20h11V9.5"/>',
+  grid:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
+  bulb:'<path d="M9.5 18h5"/><path d="M10.5 21h3"/><path d="M12 3a6 6 0 0 1 3.7 10.7c-.7.6-.7 1.3-.7 2.3h-6c0-1 0-1.7-.7-2.3A6 6 0 0 1 12 3z"/>',
+  math:'<rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 7.5h7"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 16h.01M12 16h.01M15.5 16h.01"/>',
+  reason:'<circle cx="6" cy="5.5" r="2.2"/><circle cx="18" cy="5.5" r="2.2"/><circle cx="12" cy="18.5" r="2.2"/><path d="M7 7.4l3.9 8.9M17 7.4l-3.9 8.9M8.2 5.5h7.6"/>',
+  english:'<path d="M5 19L11 5h2l6 14"/><path d="M7.5 14h9"/>',
+  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.7 2.4 4 5.5 4 9s-1.3 6.6-4 9c-2.7-2.4-4-5.5-4-9s1.3-6.6 4-9z"/>',
+  list:'<path d="M8 6h13M8 12h13M8 18h13"/><path d="M3.5 6h.01M3.5 12h.01M3.5 18h.01"/>',
+  file:'<path d="M13.5 3H7a1.5 1.5 0 0 0-1.5 1.5v15A1.5 1.5 0 0 0 7 21h10a1.5 1.5 0 0 0 1.5-1.5V8z"/><path d="M13.5 3V8h5"/>',
+  info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.5v.01"/>'
+};
+const icon = (n,cls) => `<svg class="ic${cls?' '+cls:''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]||''}</svg>`;
 
-  "Wednesday": [{"subject":"Wake Up & Fresh","start":"06:00","end":"06:30","teacher":""},{"subject":"Morning Exercise","start":"06:30","end":"07:00","teacher":""},{"subject":"Breakfast","start":"07:00","end":"07:30","teacher":""},{"subject":"Vocabulary Practice","start":"07:30","end":"08:15","teacher":""},{"subject":"Black Book Reading","start":"08:15","end":"08:45","teacher":""},{"subject":"Tiffin","start":"08:45","end":"09:30","teacher":""},{"subject":"Online Class","start":"09:30","end":"11:15","teacher":""},{"subject":"Coaching","start":"11:15","end":"13:30","teacher":""},{"subject":"Lunch & Rest","start":"13:30","end":"16:00","teacher":""},{"subject":"Newspaper Reading","start":"16:00","end":"17:30","teacher":""},{"subject":"GS Notes","start":"17:30","end":"18:00","teacher":""},{"subject":"Tea Break","start":"18:00","end":"18:30","teacher":""},{"subject":"Practice Batch","start":"18:30","end":"19:30","teacher":""},{"subject":"English Grammar","start":"19:30","end":"20:30","teacher":""},{"subject":"Running","start":"20:30","end":"21:00","teacher":""},{"subject":"Dinner","start":"21:00","end":"22:00","teacher":""},{"subject":"Math PYQ","start":"22:00","end":"23:00","teacher":""},{"subject":"Reasoning Puzzle","start":"23:00","end":"00:00","teacher":""}],
+/* ---------- subjects & storage keys ---------- */
+const SUBJECT_META = {
+  'Mathematics':       { file:'question bank/math.json',      time:45, icon:'math',   desc:'Arithmetic, algebra, ratio, interest & mensuration' },
+  'Reasoning':         { file:'question bank/reasoning.json', time:45, icon:'reason', desc:'Series, analogies, coding, directions & puzzles' },
+  'English':           { file:'question bank/english.json',   time:30, icon:'english',desc:'Grammar, vocabulary, idioms & one-word substitution' },
+  'General Awareness': { file:'question bank/ga.json',        time:30, icon:'globe',  desc:'Polity, history, science, sports & current affairs' }
+};
+const SUBJECT_NAMES = Object.keys(SUBJECT_META);
+const LETTERS = ['A','B','C','D'];
+const K = { theme:'sq_theme', history:'sq_history', imported:'sq_imported', setup:'sq_setup' };
 
-  "Thursday":  [{"subject":"Wake Up & Fresh","start":"06:00","end":"06:30","teacher":""},{"subject":"Morning Exercise","start":"06:30","end":"07:00","teacher":""},{"subject":"Breakfast","start":"07:00","end":"07:30","teacher":""},{"subject":"Vocabulary Practice","start":"07:30","end":"08:15","teacher":""},{"subject":"Black Book Reading","start":"08:15","end":"08:45","teacher":""},{"subject":"Tiffin","start":"08:45","end":"09:30","teacher":""},{"subject":"Online Class","start":"09:30","end":"11:15","teacher":""},{"subject":"Coaching","start":"11:15","end":"13:30","teacher":""},{"subject":"Lunch & Rest","start":"13:30","end":"16:00","teacher":""},{"subject":"Newspaper Reading","start":"16:00","end":"17:30","teacher":""},{"subject":"GS Questions","start":"17:30","end":"18:00","teacher":""},{"subject":"Tea Break","start":"18:00","end":"18:30","teacher":""},{"subject":"Practice Batch","start":"18:30","end":"19:30","teacher":""},{"subject":"Math Speed Test","start":"19:30","end":"20:30","teacher":""},{"subject":"Running","start":"20:30","end":"21:00","teacher":""},{"subject":"Dinner","start":"21:00","end":"22:00","teacher":""},{"subject":"English Practice","start":"22:00","end":"23:00","teacher":""},{"subject":"Reasoning + GS","start":"23:00","end":"00:00","teacher":""}],
-
-  "Friday":    [{"subject":"Wake Up & Fresh","start":"06:00","end":"06:30","teacher":""},{"subject":"Morning Exercise","start":"06:30","end":"07:00","teacher":""},{"subject":"Breakfast","start":"07:00","end":"07:30","teacher":""},{"subject":"Vocabulary Revision","start":"07:30","end":"08:15","teacher":""},{"subject":"Black Book Reading","start":"08:15","end":"08:45","teacher":""},{"subject":"Tiffin","start":"08:45","end":"09:30","teacher":""},{"subject":"Online Class","start":"09:30","end":"11:15","teacher":""},{"subject":"Coaching","start":"11:15","end":"13:30","teacher":""},{"subject":"Lunch & Rest","start":"13:30","end":"16:00","teacher":""},{"subject":"Newspaper Reading","start":"16:00","end":"17:30","teacher":""},{"subject":"GS Notes","start":"17:30","end":"18:00","teacher":""},{"subject":"Tea Break","start":"18:00","end":"18:30","teacher":""},{"subject":"Practice Batch","start":"18:30","end":"19:30","teacher":""},{"subject":"Reasoning Practice","start":"19:30","end":"20:30","teacher":""},{"subject":"Running","start":"20:30","end":"21:00","teacher":""},{"subject":"Dinner","start":"21:00","end":"22:00","teacher":""},{"subject":"English Mock Test","start":"22:00","end":"23:00","teacher":""},{"subject":"Math + GS Revision","start":"23:00","end":"00:00","teacher":""}],
-
-  "Saturday":  [{"subject":"Wake Up & Fresh","start":"06:00","end":"06:30","teacher":""},{"subject":"Morning Exercise","start":"06:30","end":"07:00","teacher":""},{"subject":"Breakfast","start":"07:00","end":"07:30","teacher":""},{"subject":"Weekly Revision","start":"07:30","end":"09:00","teacher":""},{"subject":"Tiffin","start":"09:00","end":"09:30","teacher":""},{"subject":"Mock Test","start":"09:30","end":"11:30","teacher":""},{"subject":"Error Analysis","start":"11:30","end":"13:00","teacher":""},{"subject":"Lunch & Rest","start":"13:00","end":"16:00","teacher":""},{"subject":"Current Affairs","start":"16:00","end":"17:30","teacher":""},{"subject":"GS Notes","start":"17:30","end":"18:00","teacher":""},{"subject":"Tea Break","start":"18:00","end":"18:30","teacher":""},{"subject":"English Revision","start":"18:30","end":"19:30","teacher":""},{"subject":"Math Revision","start":"19:30","end":"20:30","teacher":""},{"subject":"Running","start":"20:30","end":"21:00","teacher":""},{"subject":"Dinner","start":"21:00","end":"22:00","teacher":""},{"subject":"Reasoning Revision","start":"22:00","end":"23:00","teacher":""},{"subject":"Light Study","start":"23:00","end":"00:00","teacher":""}],
-
-  "Sunday":    [{"subject":"Wake Up & Fresh","start":"06:00","end":"07:00","teacher":""},{"subject":"Morning Walk","start":"07:00","end":"07:30","teacher":""},{"subject":"Breakfast","start":"07:30","end":"08:00","teacher":""},{"subject":"Weekly Full Revision","start":"08:00","end":"10:00","teacher":""},{"subject":"Mock Test","start":"10:00","end":"12:00","teacher":""},{"subject":"Lunch & Rest","start":"12:00","end":"16:00","teacher":""},{"subject":"Current Affairs","start":"16:00","end":"17:00","teacher":""},{"subject":"GS Notes","start":"17:00","end":"18:00","teacher":""},{"subject":"Tea Break","start":"18:00","end":"18:30","teacher":""},{"subject":"English Practice","start":"18:30","end":"19:30","teacher":""},{"subject":"Math Practice","start":"19:30","end":"20:30","teacher":""},{"subject":"Running","start":"20:30","end":"21:00","teacher":""},{"subject":"Dinner","start":"21:00","end":"22:00","teacher":""},{"subject":"Reasoning Practice","start":"22:00","end":"23:00","teacher":""},{"subject":"Plan Next Week","start":"23:00","end":"00:00","teacher":""}]
+/* ---------- global state ---------- */
+const state = {
+  banks: { 'Mathematics':[], 'Reasoning':[], 'English':[], 'General Awareness':[] },
+  loadStatus: {}, loadErrors: new Set(),
+  imported: [], history: [],
+  quiz: null, lastResult: null, lastCfg: null,
+  setupSel: null, lastSetup: { count:10, difficulty:'Mixed', mode:'practice', neg:0 },
+  reviewFilter: 'all', bankView: { subject:null, page:1 },
+  timer: { id:null, remaining:0, total:0 }
 };
 
-// Load from localStorage if exists, else use DEFAULT_ROUTINE above
-const _savedRoutine = localStorage.getItem('routine');
-let routine = (_savedRoutine && _savedRoutine !== '{}') ? JSON.parse(_savedRoutine) : JSON.parse(JSON.stringify(DEFAULT_ROUTINE));
-let exams   = JSON.parse(localStorage.getItem('exams')   || '[]');
-let viewDay = null;
-let wpIndex = 0, wpCountdown = 300, wpTimer = null;
+/* ---------- safe localStorage wrappers ---------- */
+function lsGet(key, fallback){ try { const v = localStorage.getItem(key); return v==null ? fallback : JSON.parse(v); } catch { return fallback; } }
+function lsSet(key, val){ try { localStorage.setItem(key, JSON.stringify(val)); return true; } catch { return false; } }
 
-const COLORS = ['color-0','color-1','color-2','color-3','color-4','color-5','color-6'];
-let subjectColorMap = {}, colorIdx = 0;
-
-function getSubjectColor(subject) {
-  if (!subjectColorMap[subject]) { subjectColorMap[subject] = COLORS[colorIdx % COLORS.length]; colorIdx++; }
-  return subjectColorMap[subject];
+/* ---------- theme ---------- */
+function applyTheme(t){
+  document.documentElement.dataset.theme = t;
+  const b = el('themeBtn'); if (b) b.innerHTML = icon(t==='dark' ? 'sun' : 'moon');
+}
+function toggleTheme(){
+  const next = document.documentElement.dataset.theme==='dark' ? 'light' : 'dark';
+  applyTheme(next); lsSet(K.theme, next);
 }
 
-// ========== CLOCK ==========
-function updateClock() {
-  const now = new Date();
-  const h = String(now.getHours()).padStart(2,'0');
-  const m = String(now.getMinutes()).padStart(2,'0');
-  const s = String(now.getSeconds()).padStart(2,'0');
-  document.getElementById('clock-display').innerHTML = `${h}:${m}<span class="time-seconds">:${s}</span>`;
-
-  const day = DAYS[now.getDay()];
-  const date = now.getDate();
-  const month = MONTHS[now.getMonth()];
-  const year = now.getFullYear();
-  document.getElementById('date-display').textContent = `${day}, ${date} ${month} ${year}`;
-
-  updateCurrentClass(now);
+/* ---------- toast + modal (no alert/confirm anywhere) ---------- */
+function toast(msg, type='info'){
+  const map = { info:'info', success:'check', error:'alert', warn:'alert' };
+  const d = document.createElement('div');
+  d.className = `toast t-${type}`;
+  d.innerHTML = `${icon(map[type]||'info')}<span>${esc(msg)}</span>`;
+  el('toasts').appendChild(d);
+  setTimeout(()=>{ d.classList.add('out'); setTimeout(()=>d.remove(), 320); }, 3800);
+}
+let modalCancel = null;
+function openModal({ title, body, okLabel='Confirm', okClass='btn-primary', cancelLabel='Cancel', onOk, onCancel }){
+  closeModal(true);
+  modalCancel = onCancel || null;
+  const wrap = document.createElement('div');
+  wrap.className = 'modal-ov'; wrap.id = 'modalOv';
+  wrap.innerHTML = `<div class="modal card" role="dialog" aria-modal="true" aria-label="${esc(title)}">
+      <h3>${esc(title)}</h3><div class="modal-body">${body}</div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" data-m="cancel">${esc(cancelLabel)}</button>
+        <button class="btn ${okClass}" data-m="ok">${esc(okLabel)}</button>
+      </div></div>`;
+  document.body.appendChild(wrap);
+  document.body.classList.add('locked');
+  wrap.addEventListener('click', e => {
+    if (e.target === wrap) { closeModal(); return; }
+    const b = e.target.closest('[data-m]'); if (!b) return;
+    if (b.dataset.m === 'cancel') { closeModal(); }
+    else { const fn = onOk; closeModal(true); fn && fn(); }
+  });
+  const ok = wrap.querySelector('[data-m="ok"]'); ok && ok.focus();
+}
+function closeModal(silent){
+  const m = el('modalOv'); if (!m) return;
+  m.remove(); document.body.classList.remove('locked');
+  const fn = modalCancel; modalCancel = null;
+  if (!silent && fn) fn();
 }
 
-function timeToMin(t) {
-  if (!t) return -1;
-  const [h,m] = t.split(':').map(Number);
-  return h*60+m;
+/* =====================================================================
+   DATA LAYER — everything comes from question bank/*.json via fetch()
+   ===================================================================== */
+
+/** Raw loader for one JSON file (relative path, GitHub Pages friendly). */
+async function loadQuestions(path){
+  const res = await fetch(path);
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return await res.json();
 }
 
-function updateCurrentClass(now) {
-  const dayName = DAYS[now.getDay()];
-  const classes = (routine[dayName]||[]).slice().sort((a,b)=>timeToMin(a.start)-timeToMin(b.start));
-  const curMin = now.getHours()*60+now.getMinutes();
+/** Per-question validator — returns an error string, or null when valid. */
+function validateQuestion(q){
+  if (!q || typeof q !== 'object' || Array.isArray(q)) return 'not a question object';
+  if (typeof q.question !== 'string' || !q.question.trim()) return 'missing "question" text';
+  if (!Array.isArray(q.options) || q.options.length !== 4) return 'must have exactly 4 options';
+  if (!q.options.every(o => typeof o === 'string' || typeof o === 'number')) return 'options must be plain text';
+  if (!Number.isInteger(q.answer) || q.answer < 0 || q.answer > 3) return '"answer" index must be 0, 1, 2 or 3';
+  return null;
+}
 
-  let currentClass = null, nextClass = null;
-  for (let i=0;i<classes.length;i++) {
-    const s = timeToMin(classes[i].start), e = timeToMin(classes[i].end);
-    if (curMin >= s && curMin < e) { currentClass = classes[i]; nextClass = classes[i+1]||null; break; }
-    if (curMin < s) { nextClass = classes[i]; break; }
+/** Validate a whole JSON array; returns { valid, errors, invalidCount }. */
+function validateQuestionArray(data, fallbackSubject, idPrefix){
+  if (!Array.isArray(data)) throw new Error('Question bank must be a JSON array.');
+  const valid = [], errors = [];
+  data.forEach((q, i) => {
+    const err = validateQuestion(q);
+    if (err) { errors.push(`Question ${i+1}: ${err}`); return; }
+    valid.push({
+      id: String(q.id ?? `${idPrefix}-${i+1}`),
+      subject: SUBJECT_NAMES.includes(q.subject) ? q.subject : fallbackSubject,
+      question: q.question.trim(),
+      options: q.options.map(o => String(o)),
+      answer: q.answer,
+      explanation: typeof q.explanation === 'string' ? q.explanation.trim() : '',
+      difficulty: typeof q.difficulty === 'string' ? q.difficulty.trim().toLowerCase() : undefined
+    });
+  });
+  return { valid, errors, invalidCount: data.length - valid.length };
+}
+
+/** Load + validate + store one subject's bank. Never throws. */
+async function loadSubjectQuestions(subject){
+  const meta = SUBJECT_META[subject];
+  try {
+    const data = await loadQuestions(meta.file);                     // may throw: missing file / bad HTTP
+    const { valid, errors, invalidCount } = validateQuestionArray(data, subject, subject.toLowerCase().replace(/\s+/g,'-'));
+    state.banks[subject] = valid;
+    state.loadStatus[subject] = valid.length ? 'ok' : 'empty';
+    state.loadErrors.delete(subject);
+    if (invalidCount) toast(`${invalidCount} invalid question${invalidCount>1?'s':''} skipped in ${meta.file}.`, 'warn');
+    if (!valid.length) toast(`${subject} question bank loaded but is empty.`, 'warn');
+    if (errors.length) console.warn(`[${meta.file}] skipped:`, errors);
+  } catch (e) {
+    state.banks[subject] = [];
+    state.loadStatus[subject] = 'error';
+    state.loadErrors.add(subject);
+    toast(`Unable to load ${subject} question bank.`, 'error');
+    console.warn(`Failed to load ${meta.file}:`, e);
   }
-
-  if (currentClass) {
-    document.getElementById('current-subject-name').textContent = currentClass.subject;
-    document.getElementById('current-time-info').textContent = `${currentClass.start} — ${currentClass.end}`;
-    document.getElementById('current-badge').textContent = '▶ NOW RUNNING';
-    document.getElementById('current-banner').style.borderColor = 'rgba(245,200,66,0.55)';
-  } else {
-    document.getElementById('current-subject-name').textContent = nextClass ? 'Waiting for next class' : 'All done for today 🎉';
-    document.getElementById('current-time-info').textContent = '';
-    document.getElementById('current-badge').textContent = '○ NO ACTIVE CLASS';
-    document.getElementById('current-banner').style.borderColor = 'rgba(255,255,255,0.10)';
-  }
-
-  document.getElementById('next-subject').textContent = nextClass ? `${nextClass.subject} (${nextClass.start})` : '—';
-
-  // countdown
-  if (nextClass) {
-    const diff = (timeToMin(nextClass.start) - curMin)*60 - now.getSeconds();
-    if (diff > 0) {
-      document.getElementById('cd-h').textContent = String(Math.floor(diff/3600)).padStart(2,'0');
-      document.getElementById('cd-m').textContent = String(Math.floor((diff%3600)/60)).padStart(2,'0');
-      document.getElementById('cd-s').textContent = String(diff%60).padStart(2,'0');
-      document.getElementById('cd-pct').textContent = Math.max(0,Math.round((1-diff/(12*3600))*100));
-    }
-  } else if (currentClass) {
-    const diff = (timeToMin(currentClass.end) - curMin)*60 - now.getSeconds();
-    if (diff > 0) {
-      document.getElementById('cd-h').textContent = String(Math.floor(diff/3600)).padStart(2,'0');
-      document.getElementById('cd-m').textContent = String(Math.floor((diff%3600)/60)).padStart(2,'0');
-      document.getElementById('cd-s').textContent = String(diff%60).padStart(2,'0');
-      document.getElementById('cd-pct').textContent = '—';
-    }
-  } else {
-    ['cd-h','cd-m','cd-s','cd-pct'].forEach(id => document.getElementById(id).textContent = '--');
-  }
-
-  const done = classes.filter(c => timeToMin(c.end) <= curMin).length;
-  const total = classes.length;
-  document.getElementById('day-progress').style.width = total>0 ? Math.round(done/total*100)+'%' : '0%';
-  document.getElementById('day-progress-text').textContent = `${done} of ${total} class${total!==1?'es':''} done`;
 }
 
-// ========== ROUTINE TABLE ==========
-function buildDayTabs() {
-  const container = document.getElementById('day-tabs');
-  container.innerHTML = '';
-  DAYS.forEach(day => {
-    if (!(routine[day]||[]).length) return;
-    const btn = document.createElement('button');
-    btn.className = 'day-tab' + (day === viewDay ? ' active' : '');
-    btn.textContent = `${day} (${routine[day].length})`;
-    btn.onclick = () => { viewDay = day; buildDayTabs(); renderRoutineTable(); };
-    container.appendChild(btn);
+/** Fetch all four official banks in parallel. */
+async function loadAllQuestions(){
+  state.loadErrors = new Set();
+  await Promise.allSettled(SUBJECT_NAMES.map(s => loadSubjectQuestions(s)));
+  updateBankStatus();
+}
+
+/** Retry only the banks that failed. */
+async function retryFailedBanks(){
+  const failed = Array.from(state.loadErrors);
+  for (const s of failed) await loadSubjectQuestions(s);
+  updateBankStatus();
+  if (!state.loadErrors.size) toast('All question banks loaded successfully.', 'success');
+  renderHome();
+}
+
+function officialTotal(){ return SUBJECT_NAMES.reduce((a,n)=>a+state.banks[n].length,0); }
+function updateBankStatus(){
+  const s = el('bankStatus'); if (!s) return;
+  const ok = SUBJECT_NAMES.filter(n => state.loadStatus[n]==='ok').length;
+  const warn = ok < SUBJECT_NAMES.length;
+  s.innerHTML = `<i class="dot-live${warn?' warn':''}"></i>${ok}/4 banks · ${officialTotal()} Q`;
+}
+
+/** Pool for a quiz: official banks; Mixed also pulls in imported questions. */
+function buildPool(subject){
+  if (subject === 'Mixed') return [...SUBJECT_NAMES.flatMap(n => state.banks[n]), ...state.imported];
+  return state.banks[subject] || [];
+}
+
+/** Seconds allowed per question, decided purely by the question's subject. */
+function getQuestionTime(subject){
+  return (SUBJECT_META[subject] && SUBJECT_META[subject].time) || 30;
+}
+
+/* =====================================================================
+   IMPORTED QUESTIONS (localStorage) — official files are never modified
+   ===================================================================== */
+function saveQuestions(){ lsSet(K.imported, state.imported); }
+
+function loadImported(){
+  const raw = lsGet(K.imported, []);
+  if (!Array.isArray(raw)) return [];
+  return raw.filter(q => validateQuestion(q) === null);   // defensive re-validation
+}
+
+function readFileText(file){
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(String(r.result));
+    r.onerror = () => rej(new Error('Could not read file'));
+    r.readAsText(file);
   });
 }
 
-function renderRoutineTable() {
-  const wrap = document.getElementById('routine-table-wrap');
-  if (!viewDay || !(routine[viewDay]||[]).length) {
-    wrap.innerHTML = '<div class="no-class">📭 No classes scheduled for this day.</div>';
+/** Validate + merge an uploaded JSON file. Treated strictly as data. */
+function importQuestions(text){
+  let data;
+  try { data = JSON.parse(text); }
+  catch { toast('Invalid JSON file — could not parse.', 'error'); return; }
+  if (!Array.isArray(data)) { toast('Invalid format: the JSON must be an array of questions.', 'error'); return; }
+
+  const { valid, errors } = validateQuestionArray(data, 'Imported', 'imp-' + Date.now());
+  if (!valid.length) {
+    toast('No valid questions found in this file.', 'error');
+    showImportLog(errors, data.length);
     return;
   }
-  const classes = (routine[viewDay]||[]).slice().sort((a,b)=>timeToMin(a.start)-timeToMin(b.start));
-  const now = new Date();
-  const curMin = now.getHours()*60+now.getMinutes();
-  const isToday = viewDay === DAYS[now.getDay()];
+  const existing = new Set(state.imported.map(q => q.id));
+  let dup = 0;
+  const toAdd = valid.filter(q => { if (existing.has(q.id)) { dup++; return false; } existing.add(q.id); return true; });
+  if (state.imported.length + toAdd.length > 1000) { toast('Import limit reached (max 1000 questions).', 'error'); return; }
 
-  let html = `<table class="routine-table"><thead><tr>
-    <th>#</th><th>TIME</th><th>SUBJECT</th><th>TEACHER</th><th>STATUS</th>
-  </tr></thead><tbody>`;
-
-  classes.forEach((c,i) => {
-    const s = timeToMin(c.start), e = timeToMin(c.end);
-    let rowClass = '', status = '⏳ Upcoming';
-    if (isToday) {
-      if (curMin>=s && curMin<e) { rowClass='current-row'; status='▶ In Progress'; }
-      else if (curMin>=e) { rowClass='past-row'; status='✓ Done'; }
-    }
-    const color = getSubjectColor(c.subject);
-    html += `<tr class="${rowClass}">
-      <td style="color:var(--text-muted);font-size:0.78rem">${i+1}</td>
-      <td style="font-family:'Space Mono',monospace;font-size:0.82rem;white-space:nowrap">${c.start} – ${c.end}</td>
-      <td><span class="subject-pill ${color}">${c.subject}</span></td>
-      <td style="color:var(--text-muted);font-size:0.8rem">${c.teacher||'—'}</td>
-      <td style="font-size:0.78rem">${status}</td>
-    </tr>`;
-  });
-  html += '</tbody></table>';
-  wrap.innerHTML = html;
+  state.imported.push(...toAdd);
+  saveQuestions();
+  const invalid = data.length - valid.length;
+  toast(`Imported ${toAdd.length} question${toAdd.length!==1?'s':''}` +
+        (dup ? ` · ${dup} duplicate${dup!==1?'s':''} skipped` : '') +
+        (invalid ? ` · ${invalid} invalid skipped` : ''), 'success');
+  showImportLog(errors, data.length);
+  renderBank();
 }
 
-function refreshRoutine() {
-  if (!viewDay) viewDay = DAYS[new Date().getDay()];
-  buildDayTabs();
-  renderRoutineTable();
-  renderAdminList();
+function showImportLog(errors, total){
+  const log = el('importLog'); if (!log) return;
+  log.innerHTML = `<b>Validation report — ${total - errors.length} of ${total} question${total!==1?'s':''} accepted</b>` +
+    (errors.length ? `<ul>${errors.slice(0,8).map(e=>`<li>${esc(e)}</li>`).join('')}${errors.length>8?`<li>…and ${errors.length-8} more</li>`:''}</ul>` : '<span class="muted">All questions passed validation.</span>');
+  log.classList.add('show');
 }
 
-// ========== ADMIN ==========
-function openAdminModal() {
-  renderAdminList();
-  document.getElementById('owm-key').value = owmKey;
-  document.getElementById('w-lat').value = weatherLat;
-  document.getElementById('w-lon').value = weatherLon;
-  document.getElementById('w-city').value = weatherCity;
-  document.getElementById('unsplash-key-input').value = unsplashKey;
-  document.querySelectorAll('input[name="wsrc"]').forEach(r => r.checked = r.value===weatherSource);
-  openModal('admin-modal');
+/** Download imported questions as a JSON file via Blob (no backend). */
+function exportQuestions(){
+  if (!state.imported.length) { toast('No imported questions to export.', 'warn'); return; }
+  const blob = new Blob([JSON.stringify(state.imported, null, 2)], { type:'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'ssc-quiz-imported-questions.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+  toast(`Exported ${state.imported.length} question${state.imported.length!==1?'s':''}.`, 'success');
 }
 
-function renderAdminList() {
-  const el = document.getElementById('admin-routine-list');
-  let html = '';
-  DAYS.forEach(day => {
-    const classes = routine[day]||[];
-    if (!classes.length) return;
-    html += `<div style="font-size:0.76rem;color:var(--accent);font-weight:700;margin:8px 0 4px;font-family:'Syne',sans-serif;">${day.toUpperCase()}</div>`;
-    classes.slice().sort((a,b)=>timeToMin(a.start)-timeToMin(b.start)).forEach((c,i) => {
-      html += `<div class="routine-entry">
-        <span style="font-size:0.84rem">${c.subject}</span>
-        <span style="font-size:0.78rem;color:var(--text-muted);font-family:'Space Mono',monospace">${c.start}</span>
-        <span style="font-size:0.78rem;color:var(--text-muted);font-family:'Space Mono',monospace">${c.end}</span>
-        <button class="del-btn" onclick="deleteClass('${day}',${i})">✕</button>
-      </div>`;
-    });
-  });
-  el.innerHTML = html || '<div style="color:var(--text-muted);font-size:0.83rem;padding:8px 0;">No classes added yet.</div>';
+/* =====================================================================
+   QUIZ ENGINE
+   ===================================================================== */
+
+/** Build the quiz: random selection, no duplicates, shuffled options with remapped answer index. */
+function startQuiz(cfg){
+  const pool = buildPool(cfg.subject);
+  if (!pool.length) { toast('No questions available for this selection yet.', 'error'); return; }
+
+  let working = pool;
+  if (cfg.difficulty && cfg.difficulty !== 'Mixed') {
+    const filtered = pool.filter(q => q.difficulty === cfg.difficulty.toLowerCase());
+    if (!filtered.length) toast(`No "${cfg.difficulty}"-tagged questions found — using all difficulty levels.`, 'info');
+    else working = filtered;
+  }
+  const count = Math.min(cfg.count, working.length);
+  if (count < cfg.count) toast(`Only ${working.length} question${working.length!==1?'s':''} available — quiz resized to ${count}.`, 'info');
+  if (!count) { toast('No questions available after filtering.', 'error'); return; }
+
+  const questions = shuffleArray(working).slice(0, count).map(prepareQuestion);
+  state.quiz = {
+    subject: cfg.subject, mode: cfg.mode, neg: cfg.neg, difficulty: cfg.difficulty,
+    questions, total: count, current: 0, startedAt: Date.now(),
+    cfg: { ...cfg }
+  };
+  state.lastCfg = { ...cfg };
+  state.lastSetup = { count:cfg.count, difficulty:cfg.difficulty, mode:cfg.mode, neg:cfg.neg };
+  lsSet(K.setup, state.lastSetup);
+  renderQuiz();
+  loadQuestion(0);
 }
 
-function addClass() {
-  const day     = document.getElementById('admin-day').value;
-  const subject = document.getElementById('admin-subject').value.trim();
-  const start   = document.getElementById('admin-start').value;
-  const end     = document.getElementById('admin-end').value;
-  const teacher = document.getElementById('admin-teacher').value.trim();
-  if (!subject || !start || !end) { showToast('⚠ Please fill in subject and time.', true); return; }
-  if (!routine[day]) routine[day] = [];
-  routine[day].push({subject, start, end, teacher});
-  saveRoutine(); renderAdminList(); refreshRoutine();
-  document.getElementById('admin-subject').value='';
-  document.getElementById('admin-start').value='';
-  document.getElementById('admin-end').value='';
-  document.getElementById('admin-teacher').value='';
-  showToast('✓ Class added!');
+/** Shuffle the 4 options while keeping the correct answer index correct. */
+function prepareQuestion(q){
+  const order = shuffleArray([0,1,2,3]);                 // e.g. original answer 1 may now sit at position 3
+  return {
+    ...q,
+    options: order.map(i => q.options[i]),
+    answer: order.indexOf(q.answer),                     // remapped internal index
+    userAnswer: null,
+    status: 'unanswered'                                 // -> 'answered' | 'skipped'
+  };
 }
 
-function deleteClass(day, idx) {
-  routine[day].splice(idx,1);
-  if (!routine[day].length) delete routine[day];
-  saveRoutine(); renderAdminList(); refreshRoutine();
-  showToast('🗑 Class removed.');
+/** Render one question and (re)start its per-question timer. */
+function loadQuestion(i){
+  const qz = state.quiz; if (!qz) return;
+  stopTimer();
+  qz.current = i;
+  const q = qz.questions[i];
+  renderQuestion(q);
+  renderPalette();
+  updateProgress();
+  if (q.status === 'unanswered') startTimer(getQuestionTime(q.subject));
+  else paintTimerIdle();                                 // answered in practice mode: clock stops, explanation stays
+  window.scrollTo({ top:0, behavior:'smooth' });
 }
 
-function clearAll() {
-  if (!confirm('Delete all routine data? This cannot be undone.')) return;
-  routine = {}; saveRoutine(); refreshRoutine();
-  closeModal('admin-modal');
-  showToast('🗑 All routine data cleared.');
+function selectAnswer(optIdx){
+  const qz = state.quiz; if (!qz || !el('qpanel')) return;
+  const q = qz.questions[qz.current];
+  if (qz.mode === 'practice' && q.status === 'answered') return;   // practice locks the answer
+  q.userAnswer = optIdx;
+  q.status = 'answered';
+  if (qz.mode === 'practice') stopTimer();                          // pause clock so the explanation is readable
+  renderQuestion(q);
+  renderPalette();
+  if (qz.mode === 'practice') paintTimerIdle();
+  updateControls();
 }
 
-function saveRoutine() { localStorage.setItem('routine', JSON.stringify(routine)); }
+function nextQuestion(){
+  const qz = state.quiz; if (!qz) return;
+  if (qz.current < qz.total - 1) loadQuestion(qz.current + 1);
+  else toast('This is the last question — tap Submit to finish.', 'info');
+}
+function previousQuestion(){
+  const qz = state.quiz; if (!qz) return;
+  if (qz.current > 0) loadQuestion(qz.current - 1);
+}
+function skipQuestion(){
+  const qz = state.quiz; if (!qz) return;
+  const q = qz.questions[qz.current];
+  if (qz.mode === 'practice' && q.status === 'answered') return;
+  q.userAnswer = null; q.status = 'skipped';
+  if (qz.current < qz.total - 1) loadQuestion(qz.current + 1);
+  else {
+    stopTimer();
+    state.timer.remaining = 0; paintTimer();
+    renderQuestion(q); renderPalette(); updateControls();
+    toast('Last question skipped — tap Submit to finish.', 'info');
+  }
+}
+function goToQuestion(i){ loadQuestion(i); }
 
-// ========== INLINE JSON EDITOR ==========
-function applyInlineJSON() {
-  const raw = document.getElementById('inline-json-input').value.trim();
-  if (!raw) { showToast('⚠ Paste a JSON routine first.', true); return; }
-  try {
-    const imported = JSON.parse(raw);
-    const normalised = normaliseImported(imported);
-    const mode = document.querySelector('input[name="inline-mode"]:checked')?.value || 'replace';
-    if (mode === 'replace') {
-      routine = normalised;
-    } else {
-      Object.keys(normalised).forEach(day => {
-        if (!routine[day]) routine[day] = [];
-        routine[day] = routine[day].concat(normalised[day]);
-      });
-    }
-    saveRoutine(); refreshRoutine();
-    document.getElementById('inline-json-input').value = '';
-    const total = Object.values(routine).reduce((a,b)=>a+b.length,0);
-    showToast('✓ Routine updated! ' + total + ' classes loaded.');
-  } catch(e) {
-    showToast('❌ Invalid JSON — check your format.', true);
+/* ---------- timer (per-question, real countdown, duplicate-proof) ---------- */
+function startTimer(seconds){
+  stopTimer();
+  const t = state.timer;
+  t.total = seconds; t.remaining = seconds;
+  paintTimer();
+  t.id = setInterval(tickTimer, 1000);
+}
+function tickTimer(){
+  const t = state.timer;
+  t.remaining = Math.max(0, t.remaining - 1);           // never below zero
+  paintTimer();
+  if (t.remaining === 0) { stopTimer(); onTimerExpire(); }
+}
+function stopTimer(){ if (state.timer.id) { clearInterval(state.timer.id); state.timer.id = null; } }
+function resumeTimer(){                                  // used when the submit modal is cancelled
+  const t = state.timer;
+  if (t.id || !state.quiz || !el('qpanel') || t.total === 0) return;
+  paintTimer();
+  t.id = setInterval(tickTimer, 1000);
+}
+function paintTimer(){
+  const t = state.timer, num = el('timerNum'), fg = el('ringFg'), box = el('timerBox');
+  if (!num || !fg || !box) return;
+  num.textContent = t.remaining;
+  const C = 163.36, frac = t.total ? t.remaining / t.total : 0;
+  fg.style.strokeDashoffset = String(C * (1 - frac));
+  box.classList.remove('idle');
+  box.classList.toggle('danger', t.total > 0 && t.remaining <= 10);   // visual warning at ≤ 10s
+}
+function paintTimerIdle(){
+  stopTimer();
+  const t = state.timer; t.remaining = 0; t.total = 0;
+  const num = el('timerNum'), fg = el('ringFg'), box = el('timerBox');
+  if (!num || !fg || !box) return;
+  box.classList.remove('danger'); box.classList.add('idle');
+  num.innerHTML = icon('check');
+  fg.style.strokeDashoffset = '0';
+}
+
+/** Timer hit zero → mark skipped (if untouched) and move on automatically. */
+function onTimerExpire(){
+  const qz = state.quiz;
+  if (!qz || !el('qpanel')) { stopTimer(); return; }
+  const i = qz.current, q = qz.questions[i];
+  if (q.status === 'unanswered') {
+    q.status = 'skipped'; q.userAnswer = null;
+    toast(`Time's up — Q${i+1} marked as skipped.`, 'warn');
+  }
+  renderPalette();
+  if (i < qz.total - 1) loadQuestion(i + 1);
+  else {
+    renderQuestion(q);
+    if (q.status === 'answered') paintTimerIdle();
+    else { state.timer.remaining = 0; paintTimer(); }
+    updateControls();
   }
 }
 
-function showCurrentJSON() {
-  const el = document.getElementById('inline-json-input');
-  el.value = JSON.stringify(routine, null, 2);
-  el.scrollIntoView({behavior:'smooth', block:'center'});
-}
-
-function clearAll2() {
-  if (!confirm('Clear all routine data?')) return;
-  routine = {}; saveRoutine(); refreshRoutine();
-  document.getElementById('inline-json-input').value = '';
-  showToast('🗑 All routine data cleared.');
-}
-
-// ========== JSON IMPORT ==========
-// Convert "7:30 PM" → "19:30"
-function to24hr(t) {
-  if (!t) return '00:00';
-  t = t.trim();
-  // already 24hr like "07:30 pm"
-  if (/^\d{1,2}:\d{2}$/.test(t) && !t.match(/AM|PM/i)) return t.padStart(5,'0').slice(-5);
-  const m = t.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
-  if (!m) return t;
-  let h = parseInt(m[1]), min = m[2], period = m[3].toUpperCase();
-  if (period==='PM' && h!==12) h += 12;
-  if (period==='AM' && h===12) h = 0;
-  return String(h).padStart(2,'0') + ':' + min;
-}
-
-// Parse "7:30 PM - 8:30 PM" → {start:"19:30", end:"20:30"}
-function parseTimeRange(str) {
-  const parts = str.split('-').map(s=>s.trim());
-  return { start: to24hr(parts[0]), end: to24hr(parts[1]||parts[0]) };
-}
-
-// Normalise any supported JSON format into internal format
-function normaliseImported(imported) {
-  // Format A (dashboard native): {"Monday":[{subject,start,end,teacher}]}
-  if (!imported.days && !imported.title) {
-    const out = {};
-    Object.keys(imported).forEach(day => {
-      out[day] = (imported[day]||[]).map(c => {
-        if (c.time && !c.start) {
-          const {start,end} = parseTimeRange(c.time);
-          return {subject: c.subject||c.name||'Class', start, end, teacher: c.teacher||''};
-        }
-        return c;
-      });
-    });
-    return out;
-  }
-  // Format B (user's format): {title, days:[{day, routine:[{time,subject}]}]}
-  const out = {};
-  (imported.days||[]).forEach(d => {
-    const dayName = d.day;
-    out[dayName] = (d.routine||[]).map(c => {
-      const {start, end} = parseTimeRange(c.time||'');
-      return {subject: c.subject||'Class', start, end, teacher: c.teacher||''};
-    });
-  });
-  return out;
-}
-
-function importJSON() {
-  const raw = document.getElementById('json-input').value.trim();
-  if (!raw) { showToast('⚠ Paste some JSON first.', true); return; }
-  try {
-    const imported = JSON.parse(raw);
-    const normalised = normaliseImported(imported);
-    const mode = document.querySelector('input[name="import-mode"]:checked')?.value || 'append';
-    if (mode === 'replace') {
-      routine = normalised;
-    } else {
-      Object.keys(normalised).forEach(day => {
-        if (!routine[day]) routine[day] = [];
-        routine[day] = routine[day].concat(normalised[day]);
-      });
-    }
-    saveRoutine(); refreshRoutine();
-    document.getElementById('json-input').value = '';
-    const total = Object.values(routine).reduce((a,b)=>a+b.length,0);
-    showToast(`✓ Routine imported! ${total} classes loaded.`);
-  } catch(e) {
-    showToast('❌ Invalid JSON. Check format.', true);
-  }
-}
-
-// ========== CSV IMPORT ==========
-function importCSV() {
-  const raw = document.getElementById('csv-input').value.trim();
-  if (!raw) { showToast('⚠ Paste some CSV first.', true); return; }
-  const mode = document.querySelector('input[name="import-mode"]:checked')?.value || 'append';
-  if (mode === 'replace') routine = {};
-  let count = 0;
-  raw.split('\n').forEach(line => {
-    const parts = line.split(',').map(s=>s.trim());
-    if (parts.length >= 4) {
-      const [day, subject, start, end] = parts;
-      const teacher = parts[4] || '';
-      if (!routine[day]) routine[day] = [];
-      routine[day].push({subject, start, end, teacher});
-      count++;
+/* ---------- submission, scoring, history ---------- */
+function submitQuiz(){
+  const qz = state.quiz; if (!qz) return;
+  const a = qz.questions.filter(q => q.status==='answered').length;
+  const s = qz.questions.filter(q => q.status==='skipped').length;
+  // pause the clock while the modal is open; resume on cancel
+  const rem = state.timer.remaining, tot = state.timer.total, wasRunning = !!state.timer.id;
+  stopTimer();
+  openModal({
+    title: 'Submit quiz?',
+    okLabel: 'Submit', cancelLabel: 'Keep going',
+    body: `<p>You've answered <b>${a}</b> of <b>${qz.total}</b> questions${s ? `, and skipped <b>${s}</b>` : ''}. Unanswered questions are marked as skipped — negative marking is <b>never</b> applied to them.</p>`,
+    onCancel: () => { state.timer.remaining = rem; state.timer.total = tot; if (wasRunning) resumeTimer(); },
+    onOk: () => {
+      stopTimer();
+      const result = calculateResult();
+      state.lastResult = result;
+      saveQuizHistory(result);
+      showResult();
     }
   });
-  saveRoutine(); refreshRoutine();
-  document.getElementById('csv-input').value='';
-  showToast(`✓ ${count} class${count!==1?'es':''} imported from CSV.`);
 }
 
-// ========== EXAMS ==========
-function openExamModal() { openModal('exam-modal'); }
-
-function addExam() {
-  const sub  = document.getElementById('exam-sub').value.trim();
-  const date = document.getElementById('exam-date').value;
-  const time = document.getElementById('exam-time-in').value;
-  if (!sub || !date) { showToast('⚠ Fill in subject and date.', true); return; }
-  exams.push({sub, date, time});
-  exams.sort((a,b)=>new Date(a.date)-new Date(b.date));
-  localStorage.setItem('exams', JSON.stringify(exams));
-  renderExams(); closeModal('exam-modal');
-  showToast('✓ Exam added!');
+function calculateResult(){
+  const qz = state.quiz;
+  let correct = 0, wrong = 0, skipped = 0;
+  qz.questions.forEach(q => {
+    if (q.status === 'answered') { q.userAnswer === q.answer ? correct++ : wrong++; }
+    else skipped++;
+  });
+  const attempted = correct + wrong;
+  const score = correct - wrong * qz.neg;                       // e.g. correct − (wrong × 0.25)
+  return {
+    date: new Date().toISOString(),
+    subject: qz.subject, mode: qz.mode, neg: qz.neg, difficulty: qz.difficulty, total: qz.total,
+    correct, wrong, skipped,
+    score,
+    accuracy: attempted ? (correct / attempted) * 100 : 0,
+    percentage: qz.total ? (Math.max(0, score) / qz.total) * 100 : 0,
+    timeTaken: Math.round((Date.now() - qz.startedAt) / 1000)
+  };
 }
 
-function deleteExam(i) {
-  exams.splice(i,1);
-  localStorage.setItem('exams', JSON.stringify(exams));
-  renderExams();
+function saveQuizHistory(rec){
+  state.history.unshift(rec);
+  if (state.history.length > 200) state.history.length = 200;   // keep localStorage lean
+  lsSet(K.history, state.history);
+}
+function loadQuizHistory(){
+  const h = lsGet(K.history, []);
+  if (!Array.isArray(h)) return [];
+  return h.filter(r => r && typeof r === 'object' && Number.isFinite(r.total));
 }
 
-function renderExams() {
-  const el = document.getElementById('exam-list');
-  if (!exams.length) { el.innerHTML = '<div class="no-class" style="padding:12px;">No exams added yet.</div>'; return; }
-  const now = new Date();
-  el.innerHTML = exams.map((ex,i) => {
-    const d = new Date(ex.date+'T00:00:00');
-    const isPast = d < now && d.toDateString()!==now.toDateString();
-    return `<div class="exam-item" style="${isPast?'opacity:0.38;text-decoration:line-through':''}">
-      <div class="exam-date-box">
-        <div class="exam-day">${d.getDate()}</div>
-        <div class="exam-mon">${MONTHS[d.getMonth()]}</div>
+/** All statistics are computed live from quiz history in localStorage. */
+function updateStatistics(){
+  const h = state.history;
+  const s = { quizzes:h.length, attempted:0, correct:0, wrong:0, skipped:0, avgAccuracy:0, best:null };
+  h.forEach(r => {
+    s.attempted += Number(r.total)||0;
+    s.correct += Number(r.correct)||0;
+    s.wrong += Number(r.wrong)||0;
+    s.skipped += Number(r.skipped)||0;
+    if (!s.best || (Number(r.score)||0) > s.best.score) s.best = { score:Number(r.score)||0, total:Number(r.total)||0 };
+  });
+  const att = s.correct + s.wrong;
+  s.avgAccuracy = att ? (s.correct / att) * 100 : 0;
+  return s;
+}
+
+/* =====================================================================
+   RENDERING — views
+   ===================================================================== */
+function renderBoot(){
+  el('view').innerHTML = `<div class="boot"><div class="spinner"></div><p class="mono">Loading question banks…</p></div>`;
+}
+
+/* ---------- HOME ---------- */
+function renderHome(){
+  stopTimer();
+  const stats = updateStatistics();
+  const totalQ = officialTotal() + state.imported.length;
+  const bestTxt = stats.best ? `${fmtScore(stats.best.score)}/${stats.best.total}` : '—';
+  const accTxt = stats.quizzes ? `${Math.round(stats.avgAccuracy)}%` : '—';
+
+  const issues = [];
+  state.loadErrors.forEach(n => issues.push(`Unable to load ${n} question bank.`));
+  SUBJECT_NAMES.forEach(n => { if (state.loadStatus[n]==='empty') issues.push(`${n} question bank is empty.`); });
+
+  const subjectsHtml = SUBJECT_NAMES.map((n, i) => {
+    const m = SUBJECT_META[n], cnt = state.banks[n].length;
+    return `<button class="subj" data-subj-go="${esc(n)}">
+      <span class="idx mono">0${i+1}</span>
+      <div class="subj-top">
+        <span class="subj-ic">${icon(m.icon)}</span>
+        <div><h3>${esc(n)}</h3><div class="desc">${esc(m.desc)}</div></div>
       </div>
+      <div class="subj-meta">
+        <span class="pill">${icon('clock')} ${m.time} sec / question</span>
+        <span class="pill">${icon('list')} ${cnt} question${cnt!==1?'s':''}</span>
+      </div>
+      <div class="subj-foot"><span class="go">Start practice ${icon('chevR')}</span></div>
+    </button>`;
+  }).join('');
+
+  el('view').innerHTML = `
+  <div class="view">
+    ${issues.length ? `<div class="banner">${icon('alert')}<div><b>Question bank notice</b><ul>${issues.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div><button class="btn" id="retryBanks" style="margin-left:auto">${icon('refresh')} Retry</button></div>` : ''}
+
+    <section class="hero">
       <div>
-        <div class="exam-subject">${ex.sub}</div>
-        <div class="exam-time">${ex.time||'Time TBD'}</div>
+        <span class="kicker">SSC · CGL · CHSL · MTS · GD</span>
+        <h1>Your question bank,<br><em>timed like the real exam.</em></h1>
+        <p class="sub">Per-question countdowns, an OMR-style navigation palette and honest negative marking — everything the way SSC frames it, running entirely in your browser.</p>
+        <div class="hero-cta">
+          <button class="btn btn-primary btn-lg" id="ctaStart">${icon('play')} Start Quiz</button>
+          <button class="btn btn-lg" id="ctaMixed">${icon('shuffle')} Mixed Quiz</button>
+        </div>
+        <p class="hero-note mono">No account · no server · your history &amp; settings live in localStorage</p>
       </div>
-      <button class="exam-del" onclick="deleteExam(${i})">✕</button>
+      <div class="specimen-wrap"><div class="specimen" aria-hidden="true">
+        <div class="spec-head"><span class="mono muted">SSC-QUIZ / OMR · 2025</span><span class="spec-time mono">${icon('clock')} 00:38</span></div>
+        <div class="spec-cols"><span class="qn"></span><span class="bubbles"><span class="bl">A</span><span class="bl">B</span><span class="bl">C</span><span class="bl">D</span></span></div>
+        <div class="spec-row"><span class="qn">Q1</span><span class="bubbles"><span class="bb"></span><span class="bb g"></span><span class="bb"></span><span class="bb"></span></span></div>
+        <div class="spec-row"><span class="qn">Q2</span><span class="bubbles"><span class="bb"></span><span class="bb"></span><span class="bb r"></span><span class="bb"></span></span></div>
+        <div class="spec-row"><span class="qn">Q3</span><span class="bubbles"><span class="bb a"></span><span class="bb"></span><span class="bb"></span><span class="bb"></span></span></div>
+        <div class="spec-row"><span class="qn">Q4</span><span class="bubbles"><span class="bb"></span><span class="bb"></span><span class="bb"></span><span class="bb g"></span></span></div>
+        <div class="spec-row"><span class="qn">Q5</span><span class="bubbles"><span class="bb"></span><span class="bb"></span><span class="bb"></span><span class="bb"></span></span></div>
+        <div class="spec-foot"><span>SET — A</span><span>Practice • Learn • Improve</span></div>
+      </div></div>
+    </section>
+
+    <section class="scoreboard">
+      <div class="sb"><div class="n">${totalQ}</div><div class="l">Total Questions</div></div>
+      <div class="sb"><div class="n">${stats.quizzes}</div><div class="l">Quizzes Attempted</div></div>
+      <div class="sb"><div class="n">${esc(bestTxt)}</div><div class="l">Best Score</div></div>
+      <div class="sb"><div class="n">${esc(accTxt)}</div><div class="l">Average Accuracy</div></div>
+    </section>
+
+    <div class="sec-head"><h2>Choose your subject</h2><span class="cnt">${officialTotal()} official · ${state.imported.length} imported</span></div>
+    <section class="subj-grid">${subjectsHtml}</section>
+
+    <div class="quick">
+      <button class="btn" data-nav="bank">${icon('book')} Question Bank</button>
+      <button class="btn" data-nav="history">${icon('history')} Quiz History</button>
+      <button class="btn" data-nav="stats">${icon('chart')} Statistics</button>
+    </div>
+
+    <p class="data-line">math ${state.banks['Mathematics'].length} · reasoning ${state.banks['Reasoning'].length} · english ${state.banks['English'].length} · ga ${state.banks['General Awareness'].length} &nbsp;|&nbsp; imported ${state.imported.length} &nbsp;|&nbsp; ${state.history.length} attempt${state.history.length!==1?'s':''} on this device</p>
+  </div>`;
+
+  el('ctaStart').addEventListener('click', () => {
+    const s = state.lastSetup && SUBJECT_NAMES.includes(state.lastSetup.subject) ? state.lastSetup.subject : 'Mathematics';
+    renderSetup(s);
+  });
+  el('ctaMixed').addEventListener('click', () => renderSetup('Mixed'));
+  const retry = el('retryBanks'); if (retry) retry.addEventListener('click', retryFailedBanks);
+  document.querySelectorAll('[data-subj-go]').forEach(b => b.addEventListener('click', () => renderSetup(b.dataset.subjGo)));
+  document.querySelectorAll('[data-nav]').forEach(b => b.addEventListener('click', () => {
+    const v = b.dataset.nav;
+    if (v==='bank') renderBank(); else if (v==='history') renderHistory(); else renderStats();
+  }));
+}
+
+/* ---------- QUIZ SETUP ---------- */
+function renderSetup(subject){
+  stopTimer();
+  if (!state.setupSel) {
+    const d = state.lastSetup;
+    state.setupSel = { subject, count:d.count||10, difficulty:d.difficulty||'Mixed', mode:d.mode||'practice', neg:(d.neg ?? 0) };
+  } else state.setupSel.subject = subject;
+  paintSetup();
+}
+function paintSetup(){
+  const s = state.setupSel;
+  const pool = buildPool(s.subject);
+  const isMixed = s.subject === 'Mixed';
+  const timeLabel = isMixed ? '30–45 sec per question (set by each question\u2019s subject)' : `${SUBJECT_META[s.subject].time} sec per question`;
+  const mins = Math.max(1, Math.ceil(s.count * (isMixed ? 37.5 : SUBJECT_META[s.subject]?.time || 30) / 60));
+  const negLabel = s.neg ? `−${s.neg} per wrong answer` : 'no negative marking';
+  const modeLabel = s.mode === 'practice' ? 'Practice' : 'Mock Test';
+
+  const subjChips = [...SUBJECT_NAMES, 'Mixed'].map(n =>
+    `<button class="chip${s.subject===n?' on':''}" data-subj="${esc(n)}">${n==='Mixed'?'Mixed Quiz':esc(n)}</button>`).join('');
+  const countChips = [10,20,25,50,100].map(n =>
+    `<button class="chip${s.count===n?' on':''}" data-count="${n}">${n}</button>`).join('');
+  const diffChips = ['Easy','Medium','Hard','Mixed'].map(d =>
+    `<button class="chip${s.difficulty===d?' on':''}" data-diff="${d}">${d}</button>`).join('');
+  const negChips = [['None',0],['−0.25',0.25],['−0.50',0.5]].map(([l,v]) =>
+    `<button class="chip${s.neg===v?' on':''}" data-neg="${v}">${l}</button>`).join('');
+
+  el('view').innerHTML = `
+  <div class="setup view">
+    <button class="backlink" id="setupBack">${icon('chevL')} Home</button>
+    <div class="kicker" style="margin-top:14px">Quiz setup</div>
+    <h2 class="setup-title">${isMixed ? 'Mixed Quiz' : esc(s.subject)}</h2>
+    <p class="setup-sub">${pool.length} question${pool.length!==1?'s':''} available · ${timeLabel}</p>
+    ${!pool.length ? `<div class="banner">${icon('alert')}<span>No questions are loaded for this selection. Check the JSON files in <code>question bank/</code> and retry from the home page.</span></div>` : ''}
+
+    <div class="chips">${subjChips}</div>
+
+    <div class="fgroup">
+      <span class="flabel">Number of Questions</span>
+      <p class="fhint">If the bank has fewer questions than requested, the quiz automatically uses what's available — fake fillers are never added.</p>
+      <div class="chips">${countChips}</div>
+    </div>
+
+    <div class="fgroup">
+      <span class="flabel">Difficulty</span>
+      <p class="fhint">Filters by the optional <code>difficulty</code> tag in your JSON. Untagged banks simply use all levels.</p>
+      <div class="chips">${diffChips}</div>
+    </div>
+
+    <div class="fgroup">
+      <span class="flabel">Quiz Mode</span>
+      <div class="mode-grid" style="margin-top:12px">
+        <button class="mode-card${s.mode==='practice'?' on':''}" data-mode="practice">
+          <b>Practice</b><span>Instant feedback with explanations after each answer. The per-question timer pauses once you answer, so you can read in peace.</span>
+        </button>
+        <button class="mode-card${s.mode==='mock'?' on':''}" data-mode="mock">
+          <b>Mock Test</b><span>Real exam conditions — no answers or explanations until you submit. The clock keeps moving, exactly like the real thing.</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="fgroup">
+      <span class="flabel">Negative Marking</span>
+      <p class="fhint">Wrong answers deduct marks; skipped questions never do.</p>
+      <div class="chips">${negChips}</div>
+    </div>
+
+    <div class="setup-summary">${s.count} questions · ~${mins} min max · ${modeLabel} mode · ${negLabel}</div>
+    <div class="setup-start">
+      <button class="btn btn-primary btn-lg" id="btnStart" ${pool.length?'':'disabled'}>${icon('play')} Start Quiz</button>
+    </div>
+  </div>`;
+
+  el('setupBack').addEventListener('click', renderHome);
+  document.querySelectorAll('[data-subj]').forEach(b => b.addEventListener('click', () => { s.subject = b.dataset.subj; paintSetup(); }));
+  document.querySelectorAll('[data-count]').forEach(b => b.addEventListener('click', () => { s.count = +b.dataset.count; paintSetup(); }));
+  document.querySelectorAll('[data-diff]').forEach(b => b.addEventListener('click', () => { s.difficulty = b.dataset.diff; paintSetup(); }));
+  document.querySelectorAll('[data-mode]').forEach(b => b.addEventListener('click', () => { s.mode = b.dataset.mode; paintSetup(); }));
+  document.querySelectorAll('[data-neg]').forEach(b => b.addEventListener('click', () => { s.neg = parseFloat(b.dataset.neg); paintSetup(); }));
+  el('btnStart').addEventListener('click', () => startQuiz({ subject:s.subject, count:s.count, difficulty:s.difficulty, mode:s.mode, neg:s.neg }));
+}
+
+/* ---------- QUIZ SCREEN ---------- */
+function renderQuiz(){
+  const qz = state.quiz; if (!qz) { renderHome(); return; }
+  el('view').innerHTML = `
+  <div class="quiz view">
+    <div class="card quiz-top">
+      <div class="quiz-top-row">
+        <span class="pill pill-a">${icon('book')} ${esc(qz.subject === 'Mixed' ? 'Mixed Quiz' : qz.subject)}</span>
+        <button class="btn btn-ghost pal-toggle" id="palToggle">${icon('grid')} Palette</button>
+        <span class="qcount mono" id="qCount"></span>
+        <div class="timer" id="timerBox">
+          <svg viewBox="0 0 60 60" width="58" height="58" aria-hidden="true">
+            <circle class="tring-bg" cx="30" cy="30" r="26"/>
+            <circle class="tring-fg" id="ringFg" cx="30" cy="30" r="26"/>
+          </svg>
+          <span class="tnum" id="timerNum"></span>
+        </div>
+      </div>
+      <div class="progress"><i id="qProg"></i></div>
+    </div>
+
+    <div class="quiz-grid">
+      <div class="card qpanel" id="qpanel"></div>
+      <aside class="side" id="sidePanel">
+        <div class="card pal-card">
+          <div class="pal-card-h"><b>Questions</b><span class="mono muted small">${qz.total} total</span></div>
+          <div class="pal-legend">
+            <span><i class="dot" style="background:var(--green)"></i>Answered <b id="palAns">0</b></span>
+            <span><i class="dot" style="background:var(--orange)"></i>Skipped <b id="palSki">0</b></span>
+            <span><i class="dot" style="background:var(--line2)"></i>Left <b id="palLeft">0</b></span>
+          </div>
+          <div class="pal" id="palBox"></div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="card quiz-nav">
+      <div class="nav3">
+        <button class="btn btn-ghost" id="btnPrev">${icon('chevL')} Previous</button>
+        <button class="btn btn-ghost" id="btnSkip">Skip ${icon('skip')}</button>
+        <button class="btn" id="btnNext">Next ${icon('chevR')}</button>
+      </div>
+      <button class="btn btn-primary btn-submit" id="btnSubmitQ">${icon('check')} Submit Quiz</button>
+    </div>
+  </div>`;
+
+  el('btnPrev').addEventListener('click', previousQuestion);
+  el('btnNext').addEventListener('click', nextQuestion);
+  el('btnSkip').addEventListener('click', skipQuestion);
+  el('btnSubmitQ').addEventListener('click', submitQuiz);
+  el('palToggle').addEventListener('click', () => el('sidePanel').classList.toggle('open'));
+}
+
+function renderQuestion(q){
+  const qz = state.quiz, box = el('qpanel'); if (!box || !qz) return;
+  const isPractice = qz.mode === 'practice';
+  const revealed = isPractice && q.status === 'answered';
+  const locked = revealed;
+
+  let badges = `<span class="pill">${qz.mode==='practice' ? 'Practice' : 'Mock Test'}</span>`;
+  if (qz.subject === 'Mixed') badges = `<span class="pill pill-a">${esc(q.subject)}</span>` + badges;
+  if (qz.neg > 0) badges += `<span class="pill">−${qz.neg} marking</span>`;
+  if (revealed) badges += q.userAnswer === q.answer ? `<span class="badge ok">Correct</span>` : `<span class="badge bad">Wrong</span>`;
+
+  const opts = q.options.map((o, i) => {
+    let cls = 'opt', mk = '';
+    if (revealed) {
+      if (i === q.answer) { cls += ' correct'; mk = icon('check'); }
+      else if (i === q.userAnswer) { cls += ' wrong'; mk = icon('x'); }
+    } else if (i === q.userAnswer) cls += ' selected';
+    return `<button class="${cls}" data-opt="${i}" ${locked?'disabled':''}>
+      <span class="key">${LETTERS[i]}</span><span class="otxt">${esc(o)}</span><span class="mk">${mk}</span></button>`;
+  }).join('');
+
+  let expl = '';
+  if (revealed) {
+    const txt = q.explanation ? esc(q.explanation) : `Correct answer: <b>${esc(q.options[q.answer])}</b>`;
+    expl = `<div class="expl"><div class="el">${icon('bulb')} Explanation</div><p>${txt}</p></div>`;
+  }
+
+  box.innerHTML = `<div class="q-badges">${badges}</div><div class="q-text">${esc(q.question)}</div><div class="opts">${opts}</div>${expl}`;
+  box.querySelectorAll('[data-opt]').forEach(b => b.addEventListener('click', () => selectAnswer(+b.dataset.opt)));
+}
+
+function renderPalette(){
+  const qz = state.quiz, box = el('palBox'); if (!box || !qz) return;
+  let a = 0, s = 0;
+  qz.questions.forEach(q => { if (q.status==='answered') a++; else if (q.status==='skipped') s++; });
+  el('palAns').textContent = a;
+  el('palSki').textContent = s;
+  el('palLeft').textContent = qz.total - a - s;
+  box.innerHTML = qz.questions.map((q, i) => {
+    let cls = '';
+    if (q.status==='answered') cls = 'ans'; else if (q.status==='skipped') cls = 'ski';
+    if (i === qz.current) cls += ' cur';
+    return `<button class="${cls.trim()}" data-g="${i}" aria-label="Go to question ${i+1}">${i+1}</button>`;
+  }).join('');
+  box.querySelectorAll('[data-g]').forEach(b => b.addEventListener('click', () => goToQuestion(+b.dataset.g)));
+}
+
+function updateProgress(){
+  const qz = state.quiz; if (!qz) return;
+  el('qCount').textContent = `${qz.current + 1} / ${qz.total}`;
+  el('qProg').style.width = ((qz.current + 1) / qz.total * 100) + '%';
+  updateControls();
+}
+function updateControls(){
+  const qz = state.quiz; if (!qz) return;
+  const q = qz.questions[qz.current];
+  const prev = el('btnPrev'), skip = el('btnSkip');
+  if (prev) prev.disabled = qz.current === 0;
+  if (skip) skip.disabled = qz.mode === 'practice' && q.status === 'answered';
+}
+
+/* ---------- RESULT ---------- */
+function showResult(){
+  stopTimer();
+  const r = state.lastResult;
+  if (!r) { renderHome(); return; }
+  const C = 351.86;
+  const pct = Math.max(0, Math.min(100, r.percentage));
+
+  el('view').innerHTML = `
+  <div class="result view">
+    <div class="card res-hero">
+      <div>
+        <span class="kicker">Quiz completed</span>
+        <div class="score-line"><span class="n">${fmtScore(r.score)}</span><span class="d">/ ${r.total}</span></div>
+        <div class="res-chips">
+          <span class="pill pill-a">${icon('book')} ${esc(r.subject === 'Mixed' ? 'Mixed Quiz' : r.subject)}</span>
+          <span class="pill">${r.mode === 'practice' ? 'Practice' : 'Mock Test'}</span>
+          ${r.difficulty && r.difficulty !== 'Mixed' ? `<span class="pill">${esc(r.difficulty)}</span>` : ''}
+          <span class="pill">${r.neg ? '−' + r.neg + ' marking' : 'No negative'}</span>
+        </div>
+      </div>
+      <div class="donut">
+        <svg viewBox="0 0 130 130" width="130" height="130" aria-hidden="true">
+          <circle cx="65" cy="65" r="56" fill="none" stroke="var(--line)" stroke-width="10"/>
+          <circle id="donutFg" cx="65" cy="65" r="56" fill="none" stroke="var(--accent)" stroke-width="10" stroke-linecap="round"
+            stroke-dasharray="${C}" stroke-dashoffset="${C}" style="transition:stroke-dashoffset 1s cubic-bezier(.2,.7,.3,1)"/>
+        </svg>
+        <span class="dv">${Math.round(pct)}%</span>
+      </div>
+    </div>
+
+    <div class="scoreboard res-stats">
+      <div class="sb"><div class="n g">${r.correct}</div><div class="l">Correct</div></div>
+      <div class="sb"><div class="n r">${r.wrong}</div><div class="l">Wrong</div></div>
+      <div class="sb"><div class="n o">${r.skipped}</div><div class="l">Skipped</div></div>
+      <div class="sb"><div class="n">${Math.round(r.accuracy)}%</div><div class="l">Accuracy</div></div>
+      <div class="sb"><div class="n">${Math.round(r.percentage)}%</div><div class="l">Percentage</div></div>
+      <div class="sb"><div class="n">${fmtTime(r.timeTaken)}</div><div class="l">Time Taken</div></div>
+    </div>
+
+    <div class="res-actions">
+      <button class="btn btn-primary" id="resReview">${icon('eye')} Review Answers</button>
+      <button class="btn" id="resRetry">${icon('refresh')} Try Again</button>
+      <button class="btn" id="resNew">${icon('play')} New Quiz</button>
+      <button class="btn btn-ghost" id="resHome">${icon('home')} Back to Home</button>
+    </div>
+  </div>`;
+
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    const fg = el('donutFg'); if (fg) fg.style.strokeDashoffset = String(C * (1 - pct / 100));
+  }));
+  el('resReview').addEventListener('click', () => { state.reviewFilter = 'all'; showReview(); });
+  el('resRetry').addEventListener('click', () => { state.lastCfg ? startQuiz(state.lastCfg) : renderSetup('Mathematics'); });
+  el('resNew').addEventListener('click', () => renderSetup(state.lastCfg ? state.lastCfg.subject : 'Mathematics'));
+  el('resHome').addEventListener('click', renderHome);
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ---------- REVIEW ---------- */
+function showReview(){
+  const qz = state.quiz;
+  if (!qz) { renderHome(); return; }
+  const f = state.reviewFilter || 'all';
+  const statOf = q => q.status==='answered' ? (q.userAnswer===q.answer ? 'ok' : 'bad') : 'ski';
+  const counts = { all:qz.total, ok:0, bad:0, ski:0 };
+  qz.questions.forEach(q => counts[statOf(q)]++);
+  const list = qz.questions.map((q,i) => ({ q, i, st:statOf(q) })).filter(x => f==='all' || x.st===f);
+
+  const items = list.map(({ q, i, st }) => {
+    const opts = q.options.map((o, j) => {
+      let cls = 'ropt', tag = '';
+      if (j === q.answer) { cls += ' correct'; tag = 'Correct answer'; }
+      if (q.status==='answered' && j === q.userAnswer) {
+        if (q.userAnswer !== q.answer) { cls = 'ropt mine-wrong'; tag = 'Your answer'; }
+        else tag = 'Your answer · correct';
+      }
+      return `<div class="${cls}"><span class="key">${LETTERS[j]}</span><span>${esc(o)}</span>${tag?`<span class="tag">${tag}</span>`:''}</div>`;
+    }).join('');
+    const badge = st==='ok' ? '<span class="badge ok">Correct</span>' : st==='bad' ? '<span class="badge bad">Wrong</span>' : '<span class="badge ski">Skipped</span>';
+    const expl = q.explanation
+      ? `<div class="expl"><div class="el">${icon('bulb')} Explanation</div><p>${esc(q.explanation)}</p></div>`
+      : `<div class="expl"><div class="el">${icon('bulb')} Answer</div><p>Correct answer: <b>${esc(q.options[q.answer])}</b></p></div>`;
+    return `<div class="card rev-item ${st}">
+      <div class="rev-head"><span class="rev-no">Q${pad2(i+1)}</span><span class="pill">${esc(q.subject)}</span>${badge}</div>
+      <div class="rev-q">${esc(q.question)}</div>
+      <div class="rev-opts">${opts}</div>
+      ${st==='ski' ? '<div class="rev-na">You did not answer this question.</div>' : ''}
+      ${expl}
+    </div>`;
+  }).join('') || `<div class="card empty">${icon('info')}<h3>Nothing here</h3><p>No questions in this category.</p></div>`;
+
+  const filters = [['all','All'],['ok','Correct'],['bad','Wrong'],['ski','Skipped']].map(([k,l]) =>
+    `<button class="chip${f===k?' on':''}" data-f="${k}">${l} · ${counts[k]}</button>`).join('');
+
+  el('view').innerHTML = `
+  <div class="review view">
+    <button class="backlink" id="revBack">${icon('chevL')} Back to result</button>
+    <h2>Answer Review</h2>
+    <p class="page-sub">Every question, your answer, the correct answer and the explanation.</p>
+    <div class="rev-filters">${filters}</div>
+    ${items}
+    <div class="res-actions">
+      <button class="btn btn-ghost" id="revHome">${icon('home')} Back to Home</button>
+    </div>
+  </div>`;
+
+  el('revBack').addEventListener('click', showResult);
+  el('revHome').addEventListener('click', renderHome);
+  document.querySelectorAll('[data-f]').forEach(b => b.addEventListener('click', () => { state.reviewFilter = b.dataset.f; showReview(); }));
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ---------- QUESTION BANK ---------- */
+function renderBank(){
+  stopTimer();
+  const tiles = SUBJECT_NAMES.map((n, i) => {
+    const m = SUBJECT_META[n], cnt = state.banks[n].length;
+    return `<button class="subj" data-open-bank="${esc(n)}">
+      <span class="idx mono">0${i+1}</span>
+      <div class="subj-top"><span class="subj-ic">${icon(m.icon)}</span>
+        <div><h3>${esc(n)}</h3><div class="desc">${esc(m.file)}</div></div></div>
+      <div class="subj-meta"><span class="pill">${icon('list')} ${cnt} question${cnt!==1?'s':''}</span>
+        <span class="pill">${icon('clock')} ${m.time}s / q</span></div>
+      <div class="subj-foot"><span class="go">View questions ${icon('chevR')}</span></div>
+    </button>`;
+  }).join('');
+  const has = state.imported.length > 0;
+
+  el('view').innerHTML = `
+  <div class="bank view">
+    <button class="backlink" id="bankBack">${icon('chevL')} Home</button>
+    <h2>Question Bank</h2>
+    <p class="page-sub">Live counts, read straight from your JSON files — <b>${officialTotal() + state.imported.length}</b> questions in total.</p>
+    <div class="subj-grid">${tiles}</div>
+
+    <div class="card imp-card">
+      <div class="imp-head">
+        <span class="subj-ic">${icon('file')}</span>
+        <div>
+          <h3>Imported Questions</h3>
+          <p>Extra questions from your own JSON files, stored in this browser via localStorage. The official <code>question bank/*.json</code> files are never modified — imported questions are kept strictly separate and are validated before acceptance.</p>
+        </div>
+        <span class="pill pill-a">${state.imported.length} question${state.imported.length!==1?'s':''}</span>
+      </div>
+      <div class="imp-actions">
+        <label class="btn btn-primary" for="importFile" style="cursor:pointer">${icon('upload')} Import JSON</label>
+        <input type="file" id="importFile" accept=".json,application/json" hidden>
+        <button class="btn" id="btnExport" ${has?'':'disabled'}>${icon('download')} Export JSON</button>
+        <button class="btn" id="btnViewImp" ${has?'':'disabled'}>${icon('eye')} View</button>
+        <button class="btn btn-danger" id="btnClearImp" ${has?'':'disabled'}>${icon('trash')} Clear Imported</button>
+      </div>
+      <div class="import-log" id="importLog"></div>
+    </div>
+  </div>`;
+
+  el('bankBack').addEventListener('click', renderHome);
+  document.querySelectorAll('[data-open-bank]').forEach(b => b.addEventListener('click', () => { state.bankView = { subject:b.dataset.openBank, page:1 }; paintBankViewer(); }));
+  el('importFile').addEventListener('change', async e => {
+    const f = e.target.files[0]; e.target.value = '';
+    if (!f) return;
+    if (f.size > 8 * 1024 * 1024) { toast('File too large (max 8 MB).', 'error'); return; }
+    try { importQuestions(await readFileText(f)); }
+    catch { toast('Could not read the selected file.', 'error'); }
+  });
+  el('btnExport').addEventListener('click', exportQuestions);
+  el('btnViewImp').addEventListener('click', () => { state.bankView = { subject:'Imported', page:1 }; paintBankViewer(); });
+  el('btnClearImp').addEventListener('click', () => openModal({
+    title:'Clear imported questions?',
+    okLabel:'Clear', okClass:'btn-danger',
+    body:`<p>This removes all <b>${state.imported.length}</b> imported questions from this browser. Official JSON files are not touched.</p>`,
+    onOk: () => { state.imported = []; saveQuestions(); renderBank(); toast('Imported questions cleared.', 'success'); }
+  }));
+}
+
+function paintBankViewer(){
+  const { subject, page } = state.bankView;
+  const isImp = subject === 'Imported';
+  const list = isImp ? state.imported : (state.banks[subject] || []);
+  const shown = list.slice(0, page * 20);
+
+  const items = shown.map((q, i) => {
+    const opts = q.options.map((o, j) =>
+      `<div class="ropt${j===q.answer?' correct':''}"><span class="key">${LETTERS[j]}</span><span>${esc(o)}</span>${j===q.answer?`<span class="tag">Correct</span>`:''}</div>`).join('');
+    return `<div class="card bq">
+      <span class="rev-no">Q${pad2(i+1)} <span class="pill">${esc(q.subject)}</span>${q.difficulty?`<span class="badge neu">${esc(q.difficulty)}</span>`:''}${isImp?'<span class="badge neu">Imported</span>':''}</span>
+      <div class="bq-q">${esc(q.question)}</div>
+      <div class="rev-opts">${opts}</div>
+      ${q.explanation ? `<div class="expl"><div class="el">${icon('bulb')} Explanation</div><p>${esc(q.explanation)}</p></div>` : ''}
+    </div>`;
+  }).join('') || `<div class="card empty">${icon('book')}<h3>No questions here</h3><p>This bank is empty${isImp?' — import a JSON file to fill it':''}.</p></div>`;
+
+  el('view').innerHTML = `
+  <div class="bview view">
+    <button class="backlink" id="bvBack">${icon('chevL')} Question Bank</button>
+    <h2>${esc(subject === 'Mixed' ? 'Mixed' : subject)} ${isImp ? '<span class="badge neu">Imported</span>' : '<span class="badge neu">Official JSON</span>'}</h2>
+    <p class="page-sub">${list.length} question${list.length!==1?'s':''} · read-only view · showing ${shown.length}</p>
+    ${items}
+    ${list.length > shown.length ? `<div class="loadmore-wrap"><button class="btn" id="btnLoadMore">Load more (${list.length - shown.length} left)</button></div>` : ''}
+  </div>`;
+
+  el('bvBack').addEventListener('click', renderBank);
+  const lm = el('btnLoadMore');
+  if (lm) lm.addEventListener('click', () => { state.bankView.page++; paintBankViewer(); });
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ---------- QUIZ HISTORY ---------- */
+function renderHistory(){
+  stopTimer();
+  const h = state.history;
+  const rows = h.map(r => `
+    <tr>
+      <td data-l="Date">${esc(fmtDate(r.date))}</td>
+      <td data-l="Subject">${esc(r.subject === 'Mixed' ? 'Mixed Quiz' : r.subject)}</td>
+      <td data-l="Mode">${r.mode === 'practice' ? 'Practice' : 'Mock'}</td>
+      <td data-l="Questions" class="mono">${r.total}</td>
+      <td data-l="Correct" class="mono c-g">${r.correct}</td>
+      <td data-l="Wrong" class="mono c-r">${r.wrong}</td>
+      <td data-l="Skipped" class="mono c-o">${r.skipped}</td>
+      <td data-l="Score" class="mono"><b>${fmtScore(r.score)}</b> / ${r.total}</td>
+      <td data-l="Accuracy" class="mono">${Math.round(r.accuracy || 0)}%</td>
+      <td data-l="Time" class="mono">${fmtTime(r.timeTaken)}</td>
+    </tr>`).join('');
+
+  el('view').innerHTML = `
+  <div class="hist view">
+    <button class="backlink" id="hBack">${icon('chevL')} Home</button>
+    <h2>Quiz History</h2>
+    <p class="page-sub">${h.length ? `${h.length} attempt${h.length!==1?'s':''} recorded on this device (newest first).` : 'Your attempts will appear here — stored only in this browser.'}</p>
+    ${h.length ? `
+      <div class="card hist-card"><div class="table-wrap"><table class="hist-table">
+        <thead><tr><th>Date</th><th>Subject</th><th>Mode</th><th>Qs</th><th>Correct</th><th>Wrong</th><th>Skipped</th><th>Score</th><th>Accuracy</th><th>Time</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table></div></div>
+      <div class="imp-actions"><button class="btn btn-danger" id="btnClearHist">${icon('trash')} Clear History</button></div>`
+    : `<div class="card empty">${icon('history')}<h3>No quizzes yet</h3><p>Attempt your first quiz and it will show up here instantly.</p><button class="btn btn-primary" id="hStart">${icon('play')} Start Quiz</button></div>`}
+  </div>`;
+
+  el('hBack').addEventListener('click', renderHome);
+  const hs = el('hStart'); if (hs) hs.addEventListener('click', () => renderSetup('Mathematics'));
+  const ch = el('btnClearHist');
+  if (ch) ch.addEventListener('click', () => openModal({
+    title:'Clear quiz history?',
+    okLabel:'Clear', okClass:'btn-danger',
+    body:`<p>All <b>${state.history.length}</b> attempt records will be permanently removed from this browser. Statistics will reset too.</p>`,
+    onOk: () => { state.history = []; lsSet(K.history, state.history); renderHistory(); toast('Quiz history cleared.', 'success'); }
+  }));
+}
+
+/* ---------- STATISTICS ---------- */
+function renderStats(){
+  stopTimer();
+  const s = updateStatistics();
+  if (!s.quizzes) {
+    el('view').innerHTML = `
+    <div class="stats view">
+      <button class="backlink" id="sBack">${icon('chevL')} Home</button>
+      <h2>Statistics</h2>
+      <div class="card empty" style="margin-top:20px">${icon('chart')}<h3>No data yet</h3><p>Statistics are calculated live from your quiz history in localStorage.</p><button class="btn btn-primary" id="sStart">${icon('play')} Start Quiz</button></div>
+    </div>`;
+    el('sBack').addEventListener('click', renderHome);
+    el('sStart').addEventListener('click', () => renderSetup('Mathematics'));
+    return;
+  }
+
+  const groups = {};
+  state.history.forEach(r => {
+    const g = groups[r.subject] || (groups[r.subject] = { att:0, cor:0, n:0 });
+    g.att += r.correct + r.wrong; g.cor += r.correct; g.n++;
+  });
+  const order = [...SUBJECT_NAMES, 'Mixed'].filter(n => groups[n]);
+  const bars = order.map(n => {
+    const g = groups[n], acc = g.att ? Math.round(g.cor / g.att * 100) : 0;
+    return `<div class="sbar">
+      <div class="sbar-top"><span>${esc(n === 'Mixed' ? 'Mixed Quiz' : n)}</span><span class="mono">${acc}% · ${g.n} quiz${g.n!==1?'zes':''}</span></div>
+      <div class="sbar-track"><div class="sbar-fill" data-w="${acc}"></div></div>
     </div>`;
   }).join('');
+
+  const bestTxt = s.best ? `${fmtScore(s.best.score)} / ${s.best.total}` : '—';
+  el('view').innerHTML = `
+  <div class="stats view">
+    <button class="backlink" id="sBack">${icon('chevL')} Home</button>
+    <h2>Statistics</h2>
+    <p class="page-sub">Computed live from ${s.quizzes} recorded attempt${s.quizzes!==1?'s':''}.</p>
+    <div class="scoreboard stats-scoreboard">
+      <div class="sb"><div class="n">${s.quizzes}</div><div class="l">Total Quizzes</div></div>
+      <div class="sb"><div class="n">${s.attempted}</div><div class="l">Questions Attempted</div></div>
+      <div class="sb"><div class="n g">${s.correct}</div><div class="l">Total Correct</div></div>
+      <div class="sb"><div class="n r">${s.wrong}</div><div class="l">Total Wrong</div></div>
+      <div class="sb"><div class="n o">${s.skipped}</div><div class="l">Total Skipped</div></div>
+      <div class="sb"><div class="n">${Math.round(s.avgAccuracy)}%</div><div class="l">Average Accuracy</div></div>
+      <div class="sb"><div class="n">${esc(bestTxt)}</div><div class="l">Best Score</div></div>
+    </div>
+    <div class="sbars"><div class="kicker" style="margin-bottom:14px">Performance by subject</div>${bars}</div>
+  </div>`;
+
+  el('sBack').addEventListener('click', renderHome);
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    document.querySelectorAll('.sbar-fill').forEach(f => f.style.width = f.dataset.w + '%');
+  }));
 }
 
-// ========== NOTES ==========
-function saveNotes() { localStorage.setItem('quick-notes', document.getElementById('quick-notes').value); }
-
-// ========== WEATHER ==========
-let weatherSource = localStorage.getItem('weatherSource') || 'openmeteo';
-let owmKey        = localStorage.getItem('owmKey')        || '';
-let weatherLat    = parseFloat(localStorage.getItem('weatherLat') || '23.2324');
-let weatherLon    = parseFloat(localStorage.getItem('weatherLon') || '87.8615');
-let weatherCity   = localStorage.getItem('weatherCity')   || 'Burdwan, West Bengal';
-
-async function fetchWeather() {
-  try {
-    let temp, code, wind, humidity='—';
-    if (weatherSource==='openweathermap' && owmKey) {
-      const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${weatherLat}&lon=${weatherLon}&appid=${owmKey}&units=metric`);
-      if (!res.ok) throw new Error();
-      const d = await res.json();
-      temp = Math.round(d.main.temp); wind = d.wind.speed; humidity = d.main.humidity+'%';
-      const id = d.weather[0].id;
-      code = id===800?0:id<810?2:id<700?61:id<600?45:id>=200&&id<300?95:3;
-    } else {
-      const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${weatherLat}&longitude=${weatherLon}&current=temperature_2m,weathercode,windspeed_10m,relative_humidity_2m&timezone=Asia/Kolkata`);
-      const d = await res.json();
-      temp = Math.round(d.current.temperature_2m); code = d.current.weathercode;
-      wind = d.current.windspeed_10m; humidity = d.current.relative_humidity_2m+'%';
-    }
-    document.getElementById('temp-val').textContent = `${temp}°C`;
-    const {icon, desc} = getWeatherInfo(code);
-    document.getElementById('weather-icon').textContent = icon;
-    document.getElementById('weather-desc').textContent = `${desc} · Humidity: ${humidity}`;
-    document.getElementById('weather-loc').textContent = `📍 ${weatherCity} · 💨 ${wind} km/h`;
-  } catch {
-    document.getElementById('temp-val').textContent = 'N/A';
-    document.getElementById('weather-desc').textContent = 'Weather unavailable';
-    document.getElementById('weather-loc').textContent = '⚠ API connection failed';
-  }
-}
-
-function saveWeatherSettings() {
-  const src  = document.querySelector('input[name="wsrc"]:checked').value;
-  const key  = document.getElementById('owm-key').value.trim();
-  const lat  = document.getElementById('w-lat').value.trim();
-  const lon  = document.getElementById('w-lon').value.trim();
-  const city = document.getElementById('w-city').value.trim();
-  weatherSource = src; owmKey = key;
-  weatherLat = parseFloat(lat)||23.2324;
-  weatherLon = parseFloat(lon)||87.8615;
-  weatherCity = city||'Burdwan';
-  localStorage.setItem('weatherSource', weatherSource);
-  localStorage.setItem('owmKey', owmKey);
-  localStorage.setItem('weatherLat', weatherLat);
-  localStorage.setItem('weatherLon', weatherLon);
-  localStorage.setItem('weatherCity', weatherCity);
-  fetchWeather();
-  showToast('✓ Weather settings saved!');
-}
-
-function getWeatherInfo(code) {
-  if (code===0) return {icon:'☀️',desc:'Clear sky'};
-  if (code<=3)  return {icon:'⛅',desc:'Partly cloudy'};
-  if (code<=49) return {icon:'🌫️',desc:'Foggy'};
-  if (code<=69) return {icon:'🌧️',desc:'Rainy'};
-  if (code<=79) return {icon:'❄️',desc:'Snowy'};
-  if (code<=99) return {icon:'⛈️',desc:'Thunderstorm'};
-  return {icon:'🌤️',desc:'Weather'};
-}
-
-// ========== WALLPAPER ==========
-let unsplashKey = localStorage.getItem('unsplashKey') || '';
-const WP_QUERIES = [
-  'nature landscape','mountain sunrise','ocean sunset','forest morning',
-  'galaxy stars night','cherry blossom spring','rainy city night',
-  'autumn leaves','snow mountain','tropical beach'
-];
-let wpList = [];
-
-async function fetchWallpapers() {
-  wpList = [];
-  document.getElementById('wp-info').textContent = 'Loading...';
-  for (let i=0;i<WP_QUERIES.length;i++) {
-    const q = WP_QUERIES[i];
-    try {
-      if (unsplashKey) {
-        const res = await fetch(`https://api.unsplash.com/photos/random?query=${encodeURIComponent(q)}&orientation=landscape&client_id=${unsplashKey}`);
-        if (res.ok) { wpList.push((await res.json()).urls.regular); continue; }
-      }
-      wpList.push(`https://picsum.photos/seed/${q.replace(/ /g,'')}${i}/1920/1080`);
-    } catch { wpList.push(`https://picsum.photos/seed/${i}${Date.now()}/1920/1080`); }
-  }
-  if (wpList.length) setWallpaper(wpList[0]);
-}
-
-function setWallpaper(url) {
-  const next = document.getElementById('wallpaper-next');
-  const cur  = document.getElementById('wallpaper');
-  next.style.backgroundImage = `url('${url}')`;
-  next.style.opacity = '1';
-  setTimeout(() => {
-    cur.style.backgroundImage = `url('${url}')`;
-    next.style.opacity = '0';
-    document.getElementById('wp-info').textContent = `Photo ${wpIndex+1}/${wpList.length}`;
-  }, 2000);
-}
-
-function nextWallpaper() {
-  if (!wpList.length) return;
-  wpIndex = (wpIndex+1) % wpList.length;
-  setWallpaper(wpList[wpIndex]);
-}
-
-function startWpTimer() {
-  wpCountdown = 300;
-  clearInterval(wpTimer);
-  wpTimer = setInterval(() => {
-    wpCountdown--;
-    const m = Math.floor(wpCountdown/60), s = wpCountdown%60;
-    document.getElementById('wp-timer-txt').textContent = `${m}:${String(s).padStart(2,'0')}`;
-    if (wpCountdown<=0) { nextWallpaper(); wpCountdown=300; }
-  }, 1000);
-}
-
-function saveUnsplashKey() {
-  unsplashKey = document.getElementById('unsplash-key-input').value.trim();
-  localStorage.setItem('unsplashKey', unsplashKey);
-  fetchWallpapers();
-  showToast('✓ Wallpaper settings saved!');
-}
-
-// ========== MODAL ==========
-function openModal(id)  { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-
-document.querySelectorAll('.modal-overlay').forEach(m => {
-  m.addEventListener('click', function(e) { if (e.target===this) closeModal(this.id); });
+/* ---------- keyboard shortcuts (desktop power feature) ---------- */
+document.addEventListener('keydown', e => {
+  if (el('modalOv')) { if (e.key === 'Escape') closeModal(); return; }
+  if (!state.quiz || !el('qpanel')) return;
+  if (e.key === 'ArrowRight') nextQuestion();
+  else if (e.key === 'ArrowLeft') previousQuestion();
+  else if (['1','2','3','4'].includes(e.key)) selectAnswer(+e.key - 1);
 });
 
-// ========== TOAST ==========
-let toastTimer;
-function showToast(msg, isError=false) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.style.borderColor = isError ? 'var(--danger)' : 'var(--accent2)';
-  el.style.color        = isError ? 'var(--danger)' : 'var(--accent2)';
-  el.style.background   = isError ? 'rgba(255,94,94,0.15)' : 'rgba(61,232,138,0.12)';
-  el.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
-}
-
-// ========== INIT ==========
-function init() {
-  const saved = localStorage.getItem('quick-notes');
-  if (saved) document.getElementById('quick-notes').value = saved;
-
-  viewDay = DAYS[new Date().getDay()];
-
-  updateClock();
-  setInterval(updateClock, 1000);
-  setInterval(refreshRoutine, 60000);
-
-  refreshRoutine();
-  renderExams();
-  fetchWeather();
-  setInterval(fetchWeather, 10*60*1000);
-  fetchWallpapers();
-  startWpTimer();
+/* ---------- boot ---------- */
+function init(){
+  const savedTheme = lsGet(K.theme, 'dark');
+  applyTheme(savedTheme === 'light' ? 'light' : 'dark');
+  el('themeBtn').addEventListener('click', toggleTheme);
+  el('brandHome').addEventListener('click', renderHome);
+  state.history = loadQuizHistory();
+  state.imported = loadImported();
+  const ls = lsGet(K.setup, null);
+  if (ls && Number.isInteger(ls.count)) state.lastSetup = { count:ls.count, difficulty:ls.difficulty||'Mixed', mode:ls.mode||'practice', neg:[0,0.25,0.5].includes(ls.neg)?ls.neg:0 };
+  renderBoot();
+  loadAllQuestions().then(renderHome);
 }
 init();
-document.addEventListener("keydown", function (e) {
-    // Press F → Fullscreen ON
-    if (e.key.toLowerCase() === "f") {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen();
-        }
-    }
-
-    // Press ESC → Fullscreen OFF
-    if (e.key === "Escape") {
-        if (document.fullscreenElement) {
-            document.exitFullscreen();
-        }
-    }
-});
-function saveUserName() {
-  const name = document.getElementById('user-name-input').value.trim();
-  if (!name) { alert('Enter a name first!'); return; }
-  localStorage.setItem('userName', name);
-  document.getElementById('brand-name').textContent = name.toUpperCase() + "'S DASHBOARD";
-}
-
-// Page load 
-window.addEventListener('DOMContentLoaded', function() {
-  const savedName = localStorage.getItem('userName');
-  if (savedName) {
-    document.getElementById('brand-name').textContent = savedName.toUpperCase() + "'S DASHBOARD";
-  }
-});
-  const btn = document.getElementById("fullscreenBtn");
-
-btn.addEventListener("click", () => {
-    if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
-        btn.innerHTML = "✖";
-    } else {
-        document.exitFullscreen();
-        btn.innerHTML = "⛶";
-    }
-});
-
-document.addEventListener("fullscreenchange", () => {
-    if (!document.fullscreenElement) {
-        btn.innerHTML = "⛶";
-    }
-});
 </script>
 </body>
 </html>
