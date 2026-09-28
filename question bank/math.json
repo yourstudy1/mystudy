@@ -1,0 +1,41 @@
+[
+  {
+    "id": "math001",
+    "subject": "Mathematics",
+    "question": "What is 25% of 240?",
+    "options": [
+      "50",
+      "60",
+      "70",
+      "80"
+    ],
+    "answer": 1,
+    "explanation": "25% of 240 = 240 × 25 ÷ 100 = 60."
+  },
+  {
+    "id": "math002",
+    "subject": "Mathematics",
+    "question": "What is 15 × 8?",
+    "options": [
+      "100",
+      "110",
+      "120",
+      "130"
+    ],
+    "answer": 2,
+    "explanation": "15 × 8 = 120."
+  },
+  {
+    "id": "math003",
+    "subject": "Mathematics",
+    "question": "If 5x = 45, what is the value of x?",
+    "options": [
+      "5",
+      "7",
+      "9",
+      "11"
+    ],
+    "answer": 2,
+    "explanation": "5x = 45, therefore x = 45 ÷ 5 = 9."
+  }
+]
