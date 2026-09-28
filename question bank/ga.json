@@ -1,0 +1,41 @@
+[
+  {
+    "id": "ga001",
+    "subject": "General Awareness",
+    "question": "What is the capital of India?",
+    "options": [
+      "Mumbai",
+      "Kolkata",
+      "New Delhi",
+      "Chennai"
+    ],
+    "answer": 2,
+    "explanation": "New Delhi is the capital of India."
+  },
+  {
+    "id": "ga002",
+    "subject": "General Awareness",
+    "question": "Which planet is known as the Red Planet?",
+    "options": [
+      "Earth",
+      "Mars",
+      "Jupiter",
+      "Venus"
+    ],
+    "answer": 1,
+    "explanation": "Mars is known as the Red Planet."
+  },
+  {
+    "id": "ga003",
+    "subject": "General Awareness",
+    "question": "Which is the largest planet in our Solar System?",
+    "options": [
+      "Earth",
+      "Saturn",
+      "Jupiter",
+      "Neptune"
+    ],
+    "answer": 2,
+    "explanation": "Jupiter is the largest planet in our Solar System."
+  }
+]
