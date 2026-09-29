@@ -364,16 +364,19 @@ html[data-theme="light"] .modal-ov{background:rgba(40,32,16,.35)}
 
 <main id="view" class="container"></main>
 
-<footer class="foot">SSC QUIZ · questions load from <code>question bank/*.json</code> · all your data stays in this browser</footer>
+<footer class="foot">SSC QUIZ · questions load from <code>question bank/bengali|english/*.json</code> · all your data stays in this browser</footer>
 
 <div id="toasts" class="toasts" aria-live="polite"></div>
+<input type="file" id="importFile" accept=".json,application/json" style="display:none">
 <noscript><p style="text-align:center;padding:40px">Please enable JavaScript to use SSC QUIZ.</p></noscript>
 
 <script>
 'use strict';
 /* =====================================================================
    SSC QUIZ — single-file app
-   Questions are NEVER hardcoded: they are fetched from question bank/*.json
+   Questions are NEVER hardcoded: they are fetched from
+   question bank/bengali/*.json  OR  question bank/english/*.json
+   The selected language folder is the ONLY source of questions.
    ===================================================================== */
 
 /* ---------- tiny DOM + format helpers ---------- */
@@ -422,17 +425,42 @@ const icon = (n,cls) => `<svg class="ic${cls?' '+cls:''}" viewBox="0 0 24 24" fi
 
 /* ---------- subjects & storage keys ---------- */
 const SUBJECT_META = {
-  'Mathematics':       { file:'question bank/math.json',      time:45, icon:'math',   desc:'Arithmetic, algebra, ratio, interest & mensuration' },
-  'Reasoning':         { file:'question bank/reasoning.json', time:45, icon:'reason', desc:'Series, analogies, coding, directions & puzzles' },
-  'English':           { file:'question bank/english.json',   time:30, icon:'english',desc:'Grammar, vocabulary, idioms & one-word substitution' },
-  'General Awareness': { file:'question bank/ga.json',        time:30, icon:'globe',  desc:'Polity, history, science, sports & current affairs' }
+  'Mathematics':       { time:45, icon:'math',   desc:'Arithmetic, algebra, ratio, interest & mensuration' },
+  'Reasoning':         { time:45, icon:'reason', desc:'Series, analogies, coding, directions & puzzles' },
+  'English':           { time:30, icon:'english',desc:'Grammar, vocabulary, idioms & one-word substitution' },
+  'General Awareness': { time:30, icon:'globe',  desc:'Polity, history, science, sports & current affairs' }
 };
 const SUBJECT_NAMES = Object.keys(SUBJECT_META);
 const LETTERS = ['A','B','C','D'];
-const K = { theme:'sq_theme', history:'sq_history', imported:'sq_imported', setup:'sq_setup' };
+const K = { theme:'sq_theme', history:'sq_history', imported:'sq_imported', setup:'sq_setup', language:'sq_language' };
+
+/* ---------- LANGUAGE → question bank folder mapping ---------- */
+const SUBJECT_FILE = {
+  'Mathematics':       'math.json',
+  'Reasoning':         'reasoning.json',
+  'English':           'english.json',
+  'General Awareness': 'ga.json'
+};
+function getLanguageFolder(language){
+  return language === 'Bengali' ? 'bengali' : 'english';
+}
+/** Dynamic path — the selected language folder IS the source of questions. */
+function bankPathFor(subject, language){
+  return `question bank/${getLanguageFolder(language)}/${SUBJECT_FILE[subject]}`;
+}
+
+/* ---------- safe localStorage wrappers ---------- */
+function lsGet(key, fallback){ try { const v = localStorage.getItem(key); return v==null ? fallback : JSON.parse(v); } catch { return fallback; } }
+function lsSet(key, val){ try { localStorage.setItem(key, JSON.stringify(val)); return true; } catch { return false; } }
 
 /* ---------- global state ---------- */
+function getSavedLanguage(){
+  const v = lsGet(K.language, null);
+  return (v === 'Bengali' || v === 'English') ? v : 'English';   // default: English
+}
 const state = {
+  language: getSavedLanguage(),                                  // ← drives which folder boot loads
+  loadedLanguage: null,                                          // which language's files are actually in memory
   banks: { 'Mathematics':[], 'Reasoning':[], 'English':[], 'General Awareness':[] },
   loadStatus: {}, loadErrors: new Set(),
   imported: [], history: [],
@@ -441,10 +469,6 @@ const state = {
   reviewFilter: 'all', bankView: { subject:null, page:1 },
   timer: { id:null, remaining:0, total:0 }
 };
-
-/* ---------- safe localStorage wrappers ---------- */
-function lsGet(key, fallback){ try { const v = localStorage.getItem(key); return v==null ? fallback : JSON.parse(v); } catch { return fallback; } }
-function lsSet(key, val){ try { localStorage.setItem(key, JSON.stringify(val)); return true; } catch { return false; } }
 
 /* ---------- theme ---------- */
 function applyTheme(t){
@@ -495,7 +519,7 @@ function closeModal(silent){
 }
 
 /* =====================================================================
-   DATA LAYER — everything comes from question bank/*.json via fetch()
+   DATA LAYER — everything comes from the selected language folder
    ===================================================================== */
 
 /** Raw loader for one JSON file (relative path, GitHub Pages friendly). */
@@ -535,32 +559,56 @@ function validateQuestionArray(data, fallbackSubject, idPrefix){
   return { valid, errors, invalidCount: data.length - valid.length };
 }
 
-/** Load + validate + store one subject's bank. Never throws. */
+/** Load + validate + store one subject's bank — FROM THE LANGUAGE FOLDER ONLY. Never throws. */
 async function loadSubjectQuestions(subject){
-  const meta = SUBJECT_META[subject];
+  const path = bankPathFor(subject, state.language);   // e.g. "question bank/bengali/math.json"
   try {
-    const data = await loadQuestions(meta.file);                     // may throw: missing file / bad HTTP
-    const { valid, errors, invalidCount } = validateQuestionArray(data, subject, subject.toLowerCase().replace(/\s+/g,'-'));
+    const data = await loadQuestions(path);            // may throw: missing file / bad HTTP
+    const { valid, errors, invalidCount } = validateQuestionArray(data, subject,
+      state.language.toLowerCase() + '-' + subject.toLowerCase().replace(/\s+/g,'-'));
+    valid.forEach(q => { q.language = state.language; });   // defensive tag — one folder is ever fetched
     state.banks[subject] = valid;
     state.loadStatus[subject] = valid.length ? 'ok' : 'empty';
     state.loadErrors.delete(subject);
-    if (invalidCount) toast(`${invalidCount} invalid question${invalidCount>1?'s':''} skipped in ${meta.file}.`, 'warn');
-    if (!valid.length) toast(`${subject} question bank loaded but is empty.`, 'warn');
-    if (errors.length) console.warn(`[${meta.file}] skipped:`, errors);
+    if (invalidCount) toast(`${invalidCount} invalid question${invalidCount>1?'s':''} skipped in ${path}.`, 'warn');
+    if (!valid.length) toast(`${subject} (${state.language}) bank loaded but is empty.`, 'warn');
+    if (errors.length) console.warn(`[${path}] skipped:`, errors);
   } catch (e) {
     state.banks[subject] = [];
     state.loadStatus[subject] = 'error';
     state.loadErrors.add(subject);
-    toast(`Unable to load ${subject} question bank.`, 'error');
-    console.warn(`Failed to load ${meta.file}:`, e);
+    toast(`Unable to load ${subject} question bank (${state.language}).`, 'error');
+    console.warn(`Failed to load ${path}:`, e);
   }
 }
 
-/** Fetch all four official banks in parallel. */
+/** Fetch all four banks of the CURRENT language in parallel. */
 async function loadAllQuestions(){
   state.loadErrors = new Set();
   await Promise.allSettled(SUBJECT_NAMES.map(s => loadSubjectQuestions(s)));
+  state.loadedLanguage = state.language;               // ← the folders now in memory
   updateBankStatus();
+}
+
+/** Called when the user taps a language chip in Quiz Setup. */
+async function setLanguage(lang){
+  if ((lang !== 'Bengali' && lang !== 'English') || lang === state.language) return;
+
+  state.language = lang;
+  lsSet(K.language, lang);                             // remembered for next visit
+
+  // Wipe the previous language's data so the two banks can never mix
+  SUBJECT_NAMES.forEach(n => { state.banks[n] = []; state.loadStatus[n] = 'loading'; });
+  state.loadedLanguage = null;
+  updateBankStatus();
+
+  toast(`Loading ${lang} question bank…`, 'info');
+  if (currentView === 'setup') renderSetup();          // flip chip highlight instantly
+
+  await loadAllQuestions();                            // fetches ONLY question bank/<folder>/…
+
+  refreshView();                                       // refresh counts / summary
+  if (!state.loadErrors.size) toast(`${lang} question bank ready — ${officialTotal()} questions.`, 'success');
 }
 
 /** Retry only the banks that failed. */
@@ -569,7 +617,7 @@ async function retryFailedBanks(){
   for (const s of failed) await loadSubjectQuestions(s);
   updateBankStatus();
   if (!state.loadErrors.size) toast('All question banks loaded successfully.', 'success');
-  renderHome();
+  refreshView();
 }
 
 function officialTotal(){ return SUBJECT_NAMES.reduce((a,n)=>a+state.banks[n].length,0); }
@@ -577,13 +625,18 @@ function updateBankStatus(){
   const s = el('bankStatus'); if (!s) return;
   const ok = SUBJECT_NAMES.filter(n => state.loadStatus[n]==='ok').length;
   const warn = ok < SUBJECT_NAMES.length;
-  s.innerHTML = `<i class="dot-live${warn?' warn':''}"></i>${ok}/4 banks · ${officialTotal()} Q`;
+  const tag = state.language === 'Bengali' ? 'BN' : 'EN';
+  s.innerHTML = `<i class="dot-live${warn?' warn':''}"></i>${tag} ${ok}/4 banks · ${officialTotal()} Q`;
 }
 
-/** Pool for a quiz: official banks; Mixed also pulls in imported questions. */
+/** Pool for a quiz: official banks of the ACTIVE language; Mixed also pulls imported questions. */
 function buildPool(subject){
-  if (subject === 'Mixed') return [...SUBJECT_NAMES.flatMap(n => state.banks[n]), ...state.imported];
-  return state.banks[subject] || [];
+  const lang = state.language;
+  if (subject === 'Mixed') {
+    return [...SUBJECT_NAMES.flatMap(n => state.banks[n]), ...state.imported]
+      .filter(q => !q.language || q.language === lang);   // hard guarantee: never mix languages
+  }
+  return (state.banks[subject] || []).filter(q => q.language === lang);
 }
 
 /** Seconds allowed per question, decided purely by the question's subject. */
@@ -636,7 +689,7 @@ function importQuestions(text){
         (dup ? ` · ${dup} duplicate${dup!==1?'s':''} skipped` : '') +
         (invalid ? ` · ${invalid} invalid skipped` : ''), 'success');
   showImportLog(errors, data.length);
-  renderBank();
+  refreshView();
 }
 
 function showImportLog(errors, total){
@@ -662,8 +715,25 @@ function exportQuestions(){
    QUIZ ENGINE
    ===================================================================== */
 
+/** Config built from the setup screen (mock forces Mixed / all subjects). */
+function currentCfg(){
+  const s = state.setupSel;
+  const mock = s.mode === 'mock';
+  return {
+    subject: mock ? 'Mixed' : s.subject,
+    count: +s.count, difficulty: s.difficulty, mode: s.mode, neg: +s.neg,
+    language: state.language
+  };
+}
+
 /** Build the quiz: random selection, no duplicates, shuffled options with remapped answer index. */
-function startQuiz(cfg){
+async function startQuiz(cfg){
+  // Safety: if the language was just switched, ensure the matching folder is loaded first
+  if (state.loadedLanguage !== state.language) {
+    toast(`Loading ${state.language} question bank…`, 'info');
+    await loadAllQuestions();
+  }
+
   const pool = buildPool(cfg.subject);
   if (!pool.length) { toast('No questions available for this selection yet.', 'error'); return; }
 
@@ -679,13 +749,15 @@ function startQuiz(cfg){
 
   const questions = shuffleArray(working).slice(0, count).map(prepareQuestion);
   state.quiz = {
+    language: state.language,                             // ← quizState.language
     subject: cfg.subject, mode: cfg.mode, neg: cfg.neg, difficulty: cfg.difficulty,
     questions, total: count, current: 0, startedAt: Date.now(),
     cfg: { ...cfg }
   };
   state.lastCfg = { ...cfg };
-  state.lastSetup = { count:cfg.count, difficulty:cfg.difficulty, mode:cfg.mode, neg:cfg.neg };
+  state.lastSetup = { count:cfg.count, difficulty:cfg.difficulty, mode:cfg.mode, neg:cfg.neg, language:state.language };
   lsSet(K.setup, state.lastSetup);
+  currentView = 'quiz';
   renderQuiz();
   loadQuestion(0);
 }
@@ -711,6 +783,7 @@ function loadQuestion(i){
   renderQuestion(q);
   renderPalette();
   updateProgress();
+  updateControls();
   if (q.status === 'unanswered') startTimer(getQuestionTime(q.subject));
   else paintTimerIdle();                                 // answered in practice mode: clock stops, explanation stays
   window.scrollTo({ top:0, behavior:'smooth' });
@@ -799,705 +872,671 @@ function onTimerExpire(){
   if (!qz || !el('qpanel')) { stopTimer(); return; }
   const i = qz.current, q = qz.questions[i];
   if (q.status === 'unanswered') {
-    q.status = 'skipped'; q.userAnswer = null;
-    toast(`Time's up — Q${i+1} marked as skipped.`, 'warn');
+    q.userAnswer = null; q.status = 'skipped';
+    renderQuestion(q); renderPalette(); updateControls();
   }
-  renderPalette();
-  if (i < qz.total - 1) loadQuestion(i + 1);
-  else {
-    renderQuestion(q);
-    if (q.status === 'answered') paintTimerIdle();
-    else { state.timer.remaining = 0; paintTimer(); }
-    updateControls();
+  if (i < qz.total - 1) {
+    toast(`Time's up — moving to question ${i + 2}.`, 'warn');
+    loadQuestion(i + 1);
+  } else {
+    toast(`Time's up on the last question — tap Submit to finish.`, 'warn');
   }
 }
 
-/* ---------- submission, scoring, history ---------- */
-function submitQuiz(){
+/* ---------- submit + scoring ---------- */
+function openSubmitModal(){
   const qz = state.quiz; if (!qz) return;
-  const a = qz.questions.filter(q => q.status==='answered').length;
-  const s = qz.questions.filter(q => q.status==='skipped').length;
-  // pause the clock while the modal is open; resume on cancel
-  const rem = state.timer.remaining, tot = state.timer.total, wasRunning = !!state.timer.id;
-  stopTimer();
+  const ans = qz.questions.filter(q=>q.status==='answered').length;
+  const ski = qz.questions.filter(q=>q.status==='skipped').length;
+  const un  = qz.total - ans - ski;
+  stopTimer();                                           // pause clock while the modal is open
   openModal({
-    title: 'Submit quiz?',
-    okLabel: 'Submit', cancelLabel: 'Keep going',
-    body: `<p>You've answered <b>${a}</b> of <b>${qz.total}</b> questions${s ? `, and skipped <b>${s}</b>` : ''}. Unanswered questions are marked as skipped — negative marking is <b>never</b> applied to them.</p>`,
-    onCancel: () => { state.timer.remaining = rem; state.timer.total = tot; if (wasRunning) resumeTimer(); },
-    onOk: () => {
-      stopTimer();
-      const result = calculateResult();
-      state.lastResult = result;
-      saveQuizHistory(result);
-      showResult();
-    }
+    title: 'Submit test?',
+    body: `<p>You answered <b>${ans}</b> of <b>${qz.total}</b> questions${un ? ` — <b>${un}</b> still unseen (counted as skipped)` : ''}.</p>` +
+          (qz.neg ? `<p style="margin-top:8px">Negative marking is <b>−${qz.neg}</b> per wrong answer.</p>` : '') +
+          `<p style="margin-top:8px" class="muted">You can review every question after submitting.</p>`,
+    okLabel: 'Submit & See Result',
+    onOk: finishQuiz,
+    onCancel: resumeTimer
   });
 }
 
-function calculateResult(){
-  const qz = state.quiz;
-  let correct = 0, wrong = 0, skipped = 0;
-  qz.questions.forEach(q => {
-    if (q.status === 'answered') { q.userAnswer === q.answer ? correct++ : wrong++; }
+function finishQuiz(){
+  stopTimer();
+  const qz = state.quiz; if (!qz) return;
+  let correct=0, wrong=0, skipped=0;
+  qz.questions.forEach(q=>{
+    if (q.status==='answered'){ if (q.userAnswer===q.answer) correct++; else wrong++; }
     else skipped++;
   });
+  const score = correct - wrong * qz.neg;
   const attempted = correct + wrong;
-  const score = correct - wrong * qz.neg;                       // e.g. correct − (wrong × 0.25)
-  return {
-    date: new Date().toISOString(),
-    subject: qz.subject, mode: qz.mode, neg: qz.neg, difficulty: qz.difficulty, total: qz.total,
-    correct, wrong, skipped,
-    score,
-    accuracy: attempted ? (correct / attempted) * 100 : 0,
-    percentage: qz.total ? (Math.max(0, score) / qz.total) * 100 : 0,
-    timeTaken: Math.round((Date.now() - qz.startedAt) / 1000)
+  const accuracy = attempted ? Math.round(correct/attempted*100) : 0;
+  const timeTaken = Math.round((Date.now()-qz.startedAt)/1000);
+  const entry = {
+    id: Date.now(), at: new Date().toISOString(),
+    subject: qz.subject, mode: qz.mode, language: qz.language, difficulty: qz.difficulty, neg: qz.neg,
+    total: qz.total, max: qz.total, correct, wrong, skipped,
+    score: fmtScore(score), accuracy, timeTaken, questions: qz.questions
   };
-}
-
-function saveQuizHistory(rec){
-  state.history.unshift(rec);
-  if (state.history.length > 200) state.history.length = 200;   // keep localStorage lean
+  state.history.unshift(entry);
+  if (state.history.length > 50) state.history.length = 50;
   lsSet(K.history, state.history);
-}
-function loadQuizHistory(){
-  const h = lsGet(K.history, []);
-  if (!Array.isArray(h)) return [];
-  return h.filter(r => r && typeof r === 'object' && Number.isFinite(r.total));
-}
-
-/** All statistics are computed live from quiz history in localStorage. */
-function updateStatistics(){
-  const h = state.history;
-  const s = { quizzes:h.length, attempted:0, correct:0, wrong:0, skipped:0, avgAccuracy:0, best:null };
-  h.forEach(r => {
-    s.attempted += Number(r.total)||0;
-    s.correct += Number(r.correct)||0;
-    s.wrong += Number(r.wrong)||0;
-    s.skipped += Number(r.skipped)||0;
-    if (!s.best || (Number(r.score)||0) > s.best.score) s.best = { score:Number(r.score)||0, total:Number(r.total)||0 };
-  });
-  const att = s.correct + s.wrong;
-  s.avgAccuracy = att ? (s.correct / att) * 100 : 0;
-  return s;
+  state.lastResult = entry;
+  state.quiz = null;
+  go('result');
 }
 
 /* =====================================================================
-   RENDERING — views
+   VIEWS
    ===================================================================== */
-function renderBoot(){
-  el('view').innerHTML = `<div class="boot"><div class="spinner"></div><p class="mono">Loading question banks…</p></div>`;
+function emptyState(ic, title, text, action=''){
+  return `<div class="empty">${icon(ic)}<h3>${title}</h3><p>${text}</p>${action}</div>`;
 }
 
 /* ---------- HOME ---------- */
+function subjectCard(name){
+  const m = SUBJECT_META[name];
+  const n = state.banks[name].length;
+  return `<button class="subj" data-subject="${esc(name)}">
+    <span class="idx">${String(SUBJECT_NAMES.indexOf(name)+1).padStart(2,'0')}</span>
+    <span class="subj-top"><span class="subj-ic">${icon(m.icon)}</span>
+      <span><h3>${esc(name)}</h3><span class="desc">${esc(m.desc)}</span></span></span>
+    <span class="subj-meta">
+      <span class="pill">${icon('file')} ${n} Q · ${esc(state.language)}</span>
+      <span class="pill">${icon('clock')} ${m.time}s / question</span>
+    </span>
+    <span class="subj-foot"><span class="go">Practice ${icon('chevR')}</span></span>
+  </button>`;
+}
+
 function renderHome(){
-  stopTimer();
-  const stats = updateStatistics();
-  const totalQ = officialTotal() + state.imported.length;
-  const bestTxt = stats.best ? `${fmtScore(stats.best.score)}/${stats.best.total}` : '—';
-  const accTxt = stats.quizzes ? `${Math.round(stats.avgAccuracy)}%` : '—';
-
-  const issues = [];
-  state.loadErrors.forEach(n => issues.push(`Unable to load ${n} question bank.`));
-  SUBJECT_NAMES.forEach(n => { if (state.loadStatus[n]==='empty') issues.push(`${n} question bank is empty.`); });
-
-  const subjectsHtml = SUBJECT_NAMES.map((n, i) => {
-    const m = SUBJECT_META[n], cnt = state.banks[n].length;
-    return `<button class="subj" data-subj-go="${esc(n)}">
-      <span class="idx mono">0${i+1}</span>
-      <div class="subj-top">
-        <span class="subj-ic">${icon(m.icon)}</span>
-        <div><h3>${esc(n)}</h3><div class="desc">${esc(m.desc)}</div></div>
-      </div>
-      <div class="subj-meta">
-        <span class="pill">${icon('clock')} ${m.time} sec / question</span>
-        <span class="pill">${icon('list')} ${cnt} question${cnt!==1?'s':''}</span>
-      </div>
-      <div class="subj-foot"><span class="go">Start practice ${icon('chevR')}</span></div>
-    </button>`;
-  }).join('');
-
-  el('view').innerHTML = `
-  <div class="view">
-    ${issues.length ? `<div class="banner">${icon('alert')}<div><b>Question bank notice</b><ul>${issues.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div><button class="btn" id="retryBanks" style="margin-left:auto">${icon('refresh')} Retry</button></div>` : ''}
-
+  const errs = state.loadErrors.size;
+  const total = officialTotal() + state.imported.length;
+  const folder = getLanguageFolder(state.language);
+  const specimen = `
+    <div class="specimen-wrap"><div class="specimen">
+      <div class="spec-head"><b>OMR SHEET · SET ${state.language==='Bengali'?'BN':'A'}</b>
+        <span class="spec-time">${icon('clock')}45:00</span></div>
+      <div class="spec-cols"><span class="qn"></span><span class="bl">A</span><span class="bl">B</span><span class="bl">C</span><span class="bl">D</span></div>
+      <div class="spec-row"><span class="qn">01</span><div class="bubbles"><i class="bb g"></i><i class="bb"></i><i class="bb"></i><i class="bb"></i></div></div>
+      <div class="spec-row"><span class="qn">02</span><div class="bubbles"><i class="bb"></i><i class="bb"></i><i class="bb a"></i><i class="bb"></i></div></div>
+      <div class="spec-row"><span class="qn">03</span><div class="bubbles"><i class="bb"></i><i class="bb r"></i><i class="bb"></i><i class="bb"></i></div></div>
+      <div class="spec-row"><span class="qn">04</span><div class="bubbles"><i class="bb"></i><i class="bb"></i><i class="bb"></i><i class="bb g"></i></div></div>
+      <div class="spec-foot"><span>SUBJECT CODE · 42</span><span>MARKS · 50</span></div>
+    </div></div>`;
+  el('view').innerHTML = `<div class="view">
+    ${errs ? `<div class="banner">${icon('alert')}<div><b>${errs} question bank${errs>1?'s':''} failed to load for ${esc(state.language)}.</b>
+      <ul><li>Check that all four JSON files exist inside <code>question bank/${folder}/</code></li>
+      <li>If you opened this page via <code>file://</code>, serve the folder with a local server — fetch needs http(s).</li></ul>
+      <div style="margin-top:10px"><button class="btn" data-act="retry">${icon('refresh')} Retry failed banks</button></div></div></div>` : ''}
     <section class="hero">
       <div>
-        <span class="kicker">SSC · CGL · CHSL · MTS · GD</span>
-        <h1>Your question bank,<br><em>timed like the real exam.</em></h1>
-        <p class="sub">Per-question countdowns, an OMR-style navigation palette and honest negative marking — everything the way SSC frames it, running entirely in your browser.</p>
+        <span class="kicker">SSC · ${esc(state.language)} Edition</span>
+        <h1>Practice smart.<br>Score <em>higher.</em></h1>
+        <p class="sub">Per-question timers, negative marking, instant explanations and full mock tests — everything runs in your browser, with questions loaded from the <code>${esc(folder)}</code> bank.</p>
         <div class="hero-cta">
-          <button class="btn btn-primary btn-lg" id="ctaStart">${icon('play')} Start Quiz</button>
-          <button class="btn btn-lg" id="ctaMixed">${icon('shuffle')} Mixed Quiz</button>
+          <button class="btn btn-primary btn-lg" data-act="setup">${icon('play')} Start Quiz</button>
+          <button class="btn btn-lg" data-act="mock">${icon('clock')} Quick Mock Test</button>
         </div>
-        <p class="hero-note mono">No account · no server · your history &amp; settings live in localStorage</p>
+        <p class="hero-note">No sign-up · no server · your history stays in this browser</p>
       </div>
-      <div class="specimen-wrap"><div class="specimen" aria-hidden="true">
-        <div class="spec-head"><span class="mono muted">SSC-QUIZ / OMR · 2025</span><span class="spec-time mono">${icon('clock')} 00:38</span></div>
-        <div class="spec-cols"><span class="qn"></span><span class="bubbles"><span class="bl">A</span><span class="bl">B</span><span class="bl">C</span><span class="bl">D</span></span></div>
-        <div class="spec-row"><span class="qn">Q1</span><span class="bubbles"><span class="bb"></span><span class="bb g"></span><span class="bb"></span><span class="bb"></span></span></div>
-        <div class="spec-row"><span class="qn">Q2</span><span class="bubbles"><span class="bb"></span><span class="bb"></span><span class="bb r"></span><span class="bb"></span></span></div>
-        <div class="spec-row"><span class="qn">Q3</span><span class="bubbles"><span class="bb a"></span><span class="bb"></span><span class="bb"></span><span class="bb"></span></span></div>
-        <div class="spec-row"><span class="qn">Q4</span><span class="bubbles"><span class="bb"></span><span class="bb"></span><span class="bb"></span><span class="bb g"></span></span></div>
-        <div class="spec-row"><span class="qn">Q5</span><span class="bubbles"><span class="bb"></span><span class="bb"></span><span class="bb"></span><span class="bb"></span></span></div>
-        <div class="spec-foot"><span>SET — A</span><span>Practice • Learn • Improve</span></div>
-      </div></div>
+      ${specimen}
     </section>
-
-    <section class="scoreboard">
-      <div class="sb"><div class="n">${totalQ}</div><div class="l">Total Questions</div></div>
-      <div class="sb"><div class="n">${stats.quizzes}</div><div class="l">Quizzes Attempted</div></div>
-      <div class="sb"><div class="n">${esc(bestTxt)}</div><div class="l">Best Score</div></div>
-      <div class="sb"><div class="n">${esc(accTxt)}</div><div class="l">Average Accuracy</div></div>
-    </section>
-
-    <div class="sec-head"><h2>Choose your subject</h2><span class="cnt">${officialTotal()} official · ${state.imported.length} imported</span></div>
-    <section class="subj-grid">${subjectsHtml}</section>
-
+    <div class="sec-head"><h2>Subjects</h2><span class="cnt mono">${total} questions available</span></div>
+    <div class="subj-grid">${SUBJECT_NAMES.map(subjectCard).join('')}</div>
     <div class="quick">
-      <button class="btn" data-nav="bank">${icon('book')} Question Bank</button>
-      <button class="btn" data-nav="history">${icon('history')} Quiz History</button>
-      <button class="btn" data-nav="stats">${icon('chart')} Statistics</button>
+      <button class="chip" data-act="mock">${icon('clock')} Mock Test</button>
+      <button class="chip" data-act="history">${icon('history')} History</button>
+      <button class="chip" data-act="stats">${icon('chart')} Stats</button>
+      <button class="chip" data-act="bank">${icon('upload')} Question Bank</button>
     </div>
-
-    <p class="data-line">math ${state.banks['Mathematics'].length} · reasoning ${state.banks['Reasoning'].length} · english ${state.banks['English'].length} · ga ${state.banks['General Awareness'].length} &nbsp;|&nbsp; imported ${state.imported.length} &nbsp;|&nbsp; ${state.history.length} attempt${state.history.length!==1?'s':''} on this device</p>
+    <p class="data-line">Questions load from <code>question bank/${esc(folder)}/</code> · ${officialTotal()} official · ${state.imported.length} imported</p>
   </div>`;
-
-  el('ctaStart').addEventListener('click', () => {
-    const s = state.lastSetup && SUBJECT_NAMES.includes(state.lastSetup.subject) ? state.lastSetup.subject : 'Mathematics';
-    renderSetup(s);
-  });
-  el('ctaMixed').addEventListener('click', () => renderSetup('Mixed'));
-  const retry = el('retryBanks'); if (retry) retry.addEventListener('click', retryFailedBanks);
-  document.querySelectorAll('[data-subj-go]').forEach(b => b.addEventListener('click', () => renderSetup(b.dataset.subjGo)));
-  document.querySelectorAll('[data-nav]').forEach(b => b.addEventListener('click', () => {
-    const v = b.dataset.nav;
-    if (v==='bank') renderBank(); else if (v==='history') renderHistory(); else renderStats();
-  }));
 }
 
-/* ---------- QUIZ SETUP ---------- */
-function renderSetup(subject){
-  stopTimer();
-  if (!state.setupSel) {
-    const d = state.lastSetup;
-    state.setupSel = { subject, count:d.count||10, difficulty:d.difficulty||'Mixed', mode:d.mode||'practice', neg:(d.neg ?? 0) };
-  } else state.setupSel.subject = subject;
-  paintSetup();
-}
-function paintSetup(){
+/* ---------- SETUP (Language section added — same chip style) ---------- */
+function renderSetup(){
   const s = state.setupSel;
-  const pool = buildPool(s.subject);
-  const isMixed = s.subject === 'Mixed';
-  const timeLabel = isMixed ? '30–45 sec per question (set by each question\u2019s subject)' : `${SUBJECT_META[s.subject].time} sec per question`;
-  const mins = Math.max(1, Math.ceil(s.count * (isMixed ? 37.5 : SUBJECT_META[s.subject]?.time || 30) / 60));
-  const negLabel = s.neg ? `−${s.neg} per wrong answer` : 'no negative marking';
-  const modeLabel = s.mode === 'practice' ? 'Practice' : 'Mock Test';
+  const mock = s.mode === 'mock';
+  const effSub = mock ? 'Mixed' : s.subject;
+  const folder = getLanguageFolder(state.language);
+  const estSeconds = effSub === 'Mixed' ? s.count * 40 : s.count * ((SUBJECT_META[effSub]||{}).time || 30);
+  const estMin = Math.max(1, Math.round(estSeconds / 60));
+  const negLabel = { '0':'Off', '0.25':'0.25', '0.5':'0.50', '1':'1.00' };
+  const chip = (active, label, attrs, dis=false) =>
+    `<button type="button" class="chip${active?' on':''}" ${attrs}${dis?' disabled style="opacity:.45;cursor:not-allowed"':''}>${label}</button>`;
 
-  const subjChips = [...SUBJECT_NAMES, 'Mixed'].map(n =>
-    `<button class="chip${s.subject===n?' on':''}" data-subj="${esc(n)}">${n==='Mixed'?'Mixed Quiz':esc(n)}</button>`).join('');
-  const countChips = [10,20,25,50,100].map(n =>
-    `<button class="chip${s.count===n?' on':''}" data-count="${n}">${n}</button>`).join('');
-  const diffChips = ['Easy','Medium','Hard','Mixed'].map(d =>
-    `<button class="chip${s.difficulty===d?' on':''}" data-diff="${d}">${d}</button>`).join('');
-  const negChips = [['None',0],['−0.25',0.25],['−0.50',0.5]].map(([l,v]) =>
-    `<button class="chip${s.neg===v?' on':''}" data-neg="${v}">${l}</button>`).join('');
-
-  el('view').innerHTML = `
-  <div class="setup view">
-    <button class="backlink" id="setupBack">${icon('chevL')} Home</button>
-    <div class="kicker" style="margin-top:14px">Quiz setup</div>
-    <h2 class="setup-title">${isMixed ? 'Mixed Quiz' : esc(s.subject)}</h2>
-    <p class="setup-sub">${pool.length} question${pool.length!==1?'s':''} available · ${timeLabel}</p>
-    ${!pool.length ? `<div class="banner">${icon('alert')}<span>No questions are loaded for this selection. Check the JSON files in <code>question bank/</code> and retry from the home page.</span></div>` : ''}
-
-    <div class="chips">${subjChips}</div>
+  el('view').innerHTML = `<div class="setup view">
+    <button class="backlink" data-act="home">${icon('chevL')} Back to Home</button>
+    <h1 class="setup-title">Quiz Setup</h1>
+    <p class="setup-sub">Choose your language, subject and rules — then start practicing.</p>
 
     <div class="fgroup">
-      <span class="flabel">Number of Questions</span>
-      <p class="fhint">If the bank has fewer questions than requested, the quiz automatically uses what's available — fake fillers are never added.</p>
-      <div class="chips">${countChips}</div>
-    </div>
-
-    <div class="fgroup">
-      <span class="flabel">Difficulty</span>
-      <p class="fhint">Filters by the optional <code>difficulty</code> tag in your JSON. Untagged banks simply use all levels.</p>
-      <div class="chips">${diffChips}</div>
+      <span class="flabel">Language</span>
+      <div class="fhint">Questions load only from <code>question bank/${esc(folder)}/</code> — Bengali and English banks are never mixed.</div>
+      <div class="chips" role="group" aria-label="Question language">
+        ${chip(state.language==='Bengali','Bengali','data-lang="Bengali"')}
+        ${chip(state.language==='English','English','data-lang="English"')}
+      </div>
     </div>
 
     <div class="fgroup">
       <span class="flabel">Quiz Mode</span>
-      <div class="mode-grid" style="margin-top:12px">
-        <button class="mode-card${s.mode==='practice'?' on':''}" data-mode="practice">
-          <b>Practice</b><span>Instant feedback with explanations after each answer. The per-question timer pauses once you answer, so you can read in peace.</span>
-        </button>
-        <button class="mode-card${s.mode==='mock'?' on':''}" data-mode="mock">
-          <b>Mock Test</b><span>Real exam conditions — no answers or explanations until you submit. The clock keeps moving, exactly like the real thing.</span>
-        </button>
+      <div class="fhint">Practice explains every answer instantly; Mock Test simulates the real exam.</div>
+      <div class="mode-grid">
+        <button type="button" class="mode-card${!mock?' on':''}" data-mode="practice"><b>Practice</b><span>Instant explanations · clock pauses after each answer · learn as you go.</span></button>
+        <button type="button" class="mode-card${mock?' on':''}" data-mode="mock"><b>Mock Test</b><span>Exam simulation · all four subjects · explanations only in review · negative marking applies.</span></button>
+      </div>
+    </div>
+
+    <div class="fgroup">
+      <span class="flabel">Subject</span>
+      <div class="fhint">${mock ? 'Mock Test always covers <b>all four subjects</b> from the selected language.' : 'Pick one subject — or Mixed to combine all four.'}</div>
+      <div class="chips">
+        ${SUBJECT_NAMES.map(n=>chip(!mock && s.subject===n, esc(n), `data-sel-subject="${esc(n)}"`, mock)).join('')}
+        ${chip(effSub==='Mixed','Mixed (All)','data-sel-subject="Mixed"', mock)}
+      </div>
+    </div>
+
+    <div class="fgroup">
+      <span class="flabel">Number of Questions</span>
+      <div class="fhint">If the bank has fewer questions, the quiz shrinks to fit.</div>
+      <div class="chips">
+        ${['10','25','50','100'].map(c=>chip(String(s.count)===c, c, `data-count="${c}"`)).join('')}
+      </div>
+    </div>
+
+    <div class="fgroup">
+      <span class="flabel">Difficulty</span>
+      <div class="fhint">Filters the bank by the question's difficulty tag.</div>
+      <div class="chips">
+        ${['Mixed','Easy','Medium','Hard'].map(d=>chip(s.difficulty===d, d, `data-diff="${d}"`)).join('')}
       </div>
     </div>
 
     <div class="fgroup">
       <span class="flabel">Negative Marking</span>
-      <p class="fhint">Wrong answers deduct marks; skipped questions never do.</p>
-      <div class="chips">${negChips}</div>
+      <div class="fhint">Deducted for each wrong answer — skips are always free.</div>
+      <div class="chips">
+        ${['0','0.25','0.5','1'].map(v=>chip(String(s.neg)===v, negLabel[v], `data-neg="${v}"`)).join('')}
+      </div>
     </div>
 
-    <div class="setup-summary">${s.count} questions · ~${mins} min max · ${modeLabel} mode · ${negLabel}</div>
-    <div class="setup-start">
-      <button class="btn btn-primary btn-lg" id="btnStart" ${pool.length?'':'disabled'}>${icon('play')} Start Quiz</button>
-    </div>
+    <div class="setup-summary">MODE: ${mock?'MOCK TEST':'PRACTICE'} · SUBJECT: ${esc(effSub).toUpperCase()} · Q: ${s.count} · DIFFICULTY: ${esc(s.difficulty).toUpperCase()} · NEGATIVE: ${Number(s.neg)?'−'+s.neg:'OFF'}<br>LANGUAGE: ${esc(state.language).toUpperCase()} · SOURCE: question bank/${esc(folder)}/ · EST. TIME: ~${estMin} MIN</div>
+    <div class="setup-start"><button class="btn btn-primary btn-lg" data-act="start">${icon('play')} Start Quiz</button></div>
   </div>`;
-
-  el('setupBack').addEventListener('click', renderHome);
-  document.querySelectorAll('[data-subj]').forEach(b => b.addEventListener('click', () => { s.subject = b.dataset.subj; paintSetup(); }));
-  document.querySelectorAll('[data-count]').forEach(b => b.addEventListener('click', () => { s.count = +b.dataset.count; paintSetup(); }));
-  document.querySelectorAll('[data-diff]').forEach(b => b.addEventListener('click', () => { s.difficulty = b.dataset.diff; paintSetup(); }));
-  document.querySelectorAll('[data-mode]').forEach(b => b.addEventListener('click', () => { s.mode = b.dataset.mode; paintSetup(); }));
-  document.querySelectorAll('[data-neg]').forEach(b => b.addEventListener('click', () => { s.neg = parseFloat(b.dataset.neg); paintSetup(); }));
-  el('btnStart').addEventListener('click', () => startQuiz({ subject:s.subject, count:s.count, difficulty:s.difficulty, mode:s.mode, neg:s.neg }));
 }
 
-/* ---------- QUIZ SCREEN ---------- */
+/* ---------- QUIZ ---------- */
 function renderQuiz(){
-  const qz = state.quiz; if (!qz) { renderHome(); return; }
-  el('view').innerHTML = `
-  <div class="quiz view">
+  const qz = state.quiz; if (!qz) return go('home');
+  el('view').innerHTML = `<div class="quiz view">
     <div class="card quiz-top">
       <div class="quiz-top-row">
-        <span class="pill pill-a">${icon('book')} ${esc(qz.subject === 'Mixed' ? 'Mixed Quiz' : qz.subject)}</span>
-        <button class="btn btn-ghost pal-toggle" id="palToggle">${icon('grid')} Palette</button>
-        <span class="qcount mono" id="qCount"></span>
-        <div class="timer" id="timerBox">
-          <svg viewBox="0 0 60 60" width="58" height="58" aria-hidden="true">
-            <circle class="tring-bg" cx="30" cy="30" r="26"/>
-            <circle class="tring-fg" id="ringFg" cx="30" cy="30" r="26"/>
-          </svg>
-          <span class="tnum" id="timerNum"></span>
-        </div>
+        <button class="btn btn-ghost" data-act="quit">${icon('chevL')} Quit</button>
+        <span class="pill pill-a">${icon('book')} ${esc(qz.subject)}</span>
+        <span class="pill">${qz.mode==='mock' ? 'Mock Test' : 'Practice'}</span>
+        <div class="timer" id="timerBox"><svg viewBox="0 0 58 58" width="58" height="58" aria-hidden="true">
+          <circle class="tring-bg" cx="29" cy="29" r="26"/>
+          <circle class="tring-fg" id="ringFg" cx="29" cy="29" r="26"/></svg>
+          <span class="tnum" id="timerNum">–</span></div>
+        <span class="qcount mono">Q <span id="qCur">1</span>/${qz.total}</span>
+        <button class="btn pal-toggle" data-act="pal">${icon('grid')} Palette</button>
       </div>
-      <div class="progress"><i id="qProg"></i></div>
+      <div class="progress"><i id="progBar"></i></div>
     </div>
-
     <div class="quiz-grid">
       <div class="card qpanel" id="qpanel"></div>
-      <aside class="side" id="sidePanel">
+      <div class="side" id="sidePanel">
         <div class="card pal-card">
-          <div class="pal-card-h"><b>Questions</b><span class="mono muted small">${qz.total} total</span></div>
+          <div class="pal-card-h"><b>Question Palette</b><span class="mono muted small" id="palCounts"></span></div>
           <div class="pal-legend">
-            <span><i class="dot" style="background:var(--green)"></i>Answered <b id="palAns">0</b></span>
-            <span><i class="dot" style="background:var(--orange)"></i>Skipped <b id="palSki">0</b></span>
-            <span><i class="dot" style="background:var(--line2)"></i>Left <b id="palLeft">0</b></span>
+            <span><i class="dot" style="background:var(--green)"></i>Answered</span>
+            <span><i class="dot" style="background:var(--orange)"></i>Skipped</span>
+            <span><i class="dot" style="background:var(--line2)"></i>Unseen</span>
           </div>
-          <div class="pal" id="palBox"></div>
+          <div class="pal" id="palette"></div>
         </div>
-      </aside>
+      </div>
     </div>
-
     <div class="card quiz-nav">
       <div class="nav3">
-        <button class="btn btn-ghost" id="btnPrev">${icon('chevL')} Previous</button>
-        <button class="btn btn-ghost" id="btnSkip">Skip ${icon('skip')}</button>
-        <button class="btn" id="btnNext">Next ${icon('chevR')}</button>
+        <button class="btn" id="btnPrev" data-act="prev">${icon('chevL')} Prev</button>
+        <button class="btn" id="btnSkip" data-act="skipq">${icon('skip')} Skip</button>
+        <button class="btn" id="btnNext" data-act="next">Next ${icon('chevR')}</button>
       </div>
-      <button class="btn btn-primary btn-submit" id="btnSubmitQ">${icon('check')} Submit Quiz</button>
+      <button class="btn btn-primary btn-submit" data-act="submit">${icon('check')} Submit Test</button>
     </div>
   </div>`;
-
-  el('btnPrev').addEventListener('click', previousQuestion);
-  el('btnNext').addEventListener('click', nextQuestion);
-  el('btnSkip').addEventListener('click', skipQuestion);
-  el('btnSubmitQ').addEventListener('click', submitQuiz);
-  el('palToggle').addEventListener('click', () => el('sidePanel').classList.toggle('open'));
 }
 
 function renderQuestion(q){
-  const qz = state.quiz, box = el('qpanel'); if (!box || !qz) return;
-  const isPractice = qz.mode === 'practice';
-  const revealed = isPractice && q.status === 'answered';
-  const locked = revealed;
+  const qz = state.quiz; if (!qz || !el('qpanel')) return;
+  const answered = q.status==='answered', skipped = q.status==='skipped';
+  const isPractice = qz.mode==='practice';
+  const showVerdict = isPractice && (answered || skipped);
+  const isCorrect = answered && q.userAnswer===q.answer;
 
-  let badges = `<span class="pill">${qz.mode==='practice' ? 'Practice' : 'Mock Test'}</span>`;
-  if (qz.subject === 'Mixed') badges = `<span class="pill pill-a">${esc(q.subject)}</span>` + badges;
-  if (qz.neg > 0) badges += `<span class="pill">−${qz.neg} marking</span>`;
-  if (revealed) badges += q.userAnswer === q.answer ? `<span class="badge ok">Correct</span>` : `<span class="badge bad">Wrong</span>`;
+  const badge = showVerdict
+    ? (answered
+        ? (isCorrect ? '<span class="badge ok">Correct</span>'
+                     : `<span class="badge bad">Wrong${qz.neg?` · −${qz.neg}`:''}</span>`)
+        : '<span class="badge ski">Skipped</span>')
+    : (answered ? '<span class="badge neu">Marked</span>' : '');
 
-  const opts = q.options.map((o, i) => {
-    let cls = 'opt', mk = '';
-    if (revealed) {
-      if (i === q.answer) { cls += ' correct'; mk = icon('check'); }
-      else if (i === q.userAnswer) { cls += ' wrong'; mk = icon('x'); }
-    } else if (i === q.userAnswer) cls += ' selected';
-    return `<button class="${cls}" data-opt="${i}" ${locked?'disabled':''}>
-      <span class="key">${LETTERS[i]}</span><span class="otxt">${esc(o)}</span><span class="mk">${mk}</span></button>`;
-  }).join('');
-
-  let expl = '';
-  if (revealed) {
-    const txt = q.explanation ? esc(q.explanation) : `Correct answer: <b>${esc(q.options[q.answer])}</b>`;
-    expl = `<div class="expl"><div class="el">${icon('bulb')} Explanation</div><p>${txt}</p></div>`;
-  }
-
-  box.innerHTML = `<div class="q-badges">${badges}</div><div class="q-text">${esc(q.question)}</div><div class="opts">${opts}</div>${expl}`;
-  box.querySelectorAll('[data-opt]').forEach(b => b.addEventListener('click', () => selectAnswer(+b.dataset.opt)));
+  el('qpanel').innerHTML = `
+    <div class="q-badges">
+      <span class="pill pill-a">${icon('book')} ${esc(q.subject)}</span>
+      ${q.difficulty ? `<span class="pill">${esc(q.difficulty.charAt(0).toUpperCase()+q.difficulty.slice(1))}</span>` : ''}
+      ${badge}
+      <span class="pill">${qz.mode==='mock' ? icon('clock')+' Mock' : icon('bulb')+' Practice'}</span>
+    </div>
+    <div class="q-text">${esc(q.question)}</div>
+    <div class="opts">
+      ${q.options.map((o,i)=>{
+        let cls='opt';
+        if (showVerdict){ if (i===q.answer) cls+=' correct'; else if (answered && i===q.userAnswer) cls+=' wrong'; }
+        else if (i===q.userAnswer) cls+=' selected';
+        const mk = (showVerdict && i===q.answer) ? `<span class="mk">${icon('check')}</span>`
+                 : (showVerdict && answered && i===q.userAnswer) ? `<span class="mk">${icon('x')}</span>` : '';
+        return `<button type="button" class="${cls}" data-opt="${i}" ${showVerdict?'disabled':''}>
+          <span class="key">${LETTERS[i]}</span><span class="otxt">${esc(o)}</span>${mk}</button>`;
+      }).join('')}
+    </div>
+    ${showVerdict && q.explanation ? `<div class="expl"><div class="el">${icon('bulb')} Explanation</div><p>${esc(q.explanation)}</p></div>` : ''}
+  `;
 }
 
 function renderPalette(){
-  const qz = state.quiz, box = el('palBox'); if (!box || !qz) return;
-  let a = 0, s = 0;
-  qz.questions.forEach(q => { if (q.status==='answered') a++; else if (q.status==='skipped') s++; });
-  el('palAns').textContent = a;
-  el('palSki').textContent = s;
-  el('palLeft').textContent = qz.total - a - s;
-  box.innerHTML = qz.questions.map((q, i) => {
-    let cls = '';
-    if (q.status==='answered') cls = 'ans'; else if (q.status==='skipped') cls = 'ski';
-    if (i === qz.current) cls += ' cur';
-    return `<button class="${cls.trim()}" data-g="${i}" aria-label="Go to question ${i+1}">${i+1}</button>`;
+  const qz = state.quiz; if (!qz) return;
+  const pal = el('palette'); if (!pal) return;
+  pal.innerHTML = qz.questions.map((q,i)=>{
+    const c = q.status==='answered' ? 'ans' : q.status==='skipped' ? 'ski' : '';
+    return `<button type="button" class="${c}${i===qz.current?' cur':''}" data-pal="${i}" aria-label="Question ${i+1}">${i+1}</button>`;
   }).join('');
-  box.querySelectorAll('[data-g]').forEach(b => b.addEventListener('click', () => goToQuestion(+b.dataset.g)));
+  const a = qz.questions.filter(q=>q.status==='answered').length;
+  const sk = qz.questions.filter(q=>q.status==='skipped').length;
+  const pc = el('palCounts'); if (pc) pc.textContent = `${a} ans · ${sk} skip · ${qz.total-a-sk} left`;
 }
 
 function updateProgress(){
-  const qz = state.quiz; if (!qz) return;
-  el('qCount').textContent = `${qz.current + 1} / ${qz.total}`;
-  el('qProg').style.width = ((qz.current + 1) / qz.total * 100) + '%';
-  updateControls();
+  const qz = state.quiz, bar = el('progBar');
+  if (!qz || !bar) return;
+  bar.style.width = ((qz.current+1)/qz.total*100) + '%';
 }
+
 function updateControls(){
   const qz = state.quiz; if (!qz) return;
   const q = qz.questions[qz.current];
-  const prev = el('btnPrev'), skip = el('btnSkip');
+  const prev = el('btnPrev'), next = el('btnNext'), skip = el('btnSkip'), cur = el('qCur');
   if (prev) prev.disabled = qz.current === 0;
-  if (skip) skip.disabled = qz.mode === 'practice' && q.status === 'answered';
+  if (next) next.disabled = qz.current === qz.total - 1;
+  if (skip) skip.disabled = qz.mode==='practice' && q.status==='answered';
+  if (cur) cur.textContent = qz.current + 1;
 }
 
 /* ---------- RESULT ---------- */
-function showResult(){
-  stopTimer();
+function renderResult(){
   const r = state.lastResult;
-  if (!r) { renderHome(); return; }
-  const C = 351.86;
-  const pct = Math.max(0, Math.min(100, r.percentage));
-
-  el('view').innerHTML = `
-  <div class="result view">
+  if (!r) { go('home'); return; }
+  const acc = r.accuracy, C = 339.292;
+  el('view').innerHTML = `<div class="result view">
     <div class="card res-hero">
-      <div>
-        <span class="kicker">Quiz completed</span>
-        <div class="score-line"><span class="n">${fmtScore(r.score)}</span><span class="d">/ ${r.total}</span></div>
+      <div style="flex:1;min-width:240px">
+        <span class="kicker">Test Complete · ${esc(r.language||'')}</span>
+        <div class="score-line"><span class="n">${esc(String(r.score))}</span><span class="d">/ ${r.max}</span></div>
         <div class="res-chips">
-          <span class="pill pill-a">${icon('book')} ${esc(r.subject === 'Mixed' ? 'Mixed Quiz' : r.subject)}</span>
-          <span class="pill">${r.mode === 'practice' ? 'Practice' : 'Mock Test'}</span>
-          ${r.difficulty && r.difficulty !== 'Mixed' ? `<span class="pill">${esc(r.difficulty)}</span>` : ''}
-          <span class="pill">${r.neg ? '−' + r.neg + ' marking' : 'No negative'}</span>
+          <span class="pill pill-a">${icon('book')} ${esc(r.subject)}</span>
+          <span class="pill">${r.mode==='mock'?'Mock Test':'Practice'}</span>
+          <span class="pill">${esc(r.difficulty)}</span>
+          ${Number(r.neg)?`<span class="pill">Neg −${r.neg}</span>`:'<span class="pill">No negative</span>'}
+          <span class="pill">${icon('clock')} ${fmtTime(r.timeTaken)}</span>
         </div>
       </div>
-      <div class="donut">
-        <svg viewBox="0 0 130 130" width="130" height="130" aria-hidden="true">
-          <circle cx="65" cy="65" r="56" fill="none" stroke="var(--line)" stroke-width="10"/>
-          <circle id="donutFg" cx="65" cy="65" r="56" fill="none" stroke="var(--accent)" stroke-width="10" stroke-linecap="round"
-            stroke-dasharray="${C}" stroke-dashoffset="${C}" style="transition:stroke-dashoffset 1s cubic-bezier(.2,.7,.3,1)"/>
-        </svg>
-        <span class="dv">${Math.round(pct)}%</span>
-      </div>
+      <div class="donut"><svg viewBox="0 0 130 130" width="130" height="130" aria-hidden="true">
+        <circle cx="65" cy="65" r="54" fill="none" stroke="var(--line)" stroke-width="10"/>
+        <circle cx="65" cy="65" r="54" fill="none" stroke="var(--accent)" stroke-width="10" stroke-linecap="round"
+          stroke-dasharray="${C}" stroke-dashoffset="${(C*(1-acc/100)).toFixed(1)}"/>
+      </svg><span class="dv">${acc}%</span></div>
     </div>
-
     <div class="scoreboard res-stats">
+      <div class="sb"><div class="n">${esc(String(r.score))}</div><div class="l">Score</div></div>
       <div class="sb"><div class="n g">${r.correct}</div><div class="l">Correct</div></div>
       <div class="sb"><div class="n r">${r.wrong}</div><div class="l">Wrong</div></div>
       <div class="sb"><div class="n o">${r.skipped}</div><div class="l">Skipped</div></div>
-      <div class="sb"><div class="n">${Math.round(r.accuracy)}%</div><div class="l">Accuracy</div></div>
-      <div class="sb"><div class="n">${Math.round(r.percentage)}%</div><div class="l">Percentage</div></div>
-      <div class="sb"><div class="n">${fmtTime(r.timeTaken)}</div><div class="l">Time Taken</div></div>
+      <div class="sb"><div class="n">${acc}%</div><div class="l">Accuracy</div></div>
+      <div class="sb"><div class="n">${fmtTime(r.timeTaken)}</div><div class="l">Time</div></div>
     </div>
-
     <div class="res-actions">
-      <button class="btn btn-primary" id="resReview">${icon('eye')} Review Answers</button>
-      <button class="btn" id="resRetry">${icon('refresh')} Try Again</button>
-      <button class="btn" id="resNew">${icon('play')} New Quiz</button>
-      <button class="btn btn-ghost" id="resHome">${icon('home')} Back to Home</button>
+      <button class="btn btn-primary" data-act="review">${icon('eye')} Review Answers</button>
+      <button class="btn" data-act="retake">${icon('refresh')} Retake</button>
+      <button class="btn" data-act="newsetup">${icon('grid')} New Quiz</button>
+      <button class="btn btn-ghost" data-act="home">${icon('home')} Home</button>
     </div>
   </div>`;
-
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    const fg = el('donutFg'); if (fg) fg.style.strokeDashoffset = String(C * (1 - pct / 100));
-  }));
-  el('resReview').addEventListener('click', () => { state.reviewFilter = 'all'; showReview(); });
-  el('resRetry').addEventListener('click', () => { state.lastCfg ? startQuiz(state.lastCfg) : renderSetup('Mathematics'); });
-  el('resNew').addEventListener('click', () => renderSetup(state.lastCfg ? state.lastCfg.subject : 'Mathematics'));
-  el('resHome').addEventListener('click', renderHome);
-  window.scrollTo({ top:0, behavior:'smooth' });
 }
 
 /* ---------- REVIEW ---------- */
-function showReview(){
-  const qz = state.quiz;
-  if (!qz) { renderHome(); return; }
-  const f = state.reviewFilter || 'all';
-  const statOf = q => q.status==='answered' ? (q.userAnswer===q.answer ? 'ok' : 'bad') : 'ski';
-  const counts = { all:qz.total, ok:0, bad:0, ski:0 };
-  qz.questions.forEach(q => counts[statOf(q)]++);
-  const list = qz.questions.map((q,i) => ({ q, i, st:statOf(q) })).filter(x => f==='all' || x.st===f);
+function renderReview(){
+  const r = state.lastResult;
+  if (!r || !r.questions) { go('home'); return; }
+  const isC = q => q.status==='answered' && q.userAnswer===q.answer;
+  const counts = { all:r.questions.length, correct:0, wrong:0, skipped:0 };
+  r.questions.forEach(q => { counts[isC(q)?'correct':(q.status==='answered'?'wrong':'skipped')]++; });
+  const f = state.reviewFilter;
+  const match = q => f==='all' || (f==='correct'&&isC(q)) || (f==='wrong'&&(q.status==='answered'&&!isC(q))) || (f==='skipped'&&q.status!=='answered');
 
-  const items = list.map(({ q, i, st }) => {
-    const opts = q.options.map((o, j) => {
-      let cls = 'ropt', tag = '';
-      if (j === q.answer) { cls += ' correct'; tag = 'Correct answer'; }
-      if (q.status==='answered' && j === q.userAnswer) {
-        if (q.userAnswer !== q.answer) { cls = 'ropt mine-wrong'; tag = 'Your answer'; }
-        else tag = 'Your answer · correct';
-      }
-      return `<div class="${cls}"><span class="key">${LETTERS[j]}</span><span>${esc(o)}</span>${tag?`<span class="tag">${tag}</span>`:''}</div>`;
-    }).join('');
-    const badge = st==='ok' ? '<span class="badge ok">Correct</span>' : st==='bad' ? '<span class="badge bad">Wrong</span>' : '<span class="badge ski">Skipped</span>';
-    const expl = q.explanation
-      ? `<div class="expl"><div class="el">${icon('bulb')} Explanation</div><p>${esc(q.explanation)}</p></div>`
-      : `<div class="expl"><div class="el">${icon('bulb')} Answer</div><p>Correct answer: <b>${esc(q.options[q.answer])}</b></p></div>`;
-    return `<div class="card rev-item ${st}">
-      <div class="rev-head"><span class="rev-no">Q${pad2(i+1)}</span><span class="pill">${esc(q.subject)}</span>${badge}</div>
+  const items = r.questions.map((q,i)=>({q,i})).filter(({q})=>match(q)).map(({q,i})=>{
+    const cls = q.status!=='answered' ? 'ski' : (isC(q)?'ok':'bad');
+    const label = q.status!=='answered' ? '<span class="badge ski">Skipped</span>' : (isC(q)?'<span class="badge ok">Correct</span>':'<span class="badge bad">Wrong</span>');
+    return `<div class="card rev-item ${cls}">
+      <div class="rev-head">
+        <span class="rev-no">Q ${i+1}</span>${label}
+        <span class="pill">${esc(q.subject)}</span>
+      </div>
       <div class="rev-q">${esc(q.question)}</div>
-      <div class="rev-opts">${opts}</div>
-      ${st==='ski' ? '<div class="rev-na">You did not answer this question.</div>' : ''}
-      ${expl}
+      <div class="rev-opts">
+        ${q.options.map((o,oi)=>{
+          let c='ropt', tag='';
+          if (oi===q.answer){ c+=' correct'; tag = (q.status==='answered'&&q.userAnswer===oi) ? '<span class="tag">Your pick ✓</span>' : '<span class="tag">Answer</span>'; }
+          else if (q.status==='answered' && q.userAnswer===oi){ c+=' mine-wrong'; tag='<span class="tag">Your pick</span>'; }
+          return `<div class="${c}"><span class="key">${LETTERS[oi]}</span><span>${esc(o)}</span>${tag}</div>`;
+        }).join('')}
+      </div>
+      ${q.status!=='answered' ? '<div class="rev-na">You skipped this question.</div>' : ''}
+      ${q.explanation ? `<div class="expl"><div class="el">${icon('bulb')} Explanation</div><p>${esc(q.explanation)}</p></div>` : ''}
     </div>`;
-  }).join('') || `<div class="card empty">${icon('info')}<h3>Nothing here</h3><p>No questions in this category.</p></div>`;
+  }).join('');
 
-  const filters = [['all','All'],['ok','Correct'],['bad','Wrong'],['ski','Skipped']].map(([k,l]) =>
-    `<button class="chip${f===k?' on':''}" data-f="${k}">${l} · ${counts[k]}</button>`).join('');
-
-  el('view').innerHTML = `
-  <div class="review view">
-    <button class="backlink" id="revBack">${icon('chevL')} Back to result</button>
-    <h2>Answer Review</h2>
-    <p class="page-sub">Every question, your answer, the correct answer and the explanation.</p>
-    <div class="rev-filters">${filters}</div>
-    ${items}
-    <div class="res-actions">
-      <button class="btn btn-ghost" id="revHome">${icon('home')} Back to Home</button>
+  el('view').innerHTML = `<div class="review view">
+    <button class="backlink" data-act="home">${icon('chevL')} Back to Home</button>
+    <h2>Review</h2>
+    <p class="page-sub">${esc(r.subject)} · ${r.mode==='mock'?'Mock':'Practice'} · Score <b>${esc(String(r.score))}/${r.max}</b> · ${esc(r.language||'')}</p>
+    <div class="rev-filters">
+      ${[['all','All'],['correct','Correct'],['wrong','Wrong'],['skipped','Skipped']]
+        .map(([v,l])=>`<button class="chip${f===v?' on':''}" data-revf="${v}">${l} (${counts[v]})</button>`).join('')}
     </div>
+    ${items || emptyState('list','Nothing here','No questions match this filter.')}
   </div>`;
-
-  el('revBack').addEventListener('click', showResult);
-  el('revHome').addEventListener('click', renderHome);
-  document.querySelectorAll('[data-f]').forEach(b => b.addEventListener('click', () => { state.reviewFilter = b.dataset.f; showReview(); }));
-  window.scrollTo({ top:0, behavior:'smooth' });
 }
 
-/* ---------- QUESTION BANK ---------- */
+/* ---------- QUESTION BANK (import hub + browse) ---------- */
 function renderBank(){
-  stopTimer();
-  const tiles = SUBJECT_NAMES.map((n, i) => {
-    const m = SUBJECT_META[n], cnt = state.banks[n].length;
-    return `<button class="subj" data-open-bank="${esc(n)}">
-      <span class="idx mono">0${i+1}</span>
-      <div class="subj-top"><span class="subj-ic">${icon(m.icon)}</span>
-        <div><h3>${esc(n)}</h3><div class="desc">${esc(m.file)}</div></div></div>
-      <div class="subj-meta"><span class="pill">${icon('list')} ${cnt} question${cnt!==1?'s':''}</span>
-        <span class="pill">${icon('clock')} ${m.time}s / q</span></div>
-      <div class="subj-foot"><span class="go">View questions ${icon('chevR')}</span></div>
-    </button>`;
-  }).join('');
-  const has = state.imported.length > 0;
-
-  el('view').innerHTML = `
-  <div class="bank view">
-    <button class="backlink" id="bankBack">${icon('chevL')} Home</button>
+  const folder = getLanguageFolder(state.language);
+  el('view').innerHTML = `<div class="bank view">
+    <button class="backlink" data-act="home">${icon('chevL')} Back to Home</button>
     <h2>Question Bank</h2>
-    <p class="page-sub">Live counts, read straight from your JSON files — <b>${officialTotal() + state.imported.length}</b> questions in total.</p>
-    <div class="subj-grid">${tiles}</div>
+    <p class="page-sub">Official questions load from <code>question bank/${esc(folder)}/</code>. Add your own via JSON import — they stay in this browser and never modify the official files.</p>
+
+    <div class="subj-grid" style="margin-top:20px">
+      ${SUBJECT_NAMES.map(n=>`<button class="subj" data-act="browsesubj" data-ssubj="${esc(n)}">
+        <span class="subj-top"><span class="subj-ic">${icon(SUBJECT_META[n].icon)}</span>
+          <span><h3>${esc(n)}</h3><span class="desc">${esc(SUBJECT_META[n].desc)}</span></span></span>
+        <span class="subj-meta">
+          <span class="pill">${icon('file')} ${state.banks[n].length} Q</span>
+          <span class="pill pill-a">${esc(state.language)}</span>
+        </span>
+        <span class="subj-foot"><span class="go">Browse ${icon('chevR')}</span></span>
+      </button>`).join('')}
+    </div>
 
     <div class="card imp-card">
       <div class="imp-head">
-        <span class="subj-ic">${icon('file')}</span>
-        <div>
-          <h3>Imported Questions</h3>
-          <p>Extra questions from your own JSON files, stored in this browser via localStorage. The official <code>question bank/*.json</code> files are never modified — imported questions are kept strictly separate and are validated before acceptance.</p>
-        </div>
-        <span class="pill pill-a">${state.imported.length} question${state.imported.length!==1?'s':''}</span>
+        <div><h3>Import your own questions</h3>
+        <p>JSON array — each item: <code>{ "question", "options": [4 strings], "answer": 0–3, "explanation"?, "difficulty"?, "id"? }</code>. Invalid items are skipped with a report. Max 1000 stored.</p></div>
+        <span class="pill">${state.imported.length} imported</span>
       </div>
       <div class="imp-actions">
-        <label class="btn btn-primary" for="importFile" style="cursor:pointer">${icon('upload')} Import JSON</label>
-        <input type="file" id="importFile" accept=".json,application/json" hidden>
-        <button class="btn" id="btnExport" ${has?'':'disabled'}>${icon('download')} Export JSON</button>
-        <button class="btn" id="btnViewImp" ${has?'':'disabled'}>${icon('eye')} View</button>
-        <button class="btn btn-danger" id="btnClearImp" ${has?'':'disabled'}>${icon('trash')} Clear Imported</button>
+        <button class="btn btn-primary" data-act="import">${icon('upload')} Import JSON</button>
+        <button class="btn" data-act="export" ${state.imported.length?'':'disabled'}>${icon('download')} Export</button>
+        <button class="btn btn-danger" data-act="clearimport" ${state.imported.length?'':'disabled'}>${icon('trash')} Clear Imported</button>
       </div>
       <div class="import-log" id="importLog"></div>
     </div>
   </div>`;
-
-  el('bankBack').addEventListener('click', renderHome);
-  document.querySelectorAll('[data-open-bank]').forEach(b => b.addEventListener('click', () => { state.bankView = { subject:b.dataset.openBank, page:1 }; paintBankViewer(); }));
-  el('importFile').addEventListener('change', async e => {
-    const f = e.target.files[0]; e.target.value = '';
-    if (!f) return;
-    if (f.size > 8 * 1024 * 1024) { toast('File too large (max 8 MB).', 'error'); return; }
-    try { importQuestions(await readFileText(f)); }
-    catch { toast('Could not read the selected file.', 'error'); }
-  });
-  el('btnExport').addEventListener('click', exportQuestions);
-  el('btnViewImp').addEventListener('click', () => { state.bankView = { subject:'Imported', page:1 }; paintBankViewer(); });
-  el('btnClearImp').addEventListener('click', () => openModal({
-    title:'Clear imported questions?',
-    okLabel:'Clear', okClass:'btn-danger',
-    body:`<p>This removes all <b>${state.imported.length}</b> imported questions from this browser. Official JSON files are not touched.</p>`,
-    onOk: () => { state.imported = []; saveQuestions(); renderBank(); toast('Imported questions cleared.', 'success'); }
-  }));
 }
 
-function paintBankViewer(){
-  const { subject, page } = state.bankView;
-  const isImp = subject === 'Imported';
-  const list = isImp ? state.imported : (state.banks[subject] || []);
-  const shown = list.slice(0, page * 20);
-
-  const items = shown.map((q, i) => {
-    const opts = q.options.map((o, j) =>
-      `<div class="ropt${j===q.answer?' correct':''}"><span class="key">${LETTERS[j]}</span><span>${esc(o)}</span>${j===q.answer?`<span class="tag">Correct</span>`:''}</div>`).join('');
-    return `<div class="card bq">
-      <span class="rev-no">Q${pad2(i+1)} <span class="pill">${esc(q.subject)}</span>${q.difficulty?`<span class="badge neu">${esc(q.difficulty)}</span>`:''}${isImp?'<span class="badge neu">Imported</span>':''}</span>
-      <div class="bq-q">${esc(q.question)}</div>
-      <div class="rev-opts">${opts}</div>
-      ${q.explanation ? `<div class="expl"><div class="el">${icon('bulb')} Explanation</div><p>${esc(q.explanation)}</p></div>` : ''}
-    </div>`;
-  }).join('') || `<div class="card empty">${icon('book')}<h3>No questions here</h3><p>This bank is empty${isImp?' — import a JSON file to fill it':''}.</p></div>`;
-
-  el('view').innerHTML = `
-  <div class="bview view">
-    <button class="backlink" id="bvBack">${icon('chevL')} Question Bank</button>
-    <h2>${esc(subject === 'Mixed' ? 'Mixed' : subject)} ${isImp ? '<span class="badge neu">Imported</span>' : '<span class="badge neu">Official JSON</span>'}</h2>
-    <p class="page-sub">${list.length} question${list.length!==1?'s':''} · read-only view · showing ${shown.length}</p>
-    ${items}
-    ${list.length > shown.length ? `<div class="loadmore-wrap"><button class="btn" id="btnLoadMore">Load more (${list.length - shown.length} left)</button></div>` : ''}
+function renderBankView(){
+  const bv = state.bankView;
+  const subject = bv.subject || SUBJECT_NAMES[0];
+  const pool = state.banks[subject] || [];
+  const shown = pool.slice(0, bv.page * 10);
+  const remaining = pool.length - shown.length;
+  const folder = getLanguageFolder(state.language);
+  el('view').innerHTML = `<div class="bview view">
+    <button class="backlink" data-act="backbank">${icon('chevL')} Back to Question Bank</button>
+    <h2>${esc(subject)} <span class="pill pill-a">${pool.length} Q · ${esc(state.language)}</span></h2>
+    ${pool.length ? shown.map((q,i)=>`<div class="card bq">
+        <span class="rev-no">#${String(i+1).padStart(2,'0')} ${q.difficulty?`<span class="pill">${esc(q.difficulty)}</span>`:''}</span>
+        <div class="bq-q">${esc(q.question)}</div>
+        <div class="rev-opts">${q.options.map((o,oi)=>`<div class="ropt${oi===q.answer?' correct':''}"><span class="key">${LETTERS[oi]}</span><span>${esc(o)}</span>${oi===q.answer?'<span class="tag">Answer</span>':''}</div>`).join('')}</div>
+        ${q.explanation?`<div class="expl"><div class="el">${icon('bulb')} Explanation</div><p>${esc(q.explanation)}</p></div>`:''}
+      </div>`).join('')
+    : emptyState('file','No questions here',`The file <code>question bank/${esc(folder)}/${esc(SUBJECT_FILE[subject])}</code> is empty or failed to load.`)}
+    ${remaining>0?`<div class="loadmore-wrap"><button class="btn" data-act="loadmore">Load ${Math.min(10,remaining)} more (${remaining} left)</button></div>`:''}
   </div>`;
-
-  el('bvBack').addEventListener('click', renderBank);
-  const lm = el('btnLoadMore');
-  if (lm) lm.addEventListener('click', () => { state.bankView.page++; paintBankViewer(); });
-  window.scrollTo({ top:0, behavior:'smooth' });
 }
 
-/* ---------- QUIZ HISTORY ---------- */
+/* ---------- HISTORY ---------- */
 function renderHistory(){
-  stopTimer();
   const h = state.history;
-  const rows = h.map(r => `
-    <tr>
-      <td data-l="Date">${esc(fmtDate(r.date))}</td>
-      <td data-l="Subject">${esc(r.subject === 'Mixed' ? 'Mixed Quiz' : r.subject)}</td>
-      <td data-l="Mode">${r.mode === 'practice' ? 'Practice' : 'Mock'}</td>
-      <td data-l="Questions" class="mono">${r.total}</td>
-      <td data-l="Correct" class="mono c-g">${r.correct}</td>
-      <td data-l="Wrong" class="mono c-r">${r.wrong}</td>
-      <td data-l="Skipped" class="mono c-o">${r.skipped}</td>
-      <td data-l="Score" class="mono"><b>${fmtScore(r.score)}</b> / ${r.total}</td>
-      <td data-l="Accuracy" class="mono">${Math.round(r.accuracy || 0)}%</td>
-      <td data-l="Time" class="mono">${fmtTime(r.timeTaken)}</td>
-    </tr>`).join('');
-
-  el('view').innerHTML = `
-  <div class="hist view">
-    <button class="backlink" id="hBack">${icon('chevL')} Home</button>
-    <h2>Quiz History</h2>
-    <p class="page-sub">${h.length ? `${h.length} attempt${h.length!==1?'s':''} recorded on this device (newest first).` : 'Your attempts will appear here — stored only in this browser.'}</p>
+  el('view').innerHTML = `<div class="hist view">
+    <button class="backlink" data-act="home">${icon('chevL')} Back to Home</button>
+    <h2>History</h2>
+    <p class="page-sub">Your last ${h.length} test${h.length!==1?'s':''} — stored only in this browser.</p>
     ${h.length ? `
+      <div class="res-actions" style="margin-top:14px"><button class="btn btn-danger" data-act="clearhist">${icon('trash')} Clear History</button></div>
       <div class="card hist-card"><div class="table-wrap"><table class="hist-table">
-        <thead><tr><th>Date</th><th>Subject</th><th>Mode</th><th>Qs</th><th>Correct</th><th>Wrong</th><th>Skipped</th><th>Score</th><th>Accuracy</th><th>Time</th></tr></thead>
-        <tbody>${rows}</tbody>
-      </table></div></div>
-      <div class="imp-actions"><button class="btn btn-danger" id="btnClearHist">${icon('trash')} Clear History</button></div>`
-    : `<div class="card empty">${icon('history')}<h3>No quizzes yet</h3><p>Attempt your first quiz and it will show up here instantly.</p><button class="btn btn-primary" id="hStart">${icon('play')} Start Quiz</button></div>`}
+        <thead><tr><th>Date</th><th>Language</th><th>Subject</th><th>Mode</th><th>Score</th><th>Accuracy</th><th>Time</th><th></th></tr></thead>
+        <tbody>${h.map((r,i)=>`<tr>
+          <td data-l="Date">${fmtDate(r.at)}</td>
+          <td data-l="Language">${esc(r.language||'—')}</td>
+          <td data-l="Subject"><b>${esc(r.subject)}</b></td>
+          <td data-l="Mode">${r.mode==='mock'?'Mock':'Practice'}</td>
+          <td data-l="Score"><b>${esc(String(r.score))}</b>/${r.max}</td>
+          <td data-l="Accuracy">${r.accuracy}%</td>
+          <td data-l="Time">${fmtTime(r.timeTaken)}</td>
+          <td data-l=""><button class="btn" data-act="hreview" data-i="${i}">${icon('eye')} Review</button></td>
+        </tr>`).join('')}</tbody>
+      </table></div></div>`
+    : emptyState('history','No tests yet','Finish a quiz and it will appear here.','<button class="btn btn-primary" data-act="setup">Start your first quiz</button>')}
   </div>`;
-
-  el('hBack').addEventListener('click', renderHome);
-  const hs = el('hStart'); if (hs) hs.addEventListener('click', () => renderSetup('Mathematics'));
-  const ch = el('btnClearHist');
-  if (ch) ch.addEventListener('click', () => openModal({
-    title:'Clear quiz history?',
-    okLabel:'Clear', okClass:'btn-danger',
-    body:`<p>All <b>${state.history.length}</b> attempt records will be permanently removed from this browser. Statistics will reset too.</p>`,
-    onOk: () => { state.history = []; lsSet(K.history, state.history); renderHistory(); toast('Quiz history cleared.', 'success'); }
-  }));
 }
 
-/* ---------- STATISTICS ---------- */
+/* ---------- STATS ---------- */
 function renderStats(){
-  stopTimer();
-  const s = updateStatistics();
-  if (!s.quizzes) {
-    el('view').innerHTML = `
-    <div class="stats view">
-      <button class="backlink" id="sBack">${icon('chevL')} Home</button>
+  const h = state.history;
+  if (!h.length) {
+    el('view').innerHTML = `<div class="stats view">
+      <button class="backlink" data-act="home">${icon('chevL')} Back to Home</button>
       <h2>Statistics</h2>
-      <div class="card empty" style="margin-top:20px">${icon('chart')}<h3>No data yet</h3><p>Statistics are calculated live from your quiz history in localStorage.</p><button class="btn btn-primary" id="sStart">${icon('play')} Start Quiz</button></div>
+      ${emptyState('chart','No data yet','Play a few quizzes to see your stats here.','<button class="btn btn-primary" data-act="setup">Start a quiz</button>')}
     </div>`;
-    el('sBack').addEventListener('click', renderHome);
-    el('sStart').addEventListener('click', () => renderSetup('Mathematics'));
     return;
   }
-
-  const groups = {};
-  state.history.forEach(r => {
-    const g = groups[r.subject] || (groups[r.subject] = { att:0, cor:0, n:0 });
-    g.att += r.correct + r.wrong; g.cor += r.correct; g.n++;
+  const attempted = h.reduce((a,r)=>a+r.correct+r.wrong,0);
+  const correct   = h.reduce((a,r)=>a+r.correct,0);
+  const acc = attempted ? Math.round(correct/attempted*100) : 0;
+  const time = h.reduce((a,r)=>a+(r.timeTaken||0),0);
+  const best = Math.max(...h.map(r=>parseFloat(r.score)||0));
+  const per = SUBJECT_NAMES.map(n=>{
+    let c=0,a2=0;
+    h.forEach(r=>(r.questions||[]).forEach(q=>{
+      if (q.subject===n && q.status==='answered'){ a2++; if (q.userAnswer===q.answer) c++; }
+    }));
+    return { n, c, a:a2, acc:a2?Math.round(c/a2*100):0 };
   });
-  const order = [...SUBJECT_NAMES, 'Mixed'].filter(n => groups[n]);
-  const bars = order.map(n => {
-    const g = groups[n], acc = g.att ? Math.round(g.cor / g.att * 100) : 0;
-    return `<div class="sbar">
-      <div class="sbar-top"><span>${esc(n === 'Mixed' ? 'Mixed Quiz' : n)}</span><span class="mono">${acc}% · ${g.n} quiz${g.n!==1?'zes':''}</span></div>
-      <div class="sbar-track"><div class="sbar-fill" data-w="${acc}"></div></div>
-    </div>`;
-  }).join('');
-
-  const bestTxt = s.best ? `${fmtScore(s.best.score)} / ${s.best.total}` : '—';
-  el('view').innerHTML = `
-  <div class="stats view">
-    <button class="backlink" id="sBack">${icon('chevL')} Home</button>
+  el('view').innerHTML = `<div class="stats view">
+    <button class="backlink" data-act="home">${icon('chevL')} Back to Home</button>
     <h2>Statistics</h2>
-    <p class="page-sub">Computed live from ${s.quizzes} recorded attempt${s.quizzes!==1?'s':''}.</p>
+    <p class="page-sub">Aggregated across every test stored in this browser.</p>
     <div class="scoreboard stats-scoreboard">
-      <div class="sb"><div class="n">${s.quizzes}</div><div class="l">Total Quizzes</div></div>
-      <div class="sb"><div class="n">${s.attempted}</div><div class="l">Questions Attempted</div></div>
-      <div class="sb"><div class="n g">${s.correct}</div><div class="l">Total Correct</div></div>
-      <div class="sb"><div class="n r">${s.wrong}</div><div class="l">Total Wrong</div></div>
-      <div class="sb"><div class="n o">${s.skipped}</div><div class="l">Total Skipped</div></div>
-      <div class="sb"><div class="n">${Math.round(s.avgAccuracy)}%</div><div class="l">Average Accuracy</div></div>
-      <div class="sb"><div class="n">${esc(bestTxt)}</div><div class="l">Best Score</div></div>
+      <div class="sb"><div class="n">${h.length}</div><div class="l">Tests Taken</div></div>
+      <div class="sb"><div class="n">${attempted}</div><div class="l">Questions Attempted</div></div>
+      <div class="sb"><div class="n g">${acc}%</div><div class="l">Avg Accuracy</div></div>
+      <div class="sb"><div class="n">${fmtScore(best)}</div><div class="l">Best Score</div></div>
+      <div class="sb"><div class="n">${fmtTime(time)}</div><div class="l">Time Practiced</div></div>
     </div>
-    <div class="sbars"><div class="kicker" style="margin-bottom:14px">Performance by subject</div>${bars}</div>
+    <div class="sbars">
+      <div class="sec-head" style="margin-top:8px"><h2 style="font-size:20px">Accuracy by Subject</h2></div>
+      ${per.map(p=>`<div class="sbar">
+        <div class="sbar-top"><span>${esc(p.n)}</span><span class="mono">${p.c}/${p.a} · ${p.acc}%</span></div>
+        <div class="sbar-track"><i class="sbar-fill" style="width:${p.a?p.acc:0}%"></i></div>
+      </div>`).join('')}
+    </div>
   </div>`;
-
-  el('sBack').addEventListener('click', renderHome);
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    document.querySelectorAll('.sbar-fill').forEach(f => f.style.width = f.dataset.w + '%');
-  }));
 }
 
-/* ---------- keyboard shortcuts (desktop power feature) ---------- */
+/* =====================================================================
+   ROUTER + ACTIONS
+   ===================================================================== */
+let currentView = 'home';
+
+function refreshView(){
+  const M = { home:renderHome, setup:renderSetup, bank:renderBank, bankview:renderBankView,
+              history:renderHistory, stats:renderStats, result:renderResult, review:renderReview };
+  (M[currentView] || renderHome)();
+}
+
+function doGo(view, arg){
+  stopTimer();
+  currentView = view;
+  if (view === 'bankview'){ state.bankView.subject = arg || state.bankView.subject; state.bankView.page = 1; }
+  if (view === 'setup' && typeof arg === 'string') state.setupSel.subject = arg;
+  refreshView();
+  window.scrollTo(0, 0);
+}
+
+function go(view, arg){
+  // Leaving an active quiz? Ask before discarding progress.
+  if (state.quiz && view !== 'quiz' && currentView === 'quiz'){
+    stopTimer();
+    openModal({
+      title:'Quit this quiz?',
+      body:'<p>Your progress in the current quiz will be <b>lost</b>.</p>',
+      okLabel:'Quit', okClass:'btn-danger',
+      onOk:()=>{ state.quiz = null; doGo(view, arg); },
+      onCancel: resumeTimer
+    });
+    return;
+  }
+  doGo(view, arg);
+}
+
+function rerenderSetupKeepScroll(){
+  const y = window.scrollY;
+  renderSetup();
+  window.scrollTo(0, y);
+}
+
+function handleAction(a, btn){
+  switch(a){
+    case 'home': go('home'); break;
+    case 'setup': go('setup'); break;
+    case 'mock': state.setupSel.mode = 'mock'; go('setup'); break;
+    case 'start': startQuiz(currentCfg()); break;
+    case 'retry': retryFailedBanks(); break;
+    case 'quit': go('home'); break;                       // router guard opens the confirm modal
+    case 'pal': el('sidePanel').classList.toggle('open'); break;
+    case 'prev': previousQuestion(); break;
+    case 'next': nextQuestion(); break;
+    case 'skipq': skipQuestion(); break;
+    case 'submit': openSubmitModal(); break;
+    case 'review': go('review'); break;
+    case 'retake': if (state.lastCfg) startQuiz({ ...state.lastCfg }); break;
+    case 'newsetup': go('setup'); break;
+    case 'history': go('history'); break;
+    case 'stats': go('stats'); break;
+    case 'bank': go('bank'); break;
+    case 'backbank': go('bank'); break;
+    case 'browsesubj': go('bankview', btn.dataset.ssubj); break;
+    case 'loadmore': state.bankView.page++; renderBankView(); break;
+    case 'import': el('importFile').click(); break;
+    case 'export': exportQuestions(); break;
+    case 'clearimport':
+      openModal({ title:'Clear imported questions?',
+        body:`<p>This removes all <b>${state.imported.length}</b> imported questions from this browser. Official JSON files are not touched.</p>`,
+        okLabel:'Clear', okClass:'btn-danger',
+        onOk:()=>{ state.imported=[]; saveQuestions(); renderBank(); toast('Imported questions cleared.','success'); } });
+      break;
+    case 'clearhist':
+      openModal({ title:'Clear history?',
+        body:'<p>All past results will be permanently removed from this browser.</p>',
+        okLabel:'Clear', okClass:'btn-danger',
+        onOk:()=>{ state.history=[]; lsSet(K.history,[]); renderHistory(); toast('History cleared.','success'); } });
+      break;
+    case 'hreview': {
+      const r = state.history[+btn.dataset.i];
+      if (r && r.questions){ state.lastResult = r; state.reviewFilter='all'; go('review'); }
+      else toast('This entry has no stored questions to review.','warn');
+      break;
+    }
+  }
+}
+
+/* ---------- one delegated click listener for the whole app ---------- */
+document.addEventListener('click', e => {
+  const t = e.target;
+  const langB = t.closest('[data-lang]');
+  if (langB){ setLanguage(langB.dataset.lang); return; }
+  const actB = t.closest('[data-act]');
+  if (actB){ handleAction(actB.dataset.act, actB); return; }
+  const optB = t.closest('[data-opt]');
+  if (optB){ selectAnswer(+optB.dataset.opt); return; }
+  const palB = t.closest('[data-pal]');
+  if (palB){ goToQuestion(+palB.dataset.pal); return; }
+  const modeB = t.closest('[data-mode]');
+  if (modeB){ state.setupSel.mode = modeB.dataset.mode; rerenderSetupKeepScroll(); return; }
+  const subB = t.closest('[data-sel-subject]');
+  if (subB && !subB.disabled){ state.setupSel.subject = subB.dataset.selSubject; rerenderSetupKeepScroll(); return; }
+  const cntB = t.closest('[data-count]');
+  if (cntB){ state.setupSel.count = +cntB.dataset.count; rerenderSetupKeepScroll(); return; }
+  const difB = t.closest('[data-diff]');
+  if (difB){ state.setupSel.difficulty = difB.dataset.diff; rerenderSetupKeepScroll(); return; }
+  const negB = t.closest('[data-neg]');
+  if (negB){ state.setupSel.neg = negB.dataset.neg; rerenderSetupKeepScroll(); return; }
+  const revB = t.closest('[data-revf]');
+  if (revB){ state.reviewFilter = revB.dataset.revF; renderReview(); return; }
+  const subjCard = t.closest('button.subj[data-subject]');
+  if (subjCard){ go('setup', subjCard.dataset.subject); return; }
+});
+
+/* ---------- keyboard shortcuts during a quiz ---------- */
 document.addEventListener('keydown', e => {
-  if (el('modalOv')) { if (e.key === 'Escape') closeModal(); return; }
-  if (!state.quiz || !el('qpanel')) return;
+  if (currentView !== 'quiz' || !state.quiz || el('modalOv')) return;
   if (e.key === 'ArrowRight') nextQuestion();
   else if (e.key === 'ArrowLeft') previousQuestion();
   else if (['1','2','3','4'].includes(e.key)) selectAnswer(+e.key - 1);
 });
 
-/* ---------- boot ---------- */
-function init(){
-  const savedTheme = lsGet(K.theme, 'dark');
-  applyTheme(savedTheme === 'light' ? 'light' : 'dark');
+/* =====================================================================
+   BOOT
+   ===================================================================== */
+async function boot(){
+  applyTheme(lsGet(K.theme, 'dark'));
   el('themeBtn').addEventListener('click', toggleTheme);
-  el('brandHome').addEventListener('click', renderHome);
-  state.history = loadQuizHistory();
+  el('brandHome').addEventListener('click', () => go('home'));
+  el('importFile').addEventListener('change', async e => {
+    const f = e.target.files[0]; if (!f) return;
+    try { importQuestions(await readFileText(f)); }
+    catch { toast('Could not read that file.', 'error'); }
+    e.target.value = '';
+  });
+
   state.imported = loadImported();
-  const ls = lsGet(K.setup, null);
-  if (ls && Number.isInteger(ls.count)) state.lastSetup = { count:ls.count, difficulty:ls.difficulty||'Mixed', mode:ls.mode||'practice', neg:[0,0.25,0.5].includes(ls.neg)?ls.neg:0 };
-  renderBoot();
-  loadAllQuestions().then(renderHome);
+  state.history = lsGet(K.history, []);
+  if (!Array.isArray(state.history)) state.history = [];
+  state.setupSel = {
+    mode: state.lastSetup.mode, subject: 'Mathematics',
+    count: state.lastSetup.count, difficulty: state.lastSetup.difficulty, neg: state.lastSetup.neg
+  };
+
+  el('view').innerHTML = `<div class="boot"><div class="spinner"></div><p>Loading ${esc(state.language)} question banks…</p></div>`;
+  await loadAllQuestions();
+  go('home');
 }
-init();
+boot();
 </script>
 </body>
 </html>
