@@ -1,41 +1,1929 @@
+Here is the JSON code for questions `eng001` to `eng200`. You can copy and paste this directly into your project.
+
+```json
 [
   {
     "id": "eng001",
     "subject": "English",
-    "question": "Choose the synonym of 'Rapid'.",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose ‘No error’: Do your better and avoid what others are saying about you.",
     "options": [
-      "Slow",
-      "Fast",
-      "Weak",
-      "Late"
+      "avoid what others are",
+      "No error",
+      "saying about you.",
+      "Do your better and"
     ],
-    "answer": 1,
-    "explanation": "Rapid means fast or quick."
+    "answer": 3,
+    "explanation": "The phrase 'Do your better' is grammatically incorrect. It should be 'Do your best' because 'best' is the superlative form used in this context."
   },
   {
     "id": "eng002",
     "subject": "English",
-    "question": "Choose the antonym of 'Ancient'.",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose ‘No error’: The toad lay in her lap breathing heavy.",
     "options": [
-      "Old",
-      "Modern",
-      "Historic",
-      "Past"
+      "No error",
+      "in her lap",
+      "The toad lay",
+      "breathing heavy"
     ],
-    "answer": 1,
-    "explanation": "The opposite of ancient is modern."
+    "answer": 3,
+    "explanation": "The word 'heavy' is an adjective, but an adverb is needed to modify the verb 'breathing'. The correct phrase is 'breathing heavily'."
   },
   {
     "id": "eng003",
     "subject": "English",
-    "question": "Choose the correct sentence.",
+    "question": "Select the most appropriate option for the given blank: I have __ my mind after meeting her.",
     "options": [
-      "He go to school every day.",
-      "He goes to school every day.",
-      "He going to school every day.",
-      "He gone to school every day."
+      "Masked",
+      "Granted",
+      "Replaced",
+      "Changed"
+    ],
+    "answer": 3,
+    "explanation": "'Changed my mind' is the standard idiomatic expression meaning to alter one's decision or opinion."
+  },
+  {
+    "id": "eng004",
+    "subject": "English",
+    "question": "Choose the most appropriate antonym of the underlined word: Visitors enter the train and snake through its corridors and opulent interiors.",
+    "options": [
+      "Lavish",
+      "Scary",
+      "Economical",
+      "Plush"
+    ],
+    "answer": 2,
+    "explanation": "'Opulent' means ostentatiously rich and luxurious. The antonym is 'Economical', which implies careful, thrifty management of resources."
+  },
+  {
+    "id": "eng005",
+    "subject": "English",
+    "question": "Improve the underlined part of the sentence. Choose ‘No improvement’ if the sentence is grammatically correct: I was needing to buy a new pair of gloves.",
+    "options": [
+      "needed to bought",
+      "need to buy",
+      "needs to buy",
+      "No improvement"
     ],
     "answer": 1,
-    "explanation": "With the singular subject 'He', the correct verb is 'goes'."
-  }
+    "explanation": "The verb 'need' is not normally used in the continuous '-ing' form. The correct past tense is 'needed to buy'."
+  },
+  {
+    "id": "eng006",
+    "subject": "English",
+    "question": "Select the most appropriate synonym of the given word: Absolute",
+    "options": [
+      "Bounded",
+      "Complete",
+      "Divine",
+      "Final"
+    ],
+    "answer": 1,
+    "explanation": "'Absolute' means complete or total, making 'Complete' the most appropriate synonym."
+  },
+  {
+    "id": "eng007",
+    "subject": "English",
+    "question": "Choose the idiom/phrase that can substitute the highlighted group of words meaningfully: She is so nervous.",
+    "options": [
+      "In seventh heaven",
+      "Afraid of one’s own shadow",
+      "Spilled the beans",
+      "Lost cause"
+    ],
+    "answer": 1,
+    "explanation": "The phrase 'Afraid of one's own shadow' is an idiom used to describe someone who is excessively nervous, timid, or easily frightened."
+  },
+  {
+    "id": "eng008",
+    "subject": "English",
+    "question": "In the following question, out of the given four alternatives, select the alternative which best expresses the meaning of the idiom/phrase: Go with a bang",
+    "options": [
+      "Party like there’s no tomorrow",
+      "Decide according to the situation",
+      "To go crazy",
+      "Very exciting and successful"
+    ],
+    "answer": 3,
+    "explanation": "The idiom 'Go with a bang' means to be very exciting, successful, or impressive."
+  },
+  {
+    "id": "eng009",
+    "subject": "English",
+    "question": "Four sentences are given, out of which three have all correct spellings. Choose the sentence with the incorrectly spelt word:",
+    "options": [
+      "INDEPENDENCE",
+      "ABYSMAL",
+      "RESORT",
+      "BUREACRACY"
+    ],
+    "answer": 3,
+    "explanation": "The correct spelling of the word is 'BUREAUCRACY'."
+  },
+  {
+    "id": "eng010",
+    "subject": "English",
+    "question": "Select the most appropriate word to fill in the blank: With sales down, the company closed one factory and reduced _____ workforce at another.",
+    "options": [
+      "a.an",
+      "the",
+      "a",
+      "No article"
+    ],
+    "answer": 1,
+    "explanation": "The definite article 'the' is used here to refer to the specific workforce of that particular factory."
+  },
+  {
+    "id": "eng011",
+    "subject": "English",
+    "question": "Choose the word that is opposite in meaning to the given word: Aqueous",
+    "options": [
+      "Wet",
+      "Hydrated",
+      "Saturated",
+      "Arid"
+    ],
+    "answer": 3,
+    "explanation": "'Aqueous' means containing or dissolved in water. 'Arid', meaning dry, is its opposite."
+  },
+  {
+    "id": "eng012",
+    "subject": "English",
+    "question": "Select the word segment that substitutes (replaces) the bracketed word segment correctly and completes the sentence meaningfully: Presently Rosemary (seems to have know) those people herself in some deplorable past, and then got on to them and rejected them.",
+    "options": [
+      "seemed to have known",
+      "No correction required",
+      "seemed to knew",
+      "seem to know"
+    ],
+    "answer": 0,
+    "explanation": "The correct phrase is 'seemed to have known' to maintain past tense sequence and proper grammar after 'to have'."
+  },
+  {
+    "id": "eng013",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose 'No error': Some analysts have began to advocate for strong government involvement in the development and regulation of cyber security standards for satellites.",
+    "options": [
+      "of cyber security standards for satellites.",
+      "Some analysts have began to advocate for strong",
+      "government involvement in the development and regulation",
+      "No error"
+    ],
+    "answer": 1,
+    "explanation": "The past participle of 'begin' is 'begun'. Therefore, 'have began' is incorrect; it should be 'have begun'."
+  },
+  {
+    "id": "eng014",
+    "subject": "English",
+    "question": "Select the sentence with no spelling errors:",
+    "options": [
+      "There was acute disharmony in the room, where a little time before there had been at least an outward show of harmonie.",
+      "There was acute disharmony in the room, where a litle time before there had been at least an outward show of harmony.",
+      "There was acute disarmony in the room, where a little time before there had been at least an outward show of harmony.",
+      "There was acute disharmony in the room, where a little time before there had been at least an outward show of harmony."
+    ],
+    "answer": 3,
+    "explanation": "Option 4 is the only sentence with all words correctly spelled (disharmony, little, harmony)."
+  },
+  {
+    "id": "eng015",
+    "subject": "English",
+    "question": "Improve the underlined part of the sentence. Choose 'No improvement' if the sentence is grammatically correct: If you don't water your houseplants, they will dies.",
+    "options": [
+      "will die",
+      "will death",
+      "No improvement",
+      "shall dies"
+    ],
+    "answer": 0,
+    "explanation": "After the modal verb 'will', the base form of the verb 'die' must be used, not 'dies'."
+  },
+  {
+    "id": "eng016",
+    "subject": "English",
+    "question": "Comprehension: Read the passage carefully and select the correct answer for the given blanks out of the four alternatives. Lions have large jaws and are capable of (1)______ up to 11 inches wide. They have long canine teeth which are used to (2)_______ and kill their prey. Lions do not chew their food. Small incisors at the front of their mouth are used to grip the meat (3)________ their sharp carnasial teeth in the back of their mouth tear it into (4)________ they can swallow. In the wild male lions live to around 12 years of age, with females living to around 15 years of age, whereas in (5)__________ they can live up to 25 years of age. Select the most appropriate option for blank (1):",
+    "options": [
+      "signing",
+      "standing",
+      "jumping",
+      "opening"
+    ],
+    "answer": 3,
+    "explanation": "Lions have large jaws and are capable of opening them wide, which fits the context of measuring the jaw's gape."
+  },
+  {
+    "id": "eng017",
+    "subject": "English",
+    "question": "Comprehension: Lions have large jaws and are capable of (1)______ up to 11 inches wide. They have long canine teeth which are used to (2)_______ and kill their prey. Select the most appropriate option for blank (2):",
+    "options": [
+      "grasp",
+      "host",
+      "loathe",
+      "remiss"
+    ],
+    "answer": 0,
+    "explanation": "Canine teeth are used to grasp and kill prey."
+  },
+  {
+    "id": "eng018",
+    "subject": "English",
+    "question": "Comprehension: Lions have large jaws... Small incisors at the front of their mouth are used to grip the meat (3)________ their sharp carnasial teeth in the back of their mouth tear it into (4)________ they can swallow. Select the most appropriate option for blank (3).",
+    "options": [
+      "Whilst",
+      "What",
+      "Whence",
+      "As"
+    ],
+    "answer": 3,
+    "explanation": "'As' is used here as a conjunction meaning 'while' or 'at the same time', showing that the tearing happens as they grip the meat."
+  },
+  {
+    "id": "eng019",
+    "subject": "English",
+    "question": "Comprehension: Lions have large jaws... their sharp carnasial teeth in the back of their mouth tear it into (4)________ they can swallow. Select the most appropriate option for blank (4).",
+    "options": [
+      "divisions",
+      "hordes",
+      "chunks",
+      "pecks"
+    ],
+    "answer": 2,
+    "explanation": "'Chunks' refers to thick, solid pieces of meat that can be swallowed without chewing."
+  },
+  {
+    "id": "eng020",
+    "subject": "English",
+    "question": "Comprehension: In the wild male lions live to around 12 years of age, with females living to around 15 years of age, whereas in (5)__________ they can live up to 25 years of age. Select the most appropriate option for blank (5).",
+    "options": [
+      "disaster",
+      "banality",
+      "captivity",
+      "greenery"
+    ],
+    "answer": 2,
+    "explanation": "Being kept in 'captivity' (like zoos) generally extends a lion's lifespan compared to the wild."
+  },
+  {
+    "id": "eng021",
+    "subject": "English",
+    "question": "Fill in the blank with the most appropriate option: His first movement after the shock ___ to work in his loom: and he went on with this unremittingly.",
+    "options": [
+      "was been",
+      "has being",
+      "had been",
+      "have been"
+    ],
+    "answer": 2,
+    "explanation": "The past perfect tense 'had been' is used appropriately to describe an action that occurred right after a past shock."
+  },
+  {
+    "id": "eng022",
+    "subject": "English",
+    "question": "Improve the underlined part of the sentence. Choose ‘No improvement’ if the sentence is grammatically correct: I can't wait to gone camping next weekend.",
+    "options": [
+      "going camping",
+      "No improvement",
+      "go camping",
+      "go camps"
+    ],
+    "answer": 2,
+    "explanation": "After the verb 'wait to', the base form of the verb is required. Therefore, 'go camping' is correct."
+  },
+  {
+    "id": "eng023",
+    "subject": "English",
+    "question": "Select the most appropriate option for the given blank: Please ___ my apology for this mistake.",
+    "options": [
+      "develop",
+      "acquire",
+      "accept",
+      "obtain"
+    ],
+    "answer": 2,
+    "explanation": "'Accept' is the correct verb to use when receiving an apology."
+  },
+  {
+    "id": "eng024",
+    "subject": "English",
+    "question": "Select the word segment that substitutes (replaces) the bracketed word segment correctly and completes the sentence meaningfully: Sapna was abstracted, biting her lip restlessly and reading over the guide-books to the battle-field that Suraj (had brought along).",
+    "options": [
+      "No correction required",
+      "have brought along",
+      "have brought",
+      "has brought along"
+    ],
+    "answer": 0,
+    "explanation": "The past perfect tense 'had brought along' is correct to denote an action that happened before the past action of reading."
+  },
+  {
+    "id": "eng025",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose ‘No error’: We had been collected and studied over 14,000 dung beetles from 98 different species.",
+    "options": [
+      "beetles from 98 different species.",
+      "No error",
+      "studied over 14,000 dung",
+      "We had been collected and"
+    ],
+    "answer": 3,
+    "explanation": "The sentence should use active voice. 'We had collected and studied' is the grammatically correct phrase, making 'We had been collected and' the erroneous part."
+  },
+  {
+    "id": "eng026",
+    "subject": "English",
+    "question": "Fill in the blank with the correct homophone: In the dense forest, a mother ___ and her cubs roamed freely, enjoying the tranquillity of their natural habitat.",
+    "options": [
+      "bare",
+      "beer",
+      "bear",
+      "ber"
+    ],
+    "answer": 2,
+    "explanation": "'Bear' is the correct homophone here, referring to the large mammal."
+  },
+  {
+    "id": "eng027",
+    "subject": "English",
+    "question": "Select the sentence with no spelling errors:",
+    "options": [
+      "The man walks with a grate deal of poise, in fact, very much like an elephant, but he also has the agelity of the panther.",
+      "The man walks with a great deal of poise, in fact, very much like an elephant, but he also has the agility of the panther.",
+      "The man walks with a great deal of poise, in fact, very much like an elephant, but he also has the agility of the panthur.",
+      "The man walks with a great deel of poise, in fact, very much like an ephalnt, but he also has the agility of the panther."
+    ],
+    "answer": 1,
+    "explanation": "Option 2 correctly spells 'great', 'elephant', and 'agility', making it the sentence with no errors."
+  },
+  {
+    "id": "eng028",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose 'No error': This is the most simple and basic component of life.",
+    "options": [
+      "No error",
+      "simple and basic",
+      "component of life.",
+      "This is the most"
+    ],
+    "answer": 3,
+    "explanation": "'Simple' is a one-syllable adjective whose comparative and superlative forms are 'simpler' and 'simplest', not 'most simple'."
+  },
+  {
+    "id": "eng029",
+    "subject": "English",
+    "question": "Select the incorrectly spelt word from the given sentence: The univarsity claims students can face a law-suit or fine for violating the UNO smoking prohibition.",
+    "options": [
+      "univarsity",
+      "violating",
+      "prohibition",
+      "claims"
+    ],
+    "answer": 0,
+    "explanation": "The correct spelling is 'university'."
+  },
+  {
+    "id": "eng030",
+    "subject": "English",
+    "question": "Choose the most appropriate synonym of the underlined word: This query is no doubt a very correct and moral one, but it seems somewhat cryptic.",
+    "options": [
+      "Clear",
+      "Mysterious",
+      "Obvious",
+      "Common"
+    ],
+    "answer": 1,
+    "explanation": "'Cryptic' means having a meaning that is mysterious or obscure. Therefore, 'Mysterious' is the correct synonym."
+  },
+  {
+    "id": "eng031",
+    "subject": "English",
+    "question": "Choose the most appropriate antonym of the underlined word: While some people may face legitimate obstacles, others are just obstinate.",
+    "options": [
+      "Firm",
+      "Dogged",
+      "Stubborn",
+      "Obedient"
+    ],
+    "answer": 3,
+    "explanation": "'Obstinate' means stubbornly refusing to change one's opinion or attitude. The antonym is 'Obedient', meaning willing to obey."
+  },
+  {
+    "id": "eng032",
+    "subject": "English",
+    "question": "The sentence has been divided into three parts. Identify the error segment in the sentence given below. Choose 'no error' if there is no error in the sentence: After a long day at work, he decided to switch of his/ phone, disconnecting from the digital world/ to immerse himself in a good book.",
+    "options": [
+      "To immerse himself in a good book.",
+      "No error",
+      "Phone, disconnecting from the digital world",
+      "After a long day at work, he decided to switch of his"
+    ],
+    "answer": 3,
+    "explanation": "The correct phrasal verb is 'switch off', not 'switch of'."
+  },
+  {
+    "id": "eng033",
+    "subject": "English",
+    "question": "Select the most appropriate word to fill in the blank: He was dismissed for being combative and antagonistic ___ his supervisor.",
+    "options": [
+      "about",
+      "above",
+      "through",
+      "towards"
+    ],
+    "answer": 3,
+    "explanation": "The preposition 'towards' is used to indicate the direction of someone's feelings or attitude."
+  },
+  {
+    "id": "eng034",
+    "subject": "English",
+    "question": "Choose the idiom/phrase that can substitute the highlighted group of words meaningfully: She never has to worry about money as she is born into a very rich family.",
+    "options": [
+      "Spill the beans",
+      "Out of the blue",
+      "Born with a silver spoon in mouth",
+      "Eats like a bird"
+    ],
+    "answer": 2,
+    "explanation": "The idiom 'Born with a silver spoon in mouth' means born into a wealthy family."
+  },
+  {
+    "id": "eng035",
+    "subject": "English",
+    "question": "In the following question, out of the given four alternatives, select the alternative which best expresses the meaning of the idiom/phrase: 'Under the sun'",
+    "options": [
+      "In public",
+      "On earth",
+      "Under suspicion",
+      "At high risk"
+    ],
+    "answer": 1,
+    "explanation": "The idiom 'under the sun' means on earth or in the world."
+  },
+  {
+    "id": "eng036",
+    "subject": "English",
+    "question": "Comprehension: The number of measles cases (1)______, the world increased by 18 percent... Select the most appropriate option for blank (1).",
+    "options": [
+      "for",
+      "across",
+      "through",
+      "along"
+    ],
+    "answer": 1,
+    "explanation": "'across' is the appropriate preposition to refer to the distribution of measles cases throughout the world."
+  },
+  {
+    "id": "eng037",
+    "subject": "English",
+    "question": "Comprehension: ...bringing the total number of infections (2)_______ nine million. Select the most appropriate option for blank (2).",
+    "options": [
+      "upon",
+      "to",
+      "for",
+      "in"
+    ],
+    "answer": 1,
+    "explanation": "The preposition 'to' is used to indicate the result or the total reached, which is 'nine million' here."
+  },
+  {
+    "id": "eng038",
+    "subject": "English",
+    "question": "Comprehension: Measles. a (3)________, contagious viral disease... Select the most appropriate option for blank (3).",
+    "options": [
+      "mutant",
+      "partially",
+      "great",
+      "highly"
+    ],
+    "answer": 3,
+    "explanation": "'highly' correctly acts as an adverb modifying the adjective 'contagious' to describe how infectious the disease is."
+  },
+  {
+    "id": "eng039",
+    "subject": "English",
+    "question": "Comprehension: ...spreads through respiratory droplets (4)_______ by the breath, sneeze or cough... Select the most appropriate option for blank (4).",
+    "options": [
+      "transported",
+      "transited",
+      "transmitted",
+      "transgressed"
+    ],
+    "answer": 2,
+    "explanation": "'transmitted' is the correct word, referring to how the disease is passed on via droplets."
+  },
+  {
+    "id": "eng040",
+    "subject": "English",
+    "question": "Comprehension: Some 37 countries saw significant or disruptive measles (5)_______ in 2022... Select the most appropriate option for blank (5).",
+    "options": [
+      "pointer",
+      "outbreak",
+      "ailment",
+      "break"
+    ],
+    "answer": 1,
+    "explanation": "'outbreak' is the most appropriate term to describe a sudden rise in cases of a disease."
+  },
+  {
+    "id": "eng041",
+    "subject": "English",
+    "question": "Select the most appropriate antonym of the given word. Budding",
+    "options": [
+      "Withering",
+      "Nostalgia",
+      "Jaunty",
+      "Progressive"
+    ],
+    "answer": 0,
+    "explanation": "'Budding' refers to beginning to develop or flourish. Its opposite is 'Withering', meaning fading or decaying."
+  },
+  {
+    "id": "eng042",
+    "subject": "English",
+    "question": "Select the incorrectly spelt word from the given sentence. The couple walked towards the opposite end of the dungeon, where she previously played with destiney.",
+    "options": [
+      "dungeon",
+      "couple",
+      "destiney",
+      "previously"
+    ],
+    "answer": 2,
+    "explanation": "The correct spelling of the word is 'destiny'."
+  },
+  {
+    "id": "eng043",
+    "subject": "English",
+    "question": "Choose the idiom/phrase that can substitute the highlighted group of words meaningfully. Family dispute erupted soon after grandpa’s death as he left some unclear things in his will.",
+    "options": [
+      "A grey area",
+      "Break a leg",
+      "Beat around the bush",
+      "Crack a book"
+    ],
+    "answer": 0,
+    "explanation": "The idiom 'A grey area' refers to a situation that is not clear or is open to interpretation."
+  },
+  {
+    "id": "eng044",
+    "subject": "English",
+    "question": "Select the most appropriate word to fill in the blank. The population ______ very fast in the last decade.",
+    "options": [
+      "had been risen",
+      "rising",
+      "has risen",
+      "rises"
+    ],
+    "answer": 2,
+    "explanation": "The present perfect tense 'has risen' is appropriate because the sentence refers to a period that continues up to the present."
+  },
+  {
+    "id": "eng045",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose 'No error.' People put considerably many more effort when working in groups than when working alone.",
+    "options": [
+      "than when working alone",
+      "People put considerably many more",
+      "No error",
+      "effort when working in groups"
+    ],
+    "answer": 1,
+    "explanation": "'Effort' is an uncountable noun here, so 'much more' should be used instead of 'many more'."
+  },
+  {
+    "id": "eng046",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose 'No error'. Many people fear how they will manage if the virus will show upon in town.",
+    "options": [
+      "virus will show upon in town",
+      "they will manage if the",
+      "Many people fear how",
+      "No error"
+    ],
+    "answer": 0,
+    "explanation": "The correct phrase is 'shows up' or 'show up', and 'will show upon' is grammatically incorrect."
+  },
+  {
+    "id": "eng047",
+    "subject": "English",
+    "question": "Choose the word that means the same as the given word. Daring",
+    "options": [
+      "Patience",
+      "Fearless",
+      "Coward",
+      "Trepid"
+    ],
+    "answer": 1,
+    "explanation": "'Daring' means adventurous or brave, which makes 'Fearless' an appropriate synonym."
+  },
+  {
+    "id": "eng048",
+    "subject": "English",
+    "question": "Select the most appropriate word to fill in the blank. ______! That looks disgusting.",
+    "options": [
+      "Wow",
+      "Oops",
+      "Yikes",
+      "Hush"
+    ],
+    "answer": 2,
+    "explanation": "'Yikes' is an interjection used to express shock, disgust, or fear."
+  },
+  {
+    "id": "eng049",
+    "subject": "English",
+    "question": "Choose the option which is the antonym of (opposite of) the word 'abdicated' in the sentence given below: During the meeting, he confidently asserted his viewpoint, providing compelling arguments to support his position.",
+    "options": [
+      "asserted",
+      "confidently",
+      "support",
+      "compelling"
+    ],
+    "answer": 0,
+    "explanation": "'Abdicated' means to renounce or give up a position. The antonym here is 'asserted', which means to state a fact or belief confidently."
+  },
+  {
+    "id": "eng050",
+    "subject": "English",
+    "question": "Select the most appropriate word to fill in the blank. The instructions ______ I just couldn't follow them.",
+    "options": [
+      "is complicated",
+      "are complicate",
+      "were complicated",
+      "was complicated"
+    ],
+    "answer": 2,
+    "explanation": "The plural subject 'instructions' requires a plural verb, and the past tense 'were' fits the context."
+  },
+  {
+    "id": "eng051",
+    "subject": "English",
+    "question": "Choose the word that is opposite in meaning to the given word. Applause",
+    "options": [
+      "Taunt",
+      "Praise",
+      "Intolerant",
+      "Pray"
+    ],
+    "answer": 0,
+    "explanation": "'Applause' means approval or praise. Its opposite is 'Taunt', which means to mock or insult."
+  },
+  {
+    "id": "eng052",
+    "subject": "English",
+    "question": "Improve the underlined part of the sentence. Choose 'No improvement' as an answer if the sentence is grammatically correct. Do you know how to speak Japanese?",
+    "options": [
+      "to speaks Japanese",
+      "to spoke Japanese",
+      "No improvement",
+      "to speak Japan"
+    ],
+    "answer": 2,
+    "explanation": "The sentence is grammatically correct. 'to speak' is the correct infinitive form."
+  },
+  {
+    "id": "eng053",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose 'No error.' Neither of the teachers is participating on this event.",
+    "options": [
+      "teachers is participating",
+      "Neither of the",
+      "No error",
+      "on this event"
+    ],
+    "answer": 3,
+    "explanation": "The correct preposition to use with 'participating' is 'in', not 'on'."
+  },
+  {
+    "id": "eng054",
+    "subject": "English",
+    "question": "Select the sentence with no spelling errors. Taking a walk in nature can help reduce stress levels.",
+    "options": [
+      "Taking a walk in nature can help reduce stress levels.",
+      "Taking a wak in nature can help reduce stress levels.",
+      "Taking a walk in nature can help reduce stress level.",
+      "Takking a walk in nature can help reduce stress levels."
+    ],
+    "answer": 0,
+    "explanation": "Option 1 has no spelling errors and is grammatically correct."
+  },
+  {
+    "id": "eng055",
+    "subject": "English",
+    "question": "Select the most appropriate meaning of the given idiom. Get down to brass tacks",
+    "options": [
+      "Compromise, cooperation between people",
+      "Get fired from the job",
+      "To become serious about something",
+      "To be ready"
+    ],
+    "answer": 2,
+    "explanation": "The idiom 'Get down to brass tacks' means to start focusing on the essential facts or serious details of a matter."
+  },
+  {
+    "id": "eng056",
+    "subject": "English",
+    "question": "In the following passage, some words have been deleted. Fill in the blanks with the help of the alternatives given. Instead, we (1) _______ our policy on hopes that by befriending her we would (2) _______ the evil day of reckoning. Select the most appropriate option to fill in the blank No. 1.",
+    "options": [
+      "based",
+      "placed",
+      "grounded",
+      "situated"
+    ],
+    "answer": 0,
+    "explanation": "The correct phrase is 'based on', meaning to found or establish something upon."
+  },
+  {
+    "id": "eng057",
+    "subject": "English",
+    "question": "Passage: ...we would (2) _______ the evil day of reckoning. Select the most appropriate option to fill in the blank No. 2.",
+    "options": [
+      "stoved",
+      "stave on",
+      "stave off",
+      "stave of"
+    ],
+    "answer": 2,
+    "explanation": "'Stave off' is a phrasal verb meaning to delay or prevent something bad from happening."
+  },
+  {
+    "id": "eng058",
+    "subject": "English",
+    "question": "Passage: The evil day (3) _______ on 20th October 1962... Select the most appropriate option to fill in the blank No. 3.",
+    "options": [
+      "established",
+      "approached",
+      "comes",
+      "came"
+    ],
+    "answer": 3,
+    "explanation": "The past tense 'came' fits the specific past date (20th October 1962) provided in the passage."
+  },
+  {
+    "id": "eng059",
+    "subject": "English",
+    "question": "Passage: ...barely 15 years (4) _______ Independence... Select the most appropriate option to fill in the blank No. 4.",
+    "options": [
+      "later",
+      "afterwards",
+      "after",
+      "behind"
+    ],
+    "answer": 2,
+    "explanation": "'After' is the correct preposition to indicate the time following Independence."
+  },
+  {
+    "id": "eng060",
+    "subject": "English",
+    "question": "Passage: ...and 12 years after China’s (5)_______ of Tibet. Select the most appropriate option to fill in the blank No. 5.",
+    "options": [
+      "regression",
+      "relapse",
+      "annexation",
+      "throwback"
+    ],
+    "answer": 2,
+    "explanation": "'Annexation' refers to the incorporation of a territory into another state, which accurately describes China's action regarding Tibet."
+  },
+  {
+    "id": "eng061",
+    "subject": "English",
+    "question": "Choose the word that means the same as the given word: Measure",
+    "options": [
+      "Diagnose",
+      "Gauge",
+      "Propel",
+      "Deviation"
+    ],
+    "answer": 1,
+    "explanation": "'Measure' means to ascertain the size or amount of something. 'Gauge' is a close synonym."
+  },
+  {
+    "id": "eng062",
+    "subject": "English",
+    "question": "Choose the word that is opposite in meaning to the given word: Noticeable",
+    "options": [
+      "Hail",
+      "Taunt",
+      "Dignified",
+      "Hidden"
+    ],
+    "answer": 3,
+    "explanation": "'Noticeable' means easily seen or detected. The antonym is 'Hidden'."
+  },
+  {
+    "id": "eng063",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose ‘No error’: She cracked the most funniest joke at the party.",
+    "options": [
+      "joke at the party",
+      "No error",
+      "She cracked",
+      "the most funniest"
+    ],
+    "answer": 3,
+    "explanation": "'Funniest' is already in the superlative form, so using 'most' before it is redundant and incorrect."
+  },
+  {
+    "id": "eng064",
+    "subject": "English",
+    "question": "Select the most appropriate meaning of the given idiom: Mince Words",
+    "options": [
+      "Almost failing",
+      "To find a way to deal with something",
+      "To speak vaguely or indirectly",
+      "Work not done for money"
+    ],
+    "answer": 2,
+    "explanation": "The idiom 'Mince words' means to speak indirectly or vaguely, often to avoid being too harsh or explicit."
+  },
+  {
+    "id": "eng065",
+    "subject": "English",
+    "question": "Choose the most appropriate antonym of the underlined word: Before preservationists could put a stop to it, he and other looters had raided and destroyed precious items buried at the site.",
+    "options": [
+      "Important",
+      "Pet",
+      "Dear",
+      "Defective"
+    ],
+    "answer": 3,
+    "explanation": "'Precious' means of great value. The antonym here is 'Defective', meaning having a flaw or being imperfect."
+  },
+  {
+    "id": "eng066",
+    "subject": "English",
+    "question": "Choose the word that is opposite in meaning to the given word: Spat",
+    "options": [
+      "Persuade",
+      "Beguile",
+      "Agree",
+      "Nitpick"
+    ],
+    "answer": 2,
+    "explanation": "'Spat' is a past tense of 'spit', but in informal contexts, it means a brief argument or quarrel. The antonym is 'Agree'."
+  },
+  {
+    "id": "eng067",
+    "subject": "English",
+    "question": "Improve the underlined part of the sentence. Choose ‘No improvement’ as an answer if the sentence is grammatically correct: The subway fare is go up next week.",
+    "options": [
+      "fare is going",
+      "fare has been going",
+      "fare has going",
+      "No improvement"
+    ],
+    "answer": 0,
+    "explanation": "The present continuous 'is going' should be used to describe a future action that is already planned."
+  },
+  {
+    "id": "eng068",
+    "subject": "English",
+    "question": "Select the sentence with no spelling errors:",
+    "options": [
+      "The sick woman had raised herself upright, and was stretching her arms tuwards them.",
+      "The sick woman had raised herself uprite, and was stretching her arms towards them.",
+      "The sick woman had raised herself upright, and was stretching her arms towards them.",
+      "The sick woman had raised herself upright, and was streching her arms towards them."
+    ],
+    "answer": 2,
+    "explanation": "Option 3 correctly spells 'upright', 'stretching', and 'towards'."
+  },
+  {
+    "id": "eng069",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose ‘No error’: Employees are working from home and shoppers are ordering groceries online to minimize time in crowded spaces.",
+    "options": [
+      "No error",
+      "Employees are working from home and",
+      "shoppers are ordering groceries online",
+      "to minimize time in crowded spaces"
+    ],
+    "answer": 0,
+    "explanation": "The sentence is grammatically correct and contains no errors."
+  },
+  {
+    "id": "eng070",
+    "subject": "English",
+    "question": "Replace the bracketed word with one of the given options, which suitably replaces the word without changing the meaning of the sentence: The mountaineers embarked on (an arduous) journey to conquer the formidable peak, facing treacherous terrain, extreme weather conditions, and physical exhaustion along the way.",
+    "options": [
+      "an important",
+      "a taxing",
+      "a rewarding",
+      "a severe"
+    ],
+    "answer": 1,
+    "explanation": "'Arduous' means requiring great effort or labor. 'Taxing' is the closest synonym among the options."
+  },
+  {
+    "id": "eng071",
+    "subject": "English",
+    "question": "Select the most appropriate word to fill in the blank: _____! You can do it – it's as easy as pie.",
+    "options": [
+      "Hush",
+      "Wow",
+      "Buck up",
+      "Do"
+    ],
+    "answer": 2,
+    "explanation": "'Buck up' is an exclamation used to encourage someone or tell them to cheer up."
+  },
+  {
+    "id": "eng072",
+    "subject": "English",
+    "question": "In the following question, out of the given four alternatives, select the alternative which best expresses the meaning of the Idiom/Phrase: To raise the wind",
+    "options": [
+      "To teach mannerism",
+      "To obtain the necessary funds",
+      "To head an army",
+      "To release one’s frustration"
+    ],
+    "answer": 1,
+    "explanation": "The idiom 'To raise the wind' means to procure money or obtain the necessary funds."
+  },
+  {
+    "id": "eng073",
+    "subject": "English",
+    "question": "Select the incorrectly spelt word from the given sentence: The cats have the propensity to divour their babies if alarmed and so require a calm environment for breeding.",
+    "options": [
+      "environment",
+      "divour",
+      "alarmed",
+      "propensity"
+    ],
+    "answer": 1,
+    "explanation": "The correct spelling is 'devour', meaning to eat eagerly and quickly."
+  },
+  {
+    "id": "eng074",
+    "subject": "English",
+    "question": "Select the word segment that substitutes (replaces) the bracketed word segment correctly and completes the sentence meaningfully: She (doesn't want to go on staring but it) was very difficult to turn her eyes away.",
+    "options": [
+      "does wants to go on staring",
+      "didn't want to go on staring but it",
+      "do not wanted to go on staring but it",
+      "No correction required"
+    ],
+    "answer": 1,
+    "explanation": "The past tense 'didn't want' matches the latter part of the sentence 'was very difficult'."
+  },
+  {
+    "id": "eng075",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose ‘No error’: Dr. Stone returned to the UK at January 2001 to begin data analysis.",
+    "options": [
+      "No error",
+      "to begin data analysis.",
+      "the UK at January 2001",
+      "Dr. Stone returned to"
+    ],
+    "answer": 2,
+    "explanation": "The correct preposition to use with a specific month and year is 'in', not 'at'."
+  },
+  {
+    "id": "eng076",
+    "subject": "English",
+    "question": "Comprehension: Photographs and videos showing people bursting firecrackers on the (1)_______ of Kedarnath temple... Select the most appropriate option for blank (1).",
+    "options": [
+      "establishment",
+      "plot",
+      "layout",
+      "premises"
+    ],
+    "answer": 3,
+    "explanation": "'Premises' refers to the area surrounding a building, which fits perfectly in this context."
+  },
+  {
+    "id": "eng077",
+    "subject": "English",
+    "question": "Comprehension: ...are making the (2)_______ on social media. Select the most appropriate option for blank (2).",
+    "options": [
+      "light",
+      "park",
+      "circle",
+      "rounds"
+    ],
+    "answer": 3,
+    "explanation": "The phrase 'making the rounds' means to be passed around or circulated, often used for news on social media."
+  },
+  {
+    "id": "eng078",
+    "subject": "English",
+    "question": "Comprehension: ...lights and clouds of (3)_______ along with the echo... Select the most appropriate option for blank (3).",
+    "options": [
+      "smoke",
+      "air",
+      "water",
+      "fire"
+    ],
+    "answer": 0,
+    "explanation": "Bursting firecrackers produces 'smoke'."
+  },
+  {
+    "id": "eng079",
+    "subject": "English",
+    "question": "Comprehension: ...raising (4)______. over the effect of such crackers... Select the most appropriate option for blank (4).",
+    "options": [
+      "subject",
+      "amazement",
+      "alarm",
+      "anxiety"
+    ],
+    "answer": 2,
+    "explanation": "The phrase 'raising alarm' is commonly used to indicate causing worry or concern."
+  },
+  {
+    "id": "eng080",
+    "subject": "English",
+    "question": "Comprehension: ...in the geologically (5)________ glacier region. Select the most appropriate option for blank (5).",
+    "options": [
+      "sensitive",
+      "appealing",
+      "lofty",
+      "rigorous"
+    ],
+    "answer": 0,
+    "explanation": "'Sensitive' is used to describe a region that is easily affected by changes or damage, which fits the environmental context."
+  },
+  {
+    "id": "eng081",
+    "subject": "English",
+    "question": "Choose the option which are antonyms (opposite of) the word used in the sentence given below: Although her happiness was manifest in her cheerful demeanour, the hidden sorrow in her eyes revealed a deeper emotional struggle.",
+    "options": [
+      "manifest/hidden",
+      "demeanour/sorrow",
+      "happiness/struggle",
+      "manifest/revealed"
+    ],
+    "answer": 0,
+    "explanation": "'Manifest' (clear or obvious) and 'hidden' (kept out of sight) are exact antonyms used in the sentence."
+  },
+  {
+    "id": "eng082",
+    "subject": "English",
+    "question": "Choose the most appropriate synonym of the underlined word. The trend of artwork among Middle Eastern ladies is nothing new, yet nail paint is frequently overlooked.",
+    "options": [
+      "Appreciated",
+      "Pranked",
+      "Sedated",
+      "Neglected"
+    ],
+    "answer": 3,
+    "explanation": "'Overlooked' means to ignore or fail to notice. 'Neglected' is a perfect synonym."
+  },
+  {
+    "id": "eng083",
+    "subject": "English",
+    "question": "Choose the word that is opposite in meaning to the given word. Ache",
+    "options": [
+      "Colic",
+      "Serene",
+      "Ease",
+      "Gloomy"
+    ],
+    "answer": 2,
+    "explanation": "An 'ache' is a continuous pain. The opposite is 'Ease', meaning freedom from pain."
+  },
+  {
+    "id": "eng084",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose 'No error'. Snow was falling light when everyone was leaving church.",
+    "options": [
+      "No error",
+      "light when everyone",
+      "Snow was falling",
+      "was leaving church"
+    ],
+    "answer": 1,
+    "explanation": "The adverb 'lightly' should be used instead of the adjective 'light' to modify the verb 'falling'."
+  },
+  {
+    "id": "eng085",
+    "subject": "English",
+    "question": "Improve the underlined part of the sentence. Choose 'No improvement' as an answer if the sentence is grammatically correct. They plan to marrying in the spring.",
+    "options": [
+      "plan to marry",
+      "No improvement",
+      "plans to marry",
+      "plan to married"
+    ],
+    "answer": 0,
+    "explanation": "The infinitive 'to marry' is required, not the '-ing' form 'marrying'."
+  },
+  {
+    "id": "eng086",
+    "subject": "English",
+    "question": "Choose the idiom/phrase that can substitute the highlighted group of words meaningfully: My son was not well yesterday and today I'm feeling sick.",
+    "options": [
+      "Under the weather",
+      "Call it a day",
+      "Face the music",
+      "Break a leg"
+    ],
+    "answer": 0,
+    "explanation": "The idiom 'Under the weather' means feeling slightly ill or unwell."
+  },
+  {
+    "id": "eng087",
+    "subject": "English",
+    "question": "Select the most appropriate word to fill in the blank: _____ of the shops in the High Street have closed recently.",
+    "options": [
+      "Most",
+      "Quite",
+      "Little",
+      "Very"
+    ],
+    "answer": 0,
+    "explanation": "'Most' is the correct quantifier to use with a plural countable noun like 'shops'."
+  },
+  {
+    "id": "eng088",
+    "subject": "English",
+    "question": "Select the most appropriate word to fill in the blank: This _____ a challenging time for us all.",
+    "options": [
+      "was been",
+      "are",
+      "has been",
+      "had being"
+    ],
+    "answer": 2,
+    "explanation": "The present perfect 'has been' is used to refer to a time period that extends to the present."
+  },
+  {
+    "id": "eng089",
+    "subject": "English",
+    "question": "Select the sentence with no spelling errors:",
+    "options": [
+      "Napoleon went to great lenths to craft his image as a benign ruler.",
+      "Napoleon went to great lengths to craft his image as a benign ruler.",
+      "Napoleon went to great lengths to craft his image as a benignrouler.",
+      "Napoleon went to great lengths to craft his image as a benineruler."
+    ],
+    "answer": 1,
+    "explanation": "Option 2 correctly spells 'lengths' and 'ruler'."
+  },
+  {
+    "id": "eng090",
+    "subject": "English",
+    "question": "Select the incorrectly spelt word from the given sentence: As a jazz lover, I want people to embrace the music for its entrinsic qualities, not its symbolic resonance.",
+    "options": [
+      "qualities",
+      "resonance",
+      "entrinsic",
+      "embrace"
+    ],
+    "answer": 2,
+    "explanation": "The correct spelling is 'intrinsic', meaning belonging naturally; essential."
+  },
+  {
+    "id": "eng091",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose ‘No error’. My parents are best people, but they get quite emotional sometimes.",
+    "options": [
+      "but they get",
+      "No error",
+      "My parents are best people",
+      "quite emotional sometimes"
+    ],
+    "answer": 2,
+    "explanation": "The definite article 'the' should be used before 'best people'. 'My parents are the best people' is grammatically correct."
+  },
+  {
+    "id": "eng092",
+    "subject": "English",
+    "question": "In the following question, out of the given four alternatives, select the alternative which best expresses the meaning of the Idiom/Phrase. To be on one’s last legs",
+    "options": [
+      "To be near death",
+      "To fuss about a trifle",
+      "To get married soon",
+      "Last day of work"
+    ],
+    "answer": 0,
+    "explanation": "The idiom 'To be on one's last legs' means to be near the end of one's life or usefulness."
+  },
+  {
+    "id": "eng093",
+    "subject": "English",
+    "question": "Improve the underlined part of the sentence. Choose ‘No improvement’ as an answer if the sentence is grammatically correct. ‘We should enjoyed playing all sorts of games.",
+    "options": [
+      "enjoy playing",
+      "enjoy play",
+      "No improvement",
+      "enjoyed play"
+    ],
+    "answer": 0,
+    "explanation": "After the modal verb 'should', the base form of the verb 'enjoy' must be used."
+  },
+  {
+    "id": "eng094",
+    "subject": "English",
+    "question": "Fill in the blank with the correct synonym of the word 'lavish': Her ___________ donation to the cause greatly benefited the community.",
+    "options": [
+      "stingy",
+      "contradictory",
+      "generous",
+      "miserly"
+    ],
+    "answer": 2,
+    "explanation": "'Lavish' means sumptuously rich or generous. 'Generous' is the best synonym to fill the blank."
+  },
+  {
+    "id": "eng095",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose ‘No error’. She promises to meet me at her mother’s house yesterday.",
+    "options": [
+      "house yesterday.",
+      "me at her mother’s",
+      "She promises to meet",
+      "No error"
+    ],
+    "answer": 2,
+    "explanation": "The past tense 'promised' should be used instead of 'promises' to match the past time indicator 'yesterday'."
+  },
+  {
+    "id": "eng096",
+    "subject": "English",
+    "question": "Comprehension: The concentrations of greenhouse gases (GHG) that (1)_______________ heat in the Earth's atmosphere... Select the most appropriate option for blank (1)",
+    "options": [
+      "bark",
+      "waste",
+      "trap",
+      "hang"
+    ],
+    "answer": 2,
+    "explanation": "Greenhouse gases 'trap' heat in the atmosphere, preventing it from escaping into space."
+  },
+  {
+    "id": "eng097",
+    "subject": "English",
+    "question": "Comprehension: ...rose to record levels (2)____________ 2022... Select the most appropriate option for blank (2)",
+    "options": [
+      "of",
+      "at",
+      "on",
+      "in"
+    ],
+    "answer": 3,
+    "explanation": "The preposition 'in' is used with years (e.g., in 2022)."
+  },
+  {
+    "id": "eng098",
+    "subject": "English",
+    "question": "Comprehension: The rise in concentrations of GHGs is mainly (3)___________ activities... Select the most appropriate option for blank (3)",
+    "options": [
+      "rather than",
+      "of",
+      "that",
+      "due to"
+    ],
+    "answer": 3,
+    "explanation": "The phrase 'due to' means caused by, which correctly explains the reason for the rise in GHG concentrations."
+  },
+  {
+    "id": "eng099",
+    "subject": "English",
+    "question": "Comprehension: This would lead to a (4)____________ rise in global average temperatures... Select the most appropriate option for blank (4)",
+    "options": [
+      "further",
+      "far",
+      "for",
+      "farther"
+    ],
+    "answer": 0,
+    "explanation": "'Further' is used to mean additional or more, which fits the context of an additional rise in temperatures."
+  },
+  {
+    "id": "eng100",
+    "subject": "English",
+    "question": "Comprehension: ...extreme weather events (5)_____________ torrential rainfall, flash floods... Select the most appropriate option for blank (5).",
+    "options": [
+      "such as",
+      "such",
+      "so",
+      "like as"
+    ],
+    "answer": 0,
+    "explanation": "'Such as' is used to provide examples, in this case, examples of extreme weather events."
+  },
+  {
+    "id": "eng101",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose 'No error'. The most significant near-term impacts on renewable plants that are already contracted or under construction may being felt through supply chains.",
+    "options": [
+      "renewable plants that are already contracted or under",
+      "The most significant near-term impacts on",
+      "No error",
+      "construction may being felt through supply chains"
+    ],
+    "answer": 3,
+    "explanation": "The helping verb 'be' should be used in the passive voice instead of 'being'. 'May be felt' is the correct form."
+  },
+  {
+    "id": "eng102",
+    "subject": "English",
+    "question": "Select the incorrectly spelt word from the given sentence. The primary goal of verbal comunication is to use language to convey information clearly and concisely.",
+    "options": [
+      "comunication",
+      "concisely",
+      "convey",
+      "language"
+    ],
+    "answer": 0,
+    "explanation": "The correct spelling is 'communication' with two 'm's."
+  },
+  {
+    "id": "eng103",
+    "subject": "English",
+    "question": "The sentence has been divided into three parts. Identify the error segment in the sentence given below. Choose no error if there is no error in the sentence. 'Her latest novel is considered one of the most captivating story in contemporary literature, earning praise for its intricate plot and well-developed characters.'",
+    "options": [
+      "Her latest novel is considered one of the most captivating story",
+      "For its intricate plot and well-developed characters",
+      "No error",
+      "In contemporary literature, earning praise"
+    ],
+    "answer": 0,
+    "explanation": "Since the sentence refers to 'one of the', the noun should be plural: 'stories' instead of 'story'."
+  },
+  {
+    "id": "eng104",
+    "subject": "English",
+    "question": "Select the sentence with no spelling errors.",
+    "options": [
+      "IIT-Roorkee has stated three main findengs in its report.",
+      "IIT-Roorkee has stated three main findings in its report.",
+      "IIT-Roorkee has statid three main findings in its report.",
+      "IIT-Roorkee has stated three mane findings in its report."
+    ],
+    "answer": 1,
+    "explanation": "Option 2 correctly spells 'findings' and 'stated'."
+  },
+  {
+    "id": "eng105",
+    "subject": "English",
+    "question": "In the following question, out of the given four alternatives, select the alternative which best expresses the meaning of the Idiom/Phrase. Phrase: To make merry",
+    "options": [
+      "To find loopholes",
+      "To get married",
+      "To enjoy oneself",
+      "To make excuses"
+    ],
+    "answer": 2,
+    "explanation": "The idiom 'To make merry' means to be cheerful, celebrate, or enjoy oneself."
+  },
+  {
+    "id": "eng106",
+    "subject": "English",
+    "question": "Improve the underlined part of the sentence. Choose 'No improvement' as an answer if the sentence is grammatically correct. Sentence: Find out who is the real actor.",
+    "options": [
+      "Real actors",
+      "Real acting",
+      "Really actor",
+      "No improvement"
+    ],
+    "answer": 3,
+    "explanation": "The sentence is grammatically correct as a question seeking to identify the real actor."
+  },
+  {
+    "id": "eng107",
+    "subject": "English",
+    "question": "Select the most appropriate word to fill in the blank. Sentence: This is only a partial list of the books ______ are needed in the library.",
+    "options": [
+      "that's",
+      "that",
+      "which",
+      "their"
+    ],
+    "answer": 1,
+    "explanation": "The relative pronoun 'that' correctly links the clause to 'books'. 'Which' can also be used, but 'that' is standard for restrictive clauses."
+  },
+  {
+    "id": "eng108",
+    "subject": "English",
+    "question": "Choose the word that is opposite in meaning to the given word. Word: Strong",
+    "options": [
+      "Quick",
+      "Lazy",
+      "Boring",
+      "Delicate"
+    ],
+    "answer": 3,
+    "explanation": "'Strong' means robust or sturdy. The opposite is 'Delicate', meaning fragile or easily broken."
+  },
+  {
+    "id": "eng109",
+    "subject": "English",
+    "question": "Choose the idiom/phrase that can substitute the highlighted group of words meaningfully. Phrase: It’s no use worrying about the past mishaps.",
+    "options": [
+      "Spill the beans",
+      "Crying over spilt milk",
+      "Off on the wrong foot",
+      "Back to the grind"
+    ],
+    "answer": 1,
+    "explanation": "The idiom 'Crying over spilt milk' means to be upset over something that has already happened and cannot be changed."
+  },
+  {
+    "id": "eng110",
+    "subject": "English",
+    "question": "In the following question, out of the given four alternatives, select the alternative which best expresses the meaning of the Idiom/Phrase. Phrase: To hit or miss the mark",
+    "options": [
+      "To succeed or fail in an attempt",
+      "To speak a truth and lie at the same time",
+      "To retain one’s position no matter what",
+      "To miss someone"
+    ],
+    "answer": 0,
+    "explanation": "The idiom 'To hit or miss the mark' means to achieve one's goal or fail to do so."
+  },
+  {
+    "id": "eng111",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose 'No error.' Sentence: The muscles on his chest and arms was not well defined.",
+    "options": [
+      "No error",
+      "The muscles on his chest and arms",
+      "his chest and arms",
+      "was not well defined"
+    ],
+    "answer": 3,
+    "explanation": "The subject 'muscles' is plural, so the verb should be 'were' instead of 'was'."
+  },
+  {
+    "id": "eng112",
+    "subject": "English",
+    "question": "Select the most appropriate antonym of the given word. Word: Capital",
+    "options": [
+      "Regular",
+      "Fundamental",
+      "Principle",
+      "Extra"
+    ],
+    "answer": 0,
+    "explanation": "In the context of importance or primary, 'Regular' is the antonym of 'Capital'."
+  },
+  {
+    "id": "eng113",
+    "subject": "English",
+    "question": "Choose the most appropriate synonym of the underlined word. We cannot always follow instructions exactly, sometimes we need to incorporate our own ideas.",
+    "options": [
+      "Exclude",
+      "Integrate",
+      "Part",
+      "Separate"
+    ],
+    "answer": 1,
+    "explanation": "'Incorporate' means to include or integrate something as part of a whole."
+  },
+  {
+    "id": "eng114",
+    "subject": "English",
+    "question": "Select the most appropriate option for the given blank. Can you ____ me a favour this last time?",
+    "options": [
+      "do",
+      "lend",
+      "make",
+      "have"
+    ],
+    "answer": 0,
+    "explanation": "The correct phrase is 'do me a favour', not 'make' or 'lend'."
+  },
+  {
+    "id": "eng115",
+    "subject": "English",
+    "question": "Improve the underlined part of the sentence. Choose 'No improvement' as an answer if the sentence is grammatically correct. The effect of the changes was unexpected.",
+    "options": [
+      "has unexpected",
+      "was unexpect",
+      "were unexpected",
+      "No improvement"
+    ],
+    "answer": 3,
+    "explanation": "The sentence is grammatically correct. 'Effect' is singular, so 'was' is used, and 'unexpected' is the correct adjective."
+  },
+  {
+    "id": "eng116",
+    "subject": "English",
+    "question": "In the following passage, some words have been deleted. Fill in the blanks with the help of the alternatives given. This room was chill, because it (1) _______ had a fire; it was silent... Select the most appropriate option to fill in the blank No. 1.",
+    "options": [
+      "seldom",
+      "usually",
+      "frequently",
+      "often"
+    ],
+    "answer": 0,
+    "explanation": "The room was chill because it 'seldom' (rarely) had a fire."
+  },
+  {
+    "id": "eng117",
+    "subject": "English",
+    "question": "Passage: ...it was silent, because (2) _______ from the nursery and kitchen... Select the most appropriate option to fill in the blank No. 2.",
+    "options": [
+      "remote",
+      "foreign",
+      "strange",
+      "exclusive"
+    ],
+    "answer": 0,
+    "explanation": "'Remote' means far away, explaining why the room was silent."
+  },
+  {
+    "id": "eng118",
+    "subject": "English",
+    "question": "Passage: ...solemn, (3)_______ it was known to be so seldom entered. Select the most appropriate option to fill in the blank No. 3.",
+    "options": [
+      "however",
+      "perhaps",
+      "because",
+      "as"
+    ],
+    "answer": 2,
+    "explanation": "The word 'because' provides the reason why the room was solemn (it was rarely entered)."
+  },
+  {
+    "id": "eng119",
+    "subject": "English",
+    "question": "Passage: The (4) _______ alone came here on Saturdays only, to wipe from the mirrors... Select the most appropriate option to fill in the blank No. 4.",
+    "options": [
+      "electrician",
+      "doctor",
+      "plumber",
+      "house-maid"
+    ],
+    "answer": 3,
+    "explanation": "A 'house-maid' is the person who would clean mirrors and furniture on weekends."
+  },
+  {
+    "id": "eng120",
+    "subject": "English",
+    "question": "Passage: ...and Mrs. Reed (5) _______ at far intervals, visited it to review its contents. Select the most appropriate option to fill in the blank No. 5.",
+    "options": [
+      "oneself",
+      "ourselves",
+      "themselves",
+      "herself"
+    ],
+    "answer": 3,
+    "explanation": "The reflexive pronoun 'herself' refers back to Mrs. Reed."
+  },
+  {
+    "id": "eng121",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose 'No error.' 'I am sure my mother has something that you shall wear in the evening.'",
+    "options": [
+      "'Shall wear in the evening'",
+      "No error",
+      "'Has something that you'",
+      "'I am sure my mother'"
+    ],
+    "answer": 0,
+    "explanation": "The modal 'shall' is used incorrectly with the second person 'you'. 'Will' or 'can' is the appropriate modal here."
+  },
+  {
+    "id": "eng122",
+    "subject": "English",
+    "question": "Select the word segment that substitutes (replaces) the bracketed word segment correctly and completes the sentence meaningfully. 'It grew colder and colder still, and fine, (powdery snow began to fall), so that soon we and all around us were covered with a white blanket.'",
+    "options": [
+      "'Powdery snow begin to fall'",
+      "'Powdery snow has begun to fall'",
+      "No correction required",
+      "'Powdery snow has been begun to fall'"
+    ],
+    "answer": 2,
+    "explanation": "The given phrase 'powdery snow began to fall' is grammatically correct in the past tense context."
+  },
+  {
+    "id": "eng123",
+    "subject": "English",
+    "question": "Find the part of the sentence that has an error. If there is no error, choose 'No error.' 'Drink plenty of water and contact your doctor for any worsening symptoms.'",
+    "options": [
+      "No error",
+      "'For any worsening symptoms'",
+      "'And contact your doctor'",
+      "'Drink plenty of water'"
+    ],
+    "answer": 0,
+    "explanation": "The sentence is grammatically correct and carries no error."
+  },
+  {
+    "id": "eng124",
+    "subject": "English",
+    "question": "Choose the most appropriate synonym of the underlined word: 'I have known you for a long time, and possess the most circumstantial details about the plans you were devising.'",
+    "options": [
+      "Certain",
+      "Coincidental",
+      "Credible",
+      "Direct"
+    ],
+    "answer": 0,
+    "explanation": "'Circumstantial' here means detailed and particular, often implying certainty based on facts."
+  },
+  {
+    "id": "eng125",
+    "subject": "English",
+    "question": "Choose the word that is opposite in meaning to the given word: Arrest",
+    "options": [
+      "Stall",
+      "Standstill",
+      "Detain",
+      "Unbind"
+    ],
+    "answer": 3,
+    "explanation": "To 'arrest' is to seize or detain. The antonym is 'Unbind', to set free."
+  },
+  {
+    "id": "eng126",
+    "subject": "English",
+    "question": "In the following question, out of the given four alternatives, select the alternative which best expresses the meaning of the idiom/phrase: 'To pick somebody's pocket'",
+    "options": [
+      "To make a very difficult choice",
+      "To steal something from the pocket",
+      "To choose wisely",
+      "To cry for financial help"
+    ],
+    "answer": 1,
+    "explanation": "The idiom 'To pick somebody's pocket' literally means to steal from someone's pocket."
+  },
+  {
+    "id": "eng127",
+    "subject": "English",
+    "question": "Choose the word that is opposite in meaning to the given word: 'Apart'",
+    "options": [
+      "Nearby",
+      "Contaminated",
+      "Contagious",
+      "Huge"
+    ],
+    "answer": 0,
+    "explanation": "'Apart' means separated. The opposite is 'Nearby', meaning close together."
+  },
+  {
+    "id": "eng128",
+    "subject": "English",
+    "question": "Choose the option which is the antonym of (opposite of) the word 'frugal' in the sentence given below: 'Her generous donation to the charity made a significant impact on the lives of those in need.'",
+    "options": [
+      "Generous",
+      "Charity",
+      "Significant",
+      "Thrifty"
+    ],
+    "answer": 0,
+    "explanation": "'Frugal' means economical or sparing. The antonym in the context of the sentence is 'Generous'."
+  },
+  {
+    "id": "eng129",
+    "subject": "English",
+    "question": "Select the sentence with no spelling errors:",
+    "options": [
+      "'From his childhood, honesty and morality were his darling attributes.'",
+      "'From his childhood, honesty and morality were his darling atrributes.'",
+      "'From his childhood, onesty and morality were his darling attrebutes.'",
+      "'From his childhood, honesty and morality were his darling attributions.'"
+    ],
+    "answer": 0,
+    "explanation": "Option 1 correctly spells 'honesty', 'morality', and 'attributes'."
+  },
+  {
+    "id": "eng130",
+    "subject": "English",
+    "question": "Choose the correct word to complete the sentence: 'Navigating through the dense forest, the hikers encountered ______ terrain, making the trek more challenging and adventurous.'",
+    "options": [
+      "Predictable",
+      "Monotonous",
+      "Tranquil",
+      "Treacherous"
+    ],
+    "answer": 3,
+    "explanation": "'Treacherous' terrain means dangerous or hazardous ground, making the trek challenging."
+  },
+  {
+    "id": "eng131",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose 'No error.' 'Neha's handwriting is more clearer than Varun's.'",
+    "options": [
+      "'Than Varun's'",
+      "'No error'",
+      "'Is more clearer'",
+      "'Neha's handwriting'"
+    ],
+    "answer": 2,
+    "explanation": "'Clearer' is already comparative, so using 'more' before it is incorrect."
+  },
+  {
+    "id": "eng132",
+    "subject": "English",
+    "question": "Select the most appropriate word to fill in the blank: 'He ______ my room until he finishes his homework.'",
+    "options": [
+      "Will not get",
+      "Has not got",
+      "Gets not",
+      "Gotten"
+    ],
+    "answer": 0,
+    "explanation": "The future negative form 'Will not get' accurately fits the context of the condition 'until he finishes'."
+  },
+  {
+    "id": "eng133",
+    "subject": "English",
+    "question": "Select the word segment that substitutes (replaces) the bracketed word segment correctly and completes the sentence meaningfully: '(I were the only one that) could swim, so I made a dash for it.'",
+    "options": [
+      "I was the only one that",
+      "No correction required",
+      "I was the only one whom",
+      "I was the only one who"
+    ],
+    "answer": 0,
+    "explanation": "The subject 'I' requires the singular past tense verb 'was', not 'were'."
+  },
+  {
+    "id": "eng134",
+    "subject": "English",
+    "question": "Select the incorrectly spelt word in the given sentence: 'The patient was conscious after the surgary.'",
+    "options": [
+      "Patient",
+      "Conscious",
+      "After",
+      "Surgary"
+    ],
+    "answer": 3,
+    "explanation": "The correct spelling is 'surgery'."
+  },
+  {
+    "id": "eng135",
+    "subject": "English",
+    "question": "Choose the idiom/phrase that can substitute the highlighted group of words meaningfully: 'The automobile industry is the source of livelihood of many people of Kanpur.'",
+    "options": [
+      "In the same boat",
+      "Bread and butter",
+      "Through thick and thin",
+      "Go down the drain"
+    ],
+    "answer": 1,
+    "explanation": "The idiom 'Bread and butter' refers to one's main source of income or livelihood."
+  },
+  {
+    "id": "eng136",
+    "subject": "English",
+    "question": "Comprehension: As we enter a more permanent (1) ______ of hybrid work for desk-based employees... Select the most appropriate option for blank (1) in the passage:",
+    "options": [
+      "line",
+      "era",
+      "sage",
+      "Spell"
+    ],
+    "answer": 1,
+    "explanation": "'Era' refers to a distinct period of time, which fits the context of a 'hybrid work' period."
+  },
+  {
+    "id": "eng137",
+    "subject": "English",
+    "question": "Comprehension: ...it’s time to find equitable flexibility for frontline (2)______ like those in manufacturing and healthcare. Select the most appropriate option for blank (2) in the passage:",
+    "options": [
+      "chasers",
+      "bosses",
+      "workers",
+      "personal"
+    ],
+    "answer": 2,
+    "explanation": "'Workers' fits the context of frontline roles in manufacturing and healthcare."
+  },
+  {
+    "id": "eng138",
+    "subject": "English",
+    "question": "Comprehension: ...58% of organizations (3) ______ employ frontline workers... Select the most appropriate option for blank (3) in the passage:",
+    "options": [
+      "who",
+      "whom",
+      "that",
+      "whose"
+    ],
+    "answer": 2,
+    "explanation": "The relative pronoun 'that' is used to define or restrict the organizations being talked about."
+  },
+  {
+    "id": "eng139",
+    "subject": "English",
+    "question": "Comprehension: ...have invested in (4)______ their employee experience in the past year. Select the most appropriate option for blank (4) in the passage:",
+    "options": [
+      "regressing",
+      "improving",
+      "articulating",
+      "approaching"
+    ],
+    "answer": 1,
+    "explanation": "'Improving' fits the context of investing to enhance the employee experience."
+  },
+  {
+    "id": "eng140",
+    "subject": "English",
+    "question": "Comprehension: About a third of those who haven’t done so (5) ______ to do so in the next 12 months. Select the most appropriate option for blank (5) in the passage:",
+    "options": [
+      "intend",
+      "pose",
+      "pretend",
+      "enact"
+    ],
+    "answer": 0,
+    "explanation": "'Intend' means to plan or aim to do something."
+  },
+  {
+    "id": "eng141",
+    "subject": "English",
+    "question": "Select the most appropriate word to fill in the blank: __!' Watch out for that hole.",
+    "options": [
+      "Amen",
+      "Yay",
+      "Tut",
+      "Hey"
+    ],
+    "answer": 3,
+    "explanation": "'Hey' is an interjection used to attract attention, perfectly fitting the warning 'Watch out for that hole.'"
+  },
+  {
+    "id": "eng142",
+    "subject": "English",
+    "question": "Select the most appropriate option for the blank: Your brother __ an apology to me.",
+    "options": [
+      "owes",
+      "drops",
+      "abates",
+      "owns"
+    ],
+    "answer": 0,
+    "explanation": "The phrase 'owes an apology' means needing to apologize to someone."
+  },
+  {
+    "id": "eng143",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose ‘No error’: We believe that visiting Shimla is the better therapy for you.",
+    "options": [
+      "the better therapy for you.",
+      "No error",
+      "We believe that",
+      "visiting Shimla is"
+    ],
+    "answer": 0,
+    "explanation": "Since it's comparing Shimla to all other therapies, the superlative form 'best' should be used instead of 'better'."
+  },
+  {
+    "id": "eng144",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose ‘No error’: Please distribute these balloons between all the candidates.",
+    "options": [
+      "all the candidates.",
+      "No error",
+      "Please distribute",
+      "these balloons between"
+    ],
+    "answer": 3,
+    "explanation": "When distributing something among more than two people or items, the preposition 'among' should be used, not 'between'."
+  },
+  {
+    "id": "eng145",
+    "subject": "English",
+    "question": "Improve the underlined part of the sentence. Choose 'No improvement' if the sentence is correct: I read the directions, but I still can't figured out how it works.",
+    "options": [
+      "figure out",
+      "figuring out",
+      "figures off",
+      "No improvement"
+    ],
+    "answer": 0,
+    "explanation": "After the modal 'can't', the base form of the verb 'figure' should be used, not the past tense 'figured'."
+  },
+  {
+    "id": "eng146",
+    "subject": "English",
+    "question": "Choose the most appropriate antonym of the underlined word: That missing context can often lead to separate interpretations by different readers or viewers.",
+    "options": [
+      "Analysis",
+      "Insight",
+      "Ignorance",
+      "Explanation"
+    ],
+    "answer": 3,
+    "explanation": "An antonym for 'missing' in this context would be something that provides clarity. 'Explanation' serves as the opposite by providing the necessary context."
+  },
+  {
+    "id": "eng147",
+    "subject": "English",
+    "question": "Select the incorrectly spelt word from the given sentence: According to the Finance Minister, this will provide the digital economy a new demension.",
+    "options": [
+      "provide",
+      "According",
+      "demension",
+      "economy"
+    ],
+    "answer": 2,
+    "explanation": "The correct spelling is 'dimension'."
+  },
+  {
+    "id": "eng148",
+    "subject": "English",
+    "question": "The sentence has been divided into three parts. Identify the segment with a spelling error: The renowned chef, known for his innovative cullinary creations, opened a new restaurant.",
+    "options": [
+      "No error",
+      "creations, opened a new restaurant",
+      "The renowned chef, known for his innovative cullinary",
+      "a hotspot for food enthusiasts"
+    ],
+    "answer": 2,
+    "explanation": ".."
+}
 ]
