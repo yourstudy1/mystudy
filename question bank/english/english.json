@@ -1922,8 +1922,7 @@
     ],
     "answer": 2,
     "explanation": ".."
-}
-
+},
  {
     "id": "en-english-149",
     "subject": "English",
@@ -3905,7 +3904,7 @@
     ],
     "answer": 1,
     "explanation": "To be 'capable of' means having the ability to do something."
-  }
+  },
  {
     "id": "en-english-301",
     "subject": "English",
@@ -5855,7 +5854,1958 @@
     ],
     "answer": 2,
     "explanation": "When using 'Either... or', the verb agrees with the subject closer to it. Since 'Ishita' is singular, the verb should be 'has'."
-  }
+  },
+   {
+    "id": "eng451",
+    "subject": "English",
+    "question": "Improve the underlined part of the sentence. Choose 'No improvement' as an answer if the sentence is grammatically correct. Mange is caused by a types of parasitic mite.",
+    "options": [
+      "types of parasitically",
+      "type of parasitic",
+      "No improvement",
+      "types of parasite"
+    ],
+    "answer": 1,
+    "explanation": "The singular noun 'type' is required here instead of the plural 'types', and 'parasitic' is an adjective correctly modifying the singular 'mite'. So the correct phrase is 'type of parasitic mite'."
+  },
+  {
+    "id": "eng452",
+    "subject": "English",
+    "question": "Correct the underlined part of the sentence. Choose 'No correction' as an answer if the sentence is grammatically correct. Her shoes been too small.",
+    "options": [
+      "are too",
+      "has too",
+      "No correction",
+      "is too"
+    ],
+    "answer": 0,
+    "explanation": "The plural subject 'shoes' requires a plural verb. 'Are too' provides the correct verb 'are' to complete the present tense sentence."
+  },
+  {
+    "id": "eng453",
+    "subject": "English",
+    "question": "Select the sentence with no spelling errors.",
+    "options": [
+      "Borman was joined on the mission by two other astronauts.",
+      "Borman was joinned on the mission by two other astronaots.",
+      "Borman was joined on the mision by two other astronaots.",
+      "Borman was joined on the missoin by two other astronauts."
+    ],
+    "answer": 0,
+    "explanation": "Option 1 correctly spells 'joined', 'mission', and 'astronauts'. The other options contain spelling mistakes like 'joinned', 'mision', 'astronaots', and 'missoin'."
+  },
+  {
+    "id": "eng454",
+    "subject": "English",
+    "question": "Choose the most appropriate antonym of the underlined word. She inspired us with a courage, a power, and a confidence in her and in our cause, which nothing could shake or daunt.",
+    "options": [
+      "Scare",
+      "Baffle",
+      "Dismay",
+      "Cheer"
+    ],
+    "answer": 3,
+    "explanation": "'Daunt' means to make someone feel intimidated or discouraged. The antonym is 'Cheer', which means to give encouragement or comfort."
+  },
+  {
+    "id": "eng455",
+    "subject": "English",
+    "question": "In the following question, out of the given four alternatives, select the alternative which best expresses the meaning of the Idiom Phrase. Lose by a neck",
+    "options": [
+      "Lose by a small margin",
+      "To lose one's necklace",
+      "To stop someone from putting forward his views",
+      "To cut short a matter"
+    ],
+    "answer": 0,
+    "explanation": "The idiom 'Lose by a neck' comes from horse racing and means to lose a race or contest by a very small margin."
+  },
+  {
+    "id": "eng456",
+    "subject": "English",
+    "question": "Comprehension: Healthy eating is a key component of a (1.complete) ___________ lifestyle. Fill in the blank (1) with the appropriate word from the options below:",
+    "options": [
+      "wholesome",
+      "monotonous",
+      "sedentary",
+      "active"
+    ],
+    "answer": 0,
+    "explanation": "The word 'wholesome' means good for health and well-being, which is a strong synonym for 'complete' in this context."
+  },
+  {
+    "id": "eng457",
+    "subject": "English",
+    "question": "Comprehension: It's essential to maintain a balanced diet that includes a variety of fruits and vegetables, lean proteins, and whole grains. Such a diet not only provides the necessary nutrients for (2. ideal) ____________ growth... Fill in the blank (2) with the appropriate word:",
+    "options": [
+      "optimal",
+      "adequate",
+      "special",
+      "robust"
+    ],
+    "answer": 0,
+    "explanation": "The word 'optimal' means the best or most favorable, which closely matches the meaning of 'ideal'."
+  },
+  {
+    "id": "eng458",
+    "subject": "English",
+    "question": "Comprehension: ...but also reduces the risk of (3. chronic) ____________ conditions such as heart disease and diabetes. Fill in the blank (3) with the appropriate word:",
+    "options": [
+      "unmedical",
+      "indemnified",
+      "infectious",
+      "lifestyle"
+    ],
+    "answer": 3,
+    "explanation": "Conditions like heart disease and diabetes are commonly referred to as 'lifestyle' conditions, which are chronic and often related to diet and exercise habits."
+  },
+  {
+    "id": "eng459",
+    "subject": "English",
+    "question": "Comprehension: In addition to a nutritious diet, regular physical activity is (4. essential) ____________ for maintaining good health. Fill in the blank (4) with the appropriate word:",
+    "options": [
+      "ardours",
+      "colloquial",
+      "vital",
+      "Innocuous"
+    ],
+    "answer": 2,
+    "explanation": "The word 'vital' means absolutely necessary or essential, making it a perfect synonym."
+  },
+  {
+    "id": "eng460",
+    "subject": "English",
+    "question": "Comprehension: Staying (5. healthy) ___________ and active can enhance both physical and mental well-being. Fill in the blank (5) with the appropriate word:",
+    "options": [
+      "fit",
+      "pertinent",
+      "competent",
+      "Shape"
+    ],
+    "answer": 0,
+    "explanation": "The word 'fit' means in good health and strong, which is the most appropriate synonym for 'healthy' in this context."
+  },
+  {
+    "id": "eng461",
+    "subject": "English",
+    "question": "Choose the word that is opposite in meaning to the given word. Successful",
+    "options": [
+      "Vile",
+      "Vestige",
+      "Vagary",
+      "Hopeless"
+    ],
+    "answer": 3,
+    "explanation": "'Successful' means accomplishing an aim or purpose. The antonym is 'Hopeless', meaning having no hope of success."
+  },
+  {
+    "id": "eng462",
+    "subject": "English",
+    "question": "In the following question, out of the given four alternatives, select the alternative which best expresses the meaning of the Idiom Phrase. To go to the devil",
+    "options": [
+      "To mourn the death of a close friend",
+      "To switch allegiance",
+      "To curse someone",
+      "To be in an extremely and increasingly bad or ruinous condition"
+    ],
+    "answer": 3,
+    "explanation": "The idiom 'To go to the devil' means to fall into ruin or be in a very bad state."
+  },
+  {
+    "id": "eng463",
+    "subject": "English",
+    "question": "Select the most appropriate option for the given blank. We are _____ of flour. So, we have to buy the bread.",
+    "options": [
+      "by",
+      "in",
+      "up",
+      "out"
+    ],
+    "answer": 3,
+    "explanation": "The phrase 'out of' means to have no supply of something left."
+  },
+  {
+    "id": "eng464",
+    "subject": "English",
+    "question": "Choose the word that is opposite in meaning to the given word. Acquire",
+    "options": [
+      "Barter",
+      "Reach",
+      "Garner",
+      "Discard"
+    ],
+    "answer": 3,
+    "explanation": "'Acquire' means to obtain or gain. The antonym is 'Discard', meaning to throw away or get rid of."
+  },
+  {
+    "id": "eng465",
+    "subject": "English",
+    "question": "Select the word segment that substitutes (replaces) the bracketed word segment correctly and completes the sentence meaningfully. At last Godfrey (turning his head against her), and their eyes met, dwelling in that meeting without any movement ou either side.",
+    "options": [
+      "turned his head toward her",
+      "no correction required",
+      "turning his head for their",
+      "turn his head along"
+    ],
+    "answer": 0,
+    "explanation": "The correct phrase is 'turned his head toward her' to indicate the direction of the movement."
+  },
+  {
+    "id": "eng466",
+    "subject": "English",
+    "question": "Select the incorrectly spelt word from the given sentence. While he stood, in the cluch of his adversary, he still held his hand on his sword.",
+    "options": [
+      "While",
+      "adversary",
+      "cluch",
+      "sword"
+    ],
+    "answer": 2,
+    "explanation": "The correct spelling is 'clutch', not 'cluch'."
+  },
+  {
+    "id": "eng467",
+    "subject": "English",
+    "question": "Identify the segment that contains a grammatical error. It kept getting darker and darker, / and we could rarely see / the ball any more.",
+    "options": [
+      "No error",
+      "the ball any more.",
+      "It kept getting darker and darker,",
+      "and we could rarely see"
+    ],
+    "answer": 3,
+    "explanation": "The adverb 'rarely' means not often, which doesn't fit the context of 'could not see'. 'Hardly' or 'barely' would be the correct adverb to use with 'any more'."
+  },
+  {
+    "id": "eng468",
+    "subject": "English",
+    "question": "Select the most appropriate meaning of the given idiom. Leave no stone unturned",
+    "options": [
+      "To share a secret that wasn't suppose to be shared",
+      "The final event in a series of unacceptable actions",
+      "To act in a frenzied manner",
+      "Make all possible efforts"
+    ],
+    "answer": 3,
+    "explanation": "The idiom 'Leave no stone unturned' means to try every possible course of action to achieve something."
+  },
+  {
+    "id": "eng469",
+    "subject": "English",
+    "question": "Select the sentence with no spelling errors.",
+    "options": [
+      "Water likage was thought to be a major cause of landslides.",
+      "Water leakage was thought to be a major cause of landslides.",
+      "Water leakage was thoght to be a major cause of landslides.",
+      "Water leakage was thought to be a major cause of lendslides."
+    ],
+    "answer": 1,
+    "explanation": "Option 2 correctly spells 'leakage', 'thought', and 'landslides'."
+  },
+  {
+    "id": "eng470",
+    "subject": "English",
+    "question": "Choose the word that means theme as the given word. Competent",
+    "options": [
+      "Gullible",
+      "Qualified",
+      "Widened",
+      "Untried"
+    ],
+    "answer": 1,
+    "explanation": "'Competent' means having the necessary ability or skill. 'Qualified' is a synonym meaning having the appropriate qualifications."
+  },
+  {
+    "id": "eng471",
+    "subject": "English",
+    "question": "Choose the most appropriate antonym of the underlined word. Why is there fascination. dissection, and constant conversation whenever Beyoncé or any female celebrity changes her hair?",
+    "options": [
+      "Allure",
+      "Spell",
+      "Appeal",
+      "Repulsion"
+    ],
+    "answer": 3,
+    "explanation": "'Fascination' means an intense interest or attraction. The antonym is 'Repulsion', meaning a feeling of disgust or intense dislike."
+  },
+  {
+    "id": "eng472",
+    "subject": "English",
+    "question": "Improve the underlined part of the sentence. Choose 'No improvement' as an answer if the sentence is grammatically correct. Season the meat with salt and pepper, and then fry it in a hot pan",
+    "options": [
+      "in a hottest pan",
+      "No improvement",
+      "to hotter pan",
+      "at a heat pan"
+    ],
+    "answer": 1,
+    "explanation": "The sentence is grammatically correct as given."
+  },
+  {
+    "id": "eng473",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose 'No error'. My nephew is the most naughtiest kid on this Earth.",
+    "options": [
+      "naughtiest kid",
+      "No error",
+      "on this Earth.",
+      "My nephew is the most"
+    ],
+    "answer": 3,
+    "explanation": "'Naughtiest' is already in the superlative form, so using 'most' before it is redundant and incorrect."
+  },
+  {
+    "id": "eng474",
+    "subject": "English",
+    "question": "Identify the segment that contains a grammatical error. I am shocked as I saw her / yesterday, I was horrified / when I saw her today.",
+    "options": [
+      "I am shocked as I saw her",
+      "when I saw her today.",
+      "yesterday. I was horrified",
+      "No error"
+    ],
+    "answer": 0,
+    "explanation": "The tense 'I am shocked' (present) does not match 'yesterday' (past). It should be 'I was shocked'."
+  },
+  {
+    "id": "eng475",
+    "subject": "English",
+    "question": "Select the most appropriate word to fill in the blank. Without a ___________ package, our economy's going to go down the tubes.",
+    "options": [
+      "stimulating",
+      "stimulus",
+      "stimulated",
+      "stimulant"
+    ],
+    "answer": 1,
+    "explanation": "A 'stimulus' package refers to a financial measure intended to boost economic activity."
+  },
+  {
+    "id": "eng476",
+    "subject": "English",
+    "question": "Comprehension: For a (1) ___________ Nicole stood looking down at the Mediterranean... Select the most appropriate option to fill in the blank No. 1.",
+    "options": [
+      "moment",
+      "occasion",
+      "time",
+      "Minute"
+    ],
+    "answer": 0,
+    "explanation": "The phrase 'For a moment' is a standard idiom meaning for a very short period of time."
+  },
+  {
+    "id": "eng477",
+    "subject": "English",
+    "question": "Comprehension: ...but there was (2) ___________ to do with that, even with a her tireless hands. Select the most appropriate option to fill in the blank No. 2.",
+    "options": [
+      "something",
+      "mostly",
+      "everything",
+      "nothing"
+    ],
+    "answer": 3,
+    "explanation": "The phrase 'nothing to do with that' means no action could be taken regarding it."
+  },
+  {
+    "id": "eng478",
+    "subject": "English",
+    "question": "Comprehension: Presently Dicken came out of his one-room house (3) ___________ a telescope and looked east toward Cannes. Select the most appropriate option to fill in the blank No. 3.",
+    "options": [
+      "hauling",
+      "carrying",
+      "picking",
+      "lift"
+    ],
+    "answer": 1,
+    "explanation": "The verb 'carrying' means to hold or support something while moving, fitting the context of taking a telescope."
+  },
+  {
+    "id": "eng479",
+    "subject": "English",
+    "question": "Comprehension: (4) __________ he disappeared into his house and came out with a megaphone. Select the most appropriate option to fill in the blank No. 4.",
+    "options": [
+      "wherein",
+      "whereas",
+      "whereupon",
+      "when"
+    ],
+    "answer": 3,
+    "explanation": "The conjunction 'when' is used to indicate that one event happened immediately after another."
+  },
+  {
+    "id": "eng480",
+    "subject": "English",
+    "question": "Comprehension: ...with a mix of urgency and (5) ___________ in his voice. Select the most appropriate option to fill in the blank No. 5.",
+    "options": [
+      "excite",
+      "excitation",
+      "exciting",
+      "excitement"
+    ],
+    "answer": 3,
+    "explanation": "The noun 'excitement' is required to be the object of the preposition 'of'."
+  },
+  {
+    "id": "eng481",
+    "subject": "English",
+    "question": "Choose the word that means the same as the given word. Preference",
+    "options": [
+      "Tendency",
+      "Polar",
+      "Aversion",
+      "Gentle"
+    ],
+    "answer": 0,
+    "explanation": "'Preference' means a greater liking for one alternative over another. 'Tendency' can be a synonym meaning an inclination towards a particular characteristic or behavior."
+  },
+  {
+    "id": "eng482",
+    "subject": "English",
+    "question": "Select the most appropriate antonym of the given word. Novelty",
+    "options": [
+      "Vintage",
+      "Stagnation",
+      "Creation",
+      "Pursue"
+    ],
+    "answer": 1,
+    "explanation": "'Novelty' means the quality of being new or original. The antonym is 'Stagnation', meaning a lack of activity or progress."
+  },
+  {
+    "id": "eng483",
+    "subject": "English",
+    "question": "In the following question, out of the given four alternatives, select the alternative which best expresses the meaning of the Idiom Phrase. The old Adam",
+    "options": [
+      "The evil or reckless side of human nature",
+      "An old strategy in action",
+      "Beginning of a new journey",
+      "A person with orthodox thinking"
+    ],
+    "answer": 0,
+    "explanation": "The idiom 'The old Adam' refers to the unregenerate or sinful aspect of human nature."
+  },
+  {
+    "id": "eng484",
+    "subject": "English",
+    "question": "Identify the segment that contains a grammatical error. Because you always look nicest / than anyone.",
+    "options": [
+      "No error",
+      "always look nicest",
+      "Because you",
+      "than anyone."
+    ],
+    "answer": 1,
+    "explanation": "The comparative 'nicer' should be used with 'than', not the superlative 'nicest'."
+  },
+  {
+    "id": "eng485",
+    "subject": "English",
+    "question": "Improve the underlined part of the sentence. Choose 'No improvement' as an answer if the sentence is grammatically correct. Exercise must be combine with a proper dier.",
+    "options": [
+      "combined with",
+      "combined by",
+      "was combined with",
+      "No improvement"
+    ],
+    "answer": 0,
+    "explanation": "The correct passive form is 'must be combined with', using the past participle 'combined' and the preposition 'with'."
+  },
+  {
+    "id": "eng486",
+    "subject": "English",
+    "question": "Select the most appropriate antonym of the given word. Naïve",
+    "options": [
+      "Confiding",
+      "Besotted",
+      "Expert",
+      "Rookie"
+    ],
+    "answer": 2,
+    "explanation": "'Naïve' means showing a lack of experience or judgment. The antonym is 'Expert', meaning a person with a high level of knowledge or skill."
+  },
+  {
+    "id": "eng487",
+    "subject": "English",
+    "question": "Select the word segment that substitutes the bracketed word segment correctly. As she woke up, the day seemed different to Rosemary (than the day before).",
+    "options": [
+      "No correction required",
+      "from the day before",
+      "from the day earlier",
+      "then the day previous"
+    ],
+    "answer": 1,
+    "explanation": "The correct preposition to follow 'different' when comparing is 'from', so 'from the day before' is the correct phrase."
+  },
+  {
+    "id": "eng488",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose 'No error'. You will certain pay for what you have done to your mother.",
+    "options": [
+      "done to your mother.",
+      "No error",
+      "pay for what you have",
+      "You will certain"
+    ],
+    "answer": 3,
+    "explanation": "The adverb 'certainly' is needed to modify the verb 'pay', not the adjective 'certain'."
+  },
+  {
+    "id": "eng489",
+    "subject": "English",
+    "question": "Select the most appropriate option for the given blank. We should ____________ their directions if we want to reach there.",
+    "options": [
+      "obey",
+      "run",
+      "mind",
+      "follow"
+    ],
+    "answer": 3,
+    "explanation": "The verb 'follow' collocates with 'directions' to mean take the route or guidance indicated."
+  },
+  {
+    "id": "eng490",
+    "subject": "English",
+    "question": "Improve the underlined part of the sentence. Choose 'No improvement' as an answer if the sentence is grammatically correct. A male deer is calling a buck.",
+    "options": [
+      "are calls",
+      "No improvement",
+      "is called",
+      "is call"
+    ],
+    "answer": 2,
+    "explanation": "The passive voice 'is called' is required here because the male deer is the receiver of the action."
+  },
+  {
+    "id": "eng491",
+    "subject": "English",
+    "question": "Improve the underlined part of the sentence. Choose 'No improvement' as an answer if the sentence is grammatically correct. The squirrels bury the peanuts beneath the snowy",
+    "options": [
+      "No improvement",
+      "under the snow",
+      "under the snowiest",
+      "under the snowier"
+    ],
+    "answer": 1,
+    "explanation": "The phrase 'beneath the snowy' is grammatically incorrect. 'Under the snow' uses the correct noun form."
+  },
+  {
+    "id": "eng492",
+    "subject": "English",
+    "question": "Select the incorrectly spelt word from the given sentence. Her thought of him was vage, nebulous, and taking many forms.",
+    "options": [
+      "nebulous",
+      "forms",
+      "thought",
+      "vage"
+    ],
+    "answer": 3,
+    "explanation": "The correct spelling is 'vague'."
+  },
+  {
+    "id": "eng493",
+    "subject": "English",
+    "question": "Choose the idiom/phrase that can substitute the highlighted group of words meaningfully. I had to wake up in the middle of the night to go to the toilet.",
+    "options": [
+      "Spill the beans",
+      "Answer the call of nature",
+      "Lost cause",
+      "Break a leg"
+    ],
+    "answer": 1,
+    "explanation": "The idiom 'Answer the call of nature' is a polite euphemism for going to the toilet."
+  },
+  {
+    "id": "eng494",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose 'No error'. Have a high fever early in pregnancy may increase the risk of certain birth defects.",
+    "options": [
+      "No error",
+      "risk of certain birth defects.",
+      "in pregnancy may increase the",
+      "Have a high fever early"
+    ],
+    "answer": 3,
+    "explanation": "The gerund 'Having' should be used as the subject of the sentence, not the base verb 'Have'."
+  },
+  {
+    "id": "eng495",
+    "subject": "English",
+    "question": "Select the sentence with no spelling errors.",
+    "options": [
+      "Its emotional and relational benefits are clear.",
+      "Its emosional and relational benefits are clear.",
+      "Its emotional and relationel benefits are clear.",
+      "Its emotional and relational benifits are clear."
+    ],
+    "answer": 0,
+    "explanation": "Option 1 correctly spells 'emotional', 'relational', and 'benefits'."
+  },
+  {
+    "id": "eng496",
+    "subject": "English",
+    "question": "Comprehension: (1) ___________ are the 1970s, the rate of plastic production has grown... Select the most appropriate option for blank (1)",
+    "options": [
+      "To",
+      "Since",
+      "By",
+      "For"
+    ],
+    "answer": 1,
+    "explanation": "The present perfect tense 'has grown' requires the preposition 'Since' to indicate the starting point of the action."
+  },
+  {
+    "id": "eng497",
+    "subject": "English",
+    "question": "Comprehension: ...has grown (2) __________ than that of any other material . Select the most appropriate option for blank (2)",
+    "options": [
+      "fasten",
+      "fast",
+      "fastly",
+      "faster"
+    ],
+    "answer": 3,
+    "explanation": "The comparative 'faster' is required because it is comparing the growth rate of plastic to other materials."
+  },
+  {
+    "id": "eng498",
+    "subject": "English",
+    "question": "Comprehension: ...global (3) ___________ of primary plastic is forecasted to reach 1.100 million tonnes by 2050. Select the most appropriate option for blank (3)",
+    "options": [
+      "production",
+      "accommodation",
+      "substance",
+      "energy"
+    ],
+    "answer": 0,
+    "explanation": "The noun 'production' refers to the process of manufacturing, fitting the context of making plastic."
+  },
+  {
+    "id": "eng499",
+    "subject": "English",
+    "question": "Comprehension: We have also seen a (4) ____________ shift towards single-use plastic products... Select the most appropriate option for blank (4)",
+    "options": [
+      "precious",
+      "worrying",
+      "earthy",
+      "gloomy"
+    ],
+    "answer": 1,
+    "explanation": "The adjective 'worrying' means causing anxiety, which fits the negative context of single-use plastics."
+  },
+  {
+    "id": "eng500",
+    "subject": "English",
+    "question": "Comprehension: ...items that are meant to be thrown (5) ___________ after a single short use. Select the most appropriate option for blank (5)",
+    "options": [
+      "around",
+      "away",
+      "across",
+      "of"
+    ],
+    "answer": 1,
+    "explanation": "The phrasal verb 'thrown away' means to dispose of something."
+  },
+  {
+    "id": "eng501",
+    "subject": "English",
+    "question": "Select the most appropriate word to fill in the blank. A ___________ table discussion took place between the heads of states.",
+    "options": [
+      "rounded",
+      "centre",
+      "round",
+      "circle"
+    ],
+    "answer": 2,
+    "explanation": "A 'round table' discussion is a standard phrase for a meeting where participants discuss topics as equals."
+  },
+  {
+    "id": "eng502",
+    "subject": "English",
+    "question": "Choose the word that is opposite in meaning to the given word. Plea",
+    "options": [
+      "Answer",
+      "Pure",
+      "Appeal",
+      "Suit"
+    ],
+    "answer": 0,
+    "explanation": "A 'plea' is a request or an earnest appeal. The closest opposite in a legal or responsive sense is 'Answer', which is a reaction to a plea."
+  },
+  {
+    "id": "eng503",
+    "subject": "English",
+    "question": "Choose the most appropriate antonym of the underlined word. Google wants to make sure that the information it suggests is authentic and comes from the experts in that niche.",
+    "options": [
+      "Accurate",
+      "Factual",
+      "Corrupt",
+      "Pure"
+    ],
+    "answer": 2,
+    "explanation": "'Authentic' means genuine or real. The antonym is 'Corrupt', meaning altered or not genuine."
+  },
+  {
+    "id": "eng504",
+    "subject": "English",
+    "question": "Choose the idiom/phrase that can substitute the highlighted group of words meaningfully. She is listening with full attention whenever there is a mention of her favourite hero.",
+    "options": [
+      "Break a leg",
+      "Beat around the bush",
+      "Run out of steam",
+      "All ears"
+    ],
+    "answer": 3,
+    "explanation": "The idiom 'All ears' means to listen attentively and eagerly."
+  },
+  {
+    "id": "eng505",
+    "subject": "English",
+    "question": "Choose the word that means the same as the given word. Fascinate",
+    "options": [
+      "Inspire",
+      "Entice",
+      "Insure",
+      "Impel"
+    ],
+    "answer": 1,
+    "explanation": "'Fascinate' means to attract or hold the attention of someone. 'Entice' is a synonym meaning to attract by offering pleasure."
+  },
+  {
+    "id": "eng506",
+    "subject": "English",
+    "question": "Select the incorrectly spelt word from the given sentence. At this important junctur, we asked several experts from different fields what their burning question about the coronavirus is.",
+    "options": [
+      "junctur",
+      "question",
+      "burning",
+      "fields"
+    ],
+    "answer": 0,
+    "explanation": "The correct spelling is 'juncture'."
+  },
+  {
+    "id": "eng507",
+    "subject": "English",
+    "question": "Four sentences are given, out of which three have all correct spellings. Choose the sentence with the incorrect spelt word.",
+    "options": [
+      "His life had reduced itself to the functions of weaving and hoarding, without any contemplation of an end toward which the functions tended.",
+      "I knew he would take an interest in this kind of business, and throw in the fancy touches.",
+      "I resisted all the way: a circumstance which grately strengthend the bad opinion Bessie and Miss Abbot were disposed to entertain of me",
+      "When Abe's car pulled up ahead of them the east was crayoned red and yellow, promising a sultry day"
+    ],
+    "answer": 2,
+    "explanation": "Option 3 contains the misspelled word 'grately', which should be 'greatly'."
+  },
+  {
+    "id": "eng508",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose 'No error'. The team didn't noticed any side effects in their vaccinated mice.",
+    "options": [
+      "No error",
+      "The team didn't noticed",
+      "any side effects",
+      "in their vaccinated mice."
+    ],
+    "answer": 1,
+    "explanation": "After the auxiliary verb 'didn't', the base form of the verb 'notice' should be used, not the past tense 'noticed'."
+  },
+  {
+    "id": "eng509",
+    "subject": "English",
+    "question": "What does the idiom 'barking up the wrong tree' mean?",
+    "options": [
+      "Pursuing the wrong course of action or making a mistaken assumption",
+      "Having something that is certain is much better than taking a risk for more, because chances are you might lose everything.",
+      "Something good that isn't recognized at first.",
+      "Being upset for something that happened in the past."
+    ],
+    "answer": 0,
+    "explanation": "The idiom 'Barking up the wrong tree' means to pursue a false lead or make a mistake in one's line of thought."
+  },
+  {
+    "id": "eng510",
+    "subject": "English",
+    "question": "Fill in the blank with the most appropriate option. The reaction came when he realized the waste and extravagance ______.",
+    "options": [
+      "participated",
+      "involved",
+      "hooked",
+      "Caught"
+    ],
+    "answer": 1,
+    "explanation": "The verb 'involved' means included or associated with, fitting the context of being part of the waste and extravagance."
+  },
+  {
+    "id": "eng511",
+    "subject": "English",
+    "question": "Fill in the blank with the most appropriate option. The ____ are broken now, it seems they won't reunite.",
+    "options": [
+      "core",
+      "cords",
+      "cored",
+      "chords"
+    ],
+    "answer": 3,
+    "explanation": "The word 'chords' (often used metaphorically for bonds of friendship or relationships) is the correct fit here."
+  },
+  {
+    "id": "eng512",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose 'No error'. Hina is a best girl and knows how to manage everything.",
+    "options": [
+      "Hina is a best girl",
+      "and knows how",
+      "to manage everything",
+      "No error"
+    ],
+    "answer": 0,
+    "explanation": "The superlative 'best' should not be preceded by the indefinite article 'a'. It should be 'the best girl' or just 'a good girl'."
+  },
+  {
+    "id": "eng513",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose 'No error'. The circumstances surrounding many custody disputes had have changed drastically in the past week.",
+    "options": [
+      "drastically in the past week.",
+      "The circumstances surrounding many",
+      "custody disputes had have changed",
+      "No error"
+    ],
+    "answer": 2,
+    "explanation": "The phrase 'had have' is grammatically incorrect. It should be 'had changed' (past perfect) or 'have changed' (present perfect)."
+  },
+  {
+    "id": "eng514",
+    "subject": "English",
+    "question": "Select the most appropriate word to fill in the blank. My best friend always ___________ to me and is so non-judgmental.",
+    "options": [
+      "listener",
+      "listening",
+      "listen",
+      "listens"
+    ],
+    "answer": 3,
+    "explanation": "The singular subject 'My best friend' requires the third-person singular present tense verb 'listens'."
+  },
+  {
+    "id": "eng515",
+    "subject": "English",
+    "question": "Replace the bracketed word with one of the given options: As with all new technologies. costs are expected to fall as the products become more (ubiquitous).",
+    "options": [
+      "pervasive",
+      "elusive",
+      "limited",
+      "scarce"
+    ],
+    "answer": 0,
+    "explanation": "'Ubiquitous' means present everywhere. The synonym 'pervasive' means spreading widely, fitting the context."
+  },
+  {
+    "id": "eng516",
+    "subject": "English",
+    "question": "Comprehension: Since so much of our lives are digital today, such spyware attacks are (1) __________ malicious and disruptive. Select the most appropriate option for blank(1)",
+    "options": [
+      "largely",
+      "mainly",
+      "usually",
+      "highly"
+    ],
+    "answer": 0,
+    "explanation": "The adverb 'largely' means to a great extent, which fits the context of the attacks being mostly malicious."
+  },
+  {
+    "id": "eng517",
+    "subject": "English",
+    "question": "Comprehension: This is precisely why there is a (2) __________ need for strong data protection... Select the most appropriate option for blank(2)",
+    "options": [
+      "highly",
+      "great",
+      "big",
+      "largely"
+    ],
+    "answer": 1,
+    "explanation": "The adjective 'great' collocates strongly with 'need' to mean a very strong necessity."
+  },
+  {
+    "id": "eng518",
+    "subject": "English",
+    "question": "Comprehension: In fact, data protection and privacy (3) __________ . to be recognised as core, non-negotiable values. Select the most appropriate option for blank(3)",
+    "options": [
+      "want",
+      "wants",
+      "needs",
+      "need"
+    ],
+    "answer": 3,
+    "explanation": "The compound subject 'data protection and privacy' is plural, so the plural verb 'need' is required."
+  },
+  {
+    "id": "eng519",
+    "subject": "English",
+    "question": "Comprehension: (4) __________ the government's personal data protection bill introduced in Parliament leaves (5) ___________ to be desired. Select the most appropriate option for blank(4)",
+    "options": [
+      "Yet",
+      "Through",
+      "Such",
+      "So"
+    ],
+    "answer": 0,
+    "explanation": "The conjunction 'Yet' is used to introduce a contrast, showing that despite the need for protection, the bill is inadequate."
+  },
+  {
+    "id": "eng520",
+    "subject": "English",
+    "question": "Comprehension: ...introduced in Parliament leaves (5) ___________ to be desired. Select the most appropriate option for blank(5)",
+    "options": [
+      "a lot",
+      "so",
+      "might",
+      "very"
+    ],
+    "answer": 0,
+    "explanation": "The phrase 'leaves a lot to be desired' is a standard idiom meaning something is not very good."
+  },
+  {
+    "id": "eng521",
+    "subject": "English",
+    "question": "Improve the underlined part of the sentence. Choose 'No improvement' as an answer if the sentence is grammatically correct. The doctor is accepts new patients.",
+    "options": [
+      "accepting newly",
+      "No improvement",
+      "accepting new",
+      "accept new"
+    ],
+    "answer": 2,
+    "explanation": "The present continuous 'is accepting' is used for a temporary situation. 'New' is the correct adjective."
+  },
+  {
+    "id": "eng522",
+    "subject": "English",
+    "question": "Choose the most appropriate antonym of the underlined word. Despite the ridicule. China looks set to carry out the three-child policy in the hope of addressing its rapidly aging population and plunging birth and marriage rates.",
+    "options": [
+      "Commend",
+      "Taunt",
+      "Scorn",
+      "Contempt"
+    ],
+    "answer": 0,
+    "explanation": "'Ridicule' means subjection to mockery or derision. The antonym is 'Commend', meaning to praise formally."
+  },
+  {
+    "id": "eng523",
+    "subject": "English",
+    "question": "Choose the word that is opposite in meaning to the given word. Appearance",
+    "options": [
+      "Commencement",
+      "Exit",
+      "Ingress",
+      "Masquerade"
+    ],
+    "answer": 1,
+    "explanation": "'Appearance' can mean the act of arriving or coming into sight. The antonym is 'Exit', meaning the act of leaving."
+  },
+  {
+    "id": "eng524",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose 'No error'. I am now getting best job opportunities after this internship.",
+    "options": [
+      "after this internship",
+      "getting best job opportunities",
+      "I am now",
+      "No error"
+    ],
+    "answer": 1,
+    "explanation": "The superlative 'best' should not be used without 'the'. 'Better job opportunities' would be the correct comparative phrase here."
+  },
+  {
+    "id": "eng525",
+    "subject": "English",
+    "question": "Select the most appropriate option for the given blank. I want you to _____________ an investigation into this matter.",
+    "options": [
+      "take",
+      "open",
+      "free",
+      "set"
+    ],
+    "answer": 1,
+    "explanation": "The verb 'open' collocates with 'an investigation' to mean to start it."
+  },
+  {
+    "id": "eng526",
+    "subject": "English",
+    "question": "Improve the underlined part of the sentence. Choose 'No improvement' as an answer if the sentence is grammatically correct. The bag is made from jean fabric.",
+    "options": [
+      "making from",
+      "No improvement",
+      "makes from",
+      "make from"
+    ],
+    "answer": 1,
+    "explanation": "The sentence is grammatically correct as given. 'Made from' is used when the material is transformed."
+  },
+  {
+    "id": "eng527",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose 'No error'. We did found that less capable drivers tend to choose safer cars.",
+    "options": [
+      "We did found that",
+      "to choose safer cars.",
+      "No error",
+      "less capable drivers tend"
+    ],
+    "answer": 0,
+    "explanation": "After the auxiliary verb 'did', the base form of the verb 'find' should be used, not 'found'."
+  },
+  {
+    "id": "eng528",
+    "subject": "English",
+    "question": "Correct the underlined part of the sentence. Choose 'No correct' as an answer if the sentence is grammatically correct. Life would be a burdened without good companionship.",
+    "options": [
+      "burdening without",
+      "No correct",
+      "burdens without",
+      "burden without"
+    ],
+    "answer": 3,
+    "explanation": "The base noun 'burden' is required after 'a' to form the phrase 'a burden'."
+  },
+  {
+    "id": "eng529",
+    "subject": "English",
+    "question": "Select the most appropriate synonym of the given word. Scale",
+    "options": [
+      "Magnitude",
+      "Lethargy",
+      "Slide",
+      "Chips"
+    ],
+    "answer": 0,
+    "explanation": "'Scale' can mean the relative size or extent of something. 'Magnitude' is a synonym meaning great size."
+  },
+  {
+    "id": "eng530",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose 'No error'. Either of them have started the protest outside my house.",
+    "options": [
+      "started the protest",
+      "Either of them have",
+      "No error",
+      "outside my house."
+    ],
+    "answer": 1,
+    "explanation": "'Either of' takes a singular verb. So 'has started' should be used instead of 'have'."
+  },
+  {
+    "id": "eng531",
+    "subject": "English",
+    "question": "Select the most appropriate option for the given blank. He writes essays on various topics __________ science and politics.",
+    "options": [
+      "into",
+      "including",
+      "following",
+      "after"
+    ],
+    "answer": 1,
+    "explanation": "The preposition 'including' is used to introduce examples as part of a larger group."
+  },
+  {
+    "id": "eng532",
+    "subject": "English",
+    "question": "Choose the idiom/phrase that can substitute the highlighted group of words meaningfully. You must keep it in mind because it's important to remember that living in cities is very expensive",
+    "options": [
+      "Bear something in mind",
+      "Beat the brains",
+      "In seventh heaven",
+      "In the dark"
+    ],
+    "answer": 0,
+    "explanation": "The idiom 'Bear something in mind' means to remember something important."
+  },
+  {
+    "id": "eng533",
+    "subject": "English",
+    "question": "Select the incorrectly spelt word from the given sentence. She was one of the wealthiest women in the world and certainly the most ecentric noble of her time.",
+    "options": [
+      "noble",
+      "wealthiest",
+      "ecentric",
+      "certainly"
+    ],
+    "answer": 2,
+    "explanation": "The correct spelling is 'eccentric'."
+  },
+  {
+    "id": "eng534",
+    "subject": "English",
+    "question": "In the following question, out of the given four alternatives, select the alternative which best expresses the meaning of the Idiom Phrase. Back to basics",
+    "options": [
+      "To love someone with whole heart",
+      "Covering all the possibilities",
+      "Back to where one started",
+      "Returning to the simple and most important things"
+    ],
+    "answer": 3,
+    "explanation": "The idiom 'Back to basics' means returning to the most essential and simple principles."
+  },
+  {
+    "id": "eng535",
+    "subject": "English",
+    "question": "Four sentences are given, out of which three have all correct spellings. Choose the sentence with the incorrect spelt word.",
+    "options": [
+      "In the instant they passed it they herd a blur of voices from behind the reticence of the limousine",
+      "When Doctor Kimble gave physic, it was natural that it should have an effect.",
+      "But after ten minutes it came into sight again, drawn up at the side of the road.",
+      "He seemed to weave, like the spider. from pure impulse, without reflection."
+    ],
+    "answer": 0,
+    "explanation": "Option 1 contains the misspelled word 'herd', which should be 'heard'."
+  },
+  {
+    "id": "eng536",
+    "subject": "English",
+    "question": "Comprehension: When you start a new job, you want to make a good impression (1) _____________ your colleagues and supervisors. Select the most appropriate option for blank(1)",
+    "options": [
+      "in",
+      "on",
+      "by",
+      "for"
+    ],
+    "answer": 1,
+    "explanation": "The correct preposition to use with 'impression' when referring to the people impressed is 'on'."
+  },
+  {
+    "id": "eng537",
+    "subject": "English",
+    "question": "Comprehension: Behaving professionally, being punctual. and following company (2) ____________ and procedures... Select the most appropriate option for blank(2)",
+    "options": [
+      "types",
+      "divisions",
+      "sets",
+      "policies"
+    ],
+    "answer": 3,
+    "explanation": "The noun 'policies' collocates with 'procedures' to form the standard phrase 'company policies and procedures'."
+  },
+  {
+    "id": "eng538",
+    "subject": "English",
+    "question": "Comprehension: ...can help you establish a positive (3) _____________ in the workplace. Select the most appropriate option for blank(3)",
+    "options": [
+      "face",
+      "mask",
+      "image",
+      "firework"
+    ],
+    "answer": 2,
+    "explanation": "The word 'image' refers to the general impression that a person or organization presents to the public."
+  },
+  {
+    "id": "eng539",
+    "subject": "English",
+    "question": "Comprehension: Behaving appropriately and professionally can help (4) _____________ trust with your colleagues... Select the most appropriate option for blank(4)",
+    "options": [
+      "depth",
+      "demolish",
+      "select",
+      "build"
+    ],
+    "answer": 3,
+    "explanation": "The verb 'build' collocates with 'trust' to mean to develop or establish trust."
+  },
+  {
+    "id": "eng540",
+    "subject": "English",
+    "question": "Comprehension: ...your colleagues are more (5) ____________ to support you and help you succeed. Select the most appropriate option for blank(5)",
+    "options": [
+      "suddenly",
+      "like",
+      "vaguely",
+      "likely"
+    ],
+    "answer": 3,
+    "explanation": "The adjective 'likely' means probable, fitting the phrase 'more likely to support you'."
+  },
+  {
+    "id": "eng541",
+    "subject": "English",
+    "question": "The sentence has been divided into three parts, identify the segment which contains a spelling error. The proffessor noticed a misspelled word in the student's essay and pointed out the error during the class discussion.",
+    "options": [
+      "no error",
+      "the student's essay and pointed out the",
+      "The proffessor noticed a misspelled word in",
+      "error during the class discussion."
+    ],
+    "answer": 2,
+    "explanation": "The correct spelling of the word is 'professor', with only one 'f' and two 's's."
+  },
+  {
+    "id": "eng542",
+    "subject": "English",
+    "question": "Choose the word that is opposite in meaning to the given word. Anonymity",
+    "options": [
+      "Cachet",
+      "Silence",
+      "Importance",
+      "Bareness"
+    ],
+    "answer": 0,
+    "explanation": "'Anonymity' means the condition of being anonymous or unknown. The antonym is 'Cachet', meaning the state of being respected or prestigious."
+  },
+  {
+    "id": "eng543",
+    "subject": "English",
+    "question": "Choose the most appropriate antonym of the underlined word. Many of these losses were due to the utter incompetence of the higher command.",
+    "options": [
+      "Inability",
+      "Boredom",
+      "Lacuna",
+      "Adept"
+    ],
+    "answer": 3,
+    "explanation": "'Incompetence' means lack of the skills or ability to do a job. The antonym is 'Adept', meaning highly skilled."
+  },
+  {
+    "id": "eng544",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose 'No error'. In many ways, this is the best time in history to be alive.",
+    "options": [
+      "No error",
+      "history to be alive",
+      "is the best time in",
+      "In many ways, this"
+    ],
+    "answer": 0,
+    "explanation": "The sentence is grammatically correct as given."
+  },
+  {
+    "id": "eng545",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose 'No error'. People are acting the way evolution have wired them.",
+    "options": [
+      "No error",
+      "the way evolution",
+      "have wired them",
+      "People are acting"
+    ],
+    "answer": 2,
+    "explanation": "The singular noun 'evolution' requires the singular verb 'has', not 'have'."
+  },
+  {
+    "id": "eng546",
+    "subject": "English",
+    "question": "Four sentences are given, out of which three have all correct spellings. Choose the sentence with the incorrect spelt word.",
+    "options": [
+      "Beyond the inky sea and far up that high, black shadow of a hill lived the Divers.",
+      "This preparation for bonds, and the additional igneminy it inferred, took a little of the excitement out of me.",
+      "Marner wanted the heaps of ten to grow into a square. and then into a larger square.",
+      "The judge said he could hug him for them words: so he cried, and his wife she cried again."
+    ],
+    "answer": 1,
+    "explanation": "Option 2 contains the misspelled word 'igneminy', which should be 'ignominy'."
+  },
+  {
+    "id": "eng547",
+    "subject": "English",
+    "question": "The sentence has been divided into three parts, identify the error segment. Despite facing numerous challenges, she worked hardly/ to achieve her goals and ultimately earned the well-deserved promotion.",
+    "options": [
+      "earned the well-deserved promotion.",
+      "no error",
+      "Despite facing numerous challenges, she worked hardly",
+      "to achieve her goals and ultimately"
+    ],
+    "answer": 2,
+    "explanation": "The adverb 'hardly' means barely. To mean with a great deal of effort, the adverb 'hard' should be used."
+  },
+  {
+    "id": "eng548",
+    "subject": "English",
+    "question": "Select the most appropriate synonym of the given word. Bait",
+    "options": [
+      "Greed",
+      "Food",
+      "Repulsion",
+      "Allurement"
+    ],
+    "answer": 3,
+    "explanation": "'Bait' can mean something used to lure or tempt. 'Allurement' is a synonym meaning the quality of being enticing."
+  },
+  {
+    "id": "eng549",
+    "subject": "English",
+    "question": "Improve the underlined part of the sentence. Choose 'No improvement' as an answer if the sentence is grammatically correct. It will none rained in the West this summer.",
+    "options": [
+      "no rained",
+      "not have raining",
+      "not rain",
+      "No improvement"
+    ],
+    "answer": 2,
+    "explanation": "After the modal 'will', the base form of the verb 'not rain' is required."
+  },
+  {
+    "id": "eng550",
+    "subject": "English",
+    "question": "Select the most appropriate word to fill in the blank. She is the____dancer in the competition.",
+    "options": [
+      "bad",
+      "baddest",
+      "worse",
+      "worst"
+    ],
+    "answer": 3,
+    "explanation": "The superlative 'worst' is used because she is being compared to all other dancers in the competition."
+  },
+  {
+    "id": "eng551",
+    "subject": "English",
+    "question": "Choose the idiom/phrase that can substitute the highlighted group of words meaningfully. They are working very hard in less time to make the presentation on time.",
+    "options": [
+      "Scapegoat",
+      "Off on the wrong foot",
+      "Working against the clock",
+      "Til the cows come home"
+    ],
+    "answer": 2,
+    "explanation": "The idiom 'Working against the clock' means to work quickly because there is a time limit."
+  },
+  {
+    "id": "eng552",
+    "subject": "English",
+    "question": "In the following question, out of the given four alternatives, select the alternative which best expresses the meaning of the Idiom Phrase. To pop the question",
+    "options": [
+      "To propose marriage",
+      "To ask a nonsense question",
+      "To mark important details",
+      "To give a wrong answer"
+    ],
+    "answer": 0,
+    "explanation": "The idiom 'To pop the question' means to propose marriage to someone."
+  },
+  {
+    "id": "eng553",
+    "subject": "English",
+    "question": "Improve the underlined part of the sentence. Choose 'No improvement' as an answer if the sentence is grammatically correct. The scientists have so far focussed on improve cropped yields.",
+    "options": [
+      "improves crop",
+      "No improvement",
+      "improving crop",
+      "improved cropping"
+    ],
+    "answer": 2,
+    "explanation": "After the preposition 'on', the gerund 'improving' is required. 'Crop' is a better noun choice than 'cropped'."
+  },
+  {
+    "id": "eng554",
+    "subject": "English",
+    "question": "Improve the underlined part of the sentence. Choose 'No improvement' as an answer if the sentence is grammatically correct. I'm not going to work today.",
+    "options": [
+      "No improvement",
+      "go to work",
+      "goes to work",
+      "going to working"
+    ],
+    "answer": 0,
+    "explanation": "The sentence is grammatically correct as given."
+  },
+  {
+    "id": "eng555",
+    "subject": "English",
+    "question": "Select the most appropriate option for the given blank. Your sister is ____________ advantage of my situation.",
+    "options": [
+      "pulling",
+      "taking",
+      "parting",
+      "returning"
+    ],
+    "answer": 1,
+    "explanation": "The verb 'taking' collocates with 'advantage of' to form the phrase 'taking advantage of', meaning to exploit a situation."
+  },
+  {
+    "id": "eng556",
+    "subject": "English",
+    "question": "Comprehension: His back was (1) ____________ me, and he had his arms folded... Select the most appropriate option to fill in the blank No. 1.",
+    "options": [
+      "below",
+      "beyond",
+      "towards",
+      "above"
+    ],
+    "answer": 2,
+    "explanation": "The preposition 'towards' indicates direction, fitting the context that his back was facing the speaker."
+  },
+  {
+    "id": "eng557",
+    "subject": "English",
+    "question": "Comprehension: I thought he would be (2) __________ if I came upon him with his breakfast, in that unexpected manner... Select the most appropriate option to fill in the blank No. 2.",
+    "options": [
+      "most glad",
+      "gladdest",
+      "more gladder",
+      "glad"
+    ],
+    "answer": 3,
+    "explanation": "The adjective 'glad' is required in its base form after 'be' to describe his state."
+  },
+  {
+    "id": "eng558",
+    "subject": "English",
+    "question": "Comprehension: ...so I went (3) ____________ softly and touched him on the shoulder. Select the most appropriate option to fill in the blank No. 3.",
+    "options": [
+      "onward",
+      "forward",
+      "before",
+      "forth"
+    ],
+    "answer": 1,
+    "explanation": "The adverb 'forward' means in a direction ahead, fitting the context of moving towards the person."
+  },
+  {
+    "id": "eng559",
+    "subject": "English",
+    "question": "Comprehension: He (4) ____________ jumped up. and it was not the same man... Select the most appropriate option to fill in the blank No. 4.",
+    "options": [
+      "gracefully",
+      "tardily",
+      "constantly",
+      "instantly"
+    ],
+    "answer": 3,
+    "explanation": "The adverb 'instantly' means immediately, which fits the sudden reaction described."
+  },
+  {
+    "id": "eng560",
+    "subject": "English",
+    "question": "Comprehension: ...as if he had (5) ____________ awakened from a deep dream. Select the most appropriate option to fill in the blank No. 5.",
+    "options": [
+      "SO",
+      "just",
+      "after",
+      "Therefore"
+    ],
+    "answer": 1,
+    "explanation": "The adverb 'just' is used to indicate a very short time before, meaning he had 'just awakened'."
+  },
+  {
+    "id": "eng561",
+    "subject": "English",
+    "question": "Fill in the blank with the correct homophone: She wanted __________ join the hiking trip too, as the mountains held a special place in her heart.",
+    "options": [
+      "two",
+      "too",
+      "toon",
+      "to"
+    ],
+    "answer": 3,
+    "explanation": "The preposition 'to' is required before the verb 'join' to form the infinitive."
+  },
+  {
+    "id": "eng562",
+    "subject": "English",
+    "question": "Select the most appropriate option for the given blank. They need to ____________ their own business; my life is not their concern.",
+    "options": [
+      "mind",
+      "mend",
+      "hit",
+      "hint"
+    ],
+    "answer": 0,
+    "explanation": "The idiom 'mind your own business' means to not interfere in other people's affairs."
+  },
+  {
+    "id": "eng563",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose 'No error'. I know Rohan has been going through a tough time latter",
+    "options": [
+      "I know Rohan has",
+      "a tough time latter.",
+      "No error",
+      "been going through"
+    ],
+    "answer": 1,
+    "explanation": "The correct spelling is 'lately', meaning recently, not 'latter'."
+  },
+  {
+    "id": "eng564",
+    "subject": "English",
+    "question": "Improve the underlined part of the sentence. Choose 'No improvement' as an answer if the sentence is grammatically correct. The creek flooding every spring.",
+    "options": [
+      "creek floods",
+      "creeks floods",
+      "No improvement",
+      "creek has been floods"
+    ],
+    "answer": 0,
+    "explanation": "The singular subject 'creek' requires the singular verb 'floods' to form a complete sentence."
+  },
+  {
+    "id": "eng565",
+    "subject": "English",
+    "question": "Choose the most appropriate synonym of the underlined word. Russia uses the prospect of a gas cutoff to put pressure on Kiev and compel Europe.",
+    "options": [
+      "Dissuade",
+      "Discourage",
+      "Coerce",
+      "Assist"
+    ],
+    "answer": 2,
+    "explanation": "'Compel' means to force or oblige someone to do something. 'Coerce' is a close synonym."
+  },
+  {
+    "id": "eng566",
+    "subject": "English",
+    "question": "The sentence has been divided into three parts, identify the error segment. Neither of them have shown any / interest in taking on the challenging/ project that was assigned to the team.",
+    "options": [
+      "interest in taking on the challenging",
+      "no error",
+      "Neither of them have shown any",
+      "project that was assigned to the team."
+    ],
+    "answer": 2,
+    "explanation": "'Neither of' takes a singular verb, so 'has shown' should be used instead of 'have shown'."
+  },
+  {
+    "id": "eng567",
+    "subject": "English",
+    "question": "Select the sentence with no spelling errors.",
+    "options": [
+      "Each religion claims that its own holy book is the direct concealment of God.",
+      "Each religion claims that its own holi book is the direct concealment of God.",
+      "Each religion claims that its own holy book is the direct conceelment of God.",
+      "Each religon claims that its own holy book is the direct concealment of God."
+    ],
+    "answer": 0,
+    "explanation": "Option 1 correctly spells 'religion', 'holy', and 'concealment'."
+  },
+  {
+    "id": "eng568",
+    "subject": "English",
+    "question": "Choose the most appropriate antonym of the underlined word. She began to think more about the origins of his views.",
+    "options": [
+      "influence",
+      "inheritors",
+      "author",
+      "destiny"
+    ],
+    "answer": 2,
+    "explanation": "The 'origins' of a view or idea can be seen as its author or creator. 'Author' is the closest antonym in meaning to the source."
+  },
+  {
+    "id": "eng569",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose 'No error'. My colleague thinks that I am inferior than her.",
+    "options": [
+      "My colleague thinks",
+      "inferior than her.",
+      "that I am",
+      "No error"
+    ],
+    "answer": 1,
+    "explanation": "The correct preposition to use with 'inferior' is 'to', not 'than'."
+  },
+  {
+    "id": "eng570",
+    "subject": "English",
+    "question": "Select the most appropriate word to fill in the blank. Are you ____________ aware of what may happen?",
+    "options": [
+      "freely",
+      "fully",
+      "full",
+      "firm"
+    ],
+    "answer": 1,
+    "explanation": "The adverb 'fully' is needed to modify the adjective 'aware', meaning completely aware."
+  },
+  {
+    "id": "eng571",
+    "subject": "English",
+    "question": "Choose the idiom/phrase that can substitute the highlighted group of words meaningfully. People were very angry over the demolition of the old theatre.",
+    "options": [
+      "Break a leg",
+      "Armchair critic",
+      "Up in arms",
+      "Run out of steam"
+    ],
+    "answer": 2,
+    "explanation": "The idiom 'Up in arms' means to be very angry and protest about something."
+  },
+  {
+    "id": "eng572",
+    "subject": "English",
+    "question": "Select the most appropriate meaning of the given idiom. Let your hair down",
+    "options": [
+      "Forget everything.",
+      "The power of the mind is stranger than the body.",
+      "To behave freely",
+      "Financially ruined"
+    ],
+    "answer": 2,
+    "explanation": "The idiom 'Let your hair down' means to relax and behave freely, without worrying about rules."
+  },
+  {
+    "id": "eng573",
+    "subject": "English",
+    "question": "Choose the correct words to complete the sentence: Despite the (1)__________ challenges they faced during their (2) ___________ journey, the explorers remained determined to reach the (3) __________ of their expedition .",
+    "options": [
+      "numerous, perilous, end",
+      "trivial, pleasant, destination",
+      "extraordinary, swift, midpoint",
+      "tedious, brief, beginning"
+    ],
+    "answer": 0,
+    "explanation": "Option 1 fits the context of facing challenges on a dangerous journey to reach the end of the expedition."
+  },
+  {
+    "id": "eng574",
+    "subject": "English",
+    "question": "Select the incorrectly spelt word from the given sentence. The most notorious serial killer of the 19th century remains known only by the psudonym of Jack the Ripper.",
+    "options": [
+      "notorious",
+      "century",
+      "serial",
+      "psudonym"
+    ],
+    "answer": 3,
+    "explanation": "The correct spelling is 'pseudonym'."
+  },
+  {
+    "id": "eng575",
+    "subject": "English",
+    "question": "Select the most appropriate word to fill in the blank. As a child, he was tender and warm-hearted towards ____________.",
+    "options": [
+      "whomever",
+      "one",
+      "everybody",
+      "everywhere"
+    ],
+    "answer": 2,
+    "explanation": "The pronoun 'everybody' refers to all people, fitting the context of being kind to others."
+  },
+  {
+    "id": "eng576",
+    "subject": "English",
+    "question": "Comprehension: Whole grains contain antioxidants that (1) ___________ your tissues from harmful inflammation. Select the most appropriate option for blank(1)",
+    "options": [
+      "pertain",
+      "correct",
+      "simplify",
+      "protect"
+    ],
+    "answer": 3,
+    "explanation": "Antioxidants 'protect' tissues, meaning they keep them safe from damage."
+  },
+  {
+    "id": "eng577",
+    "subject": "English",
+    "question": "Comprehension: Plus, they're loaded (2) ____________ minerals like calcium, potassium, magnesium, zinc and iron... Select the most appropriate option for blank(2)",
+    "options": [
+      "over",
+      "from",
+      "with",
+      "of"
+    ],
+    "answer": 2,
+    "explanation": "The adjective 'loaded' takes the preposition 'with' to mean containing a lot of something."
+  },
+  {
+    "id": "eng578",
+    "subject": "English",
+    "question": "Comprehension: ...important building (3) ___________ for a strong immune system... Select the most appropriate option for blank(3)",
+    "options": [
+      "stacks",
+      "chains",
+      "steps",
+      "blocks"
+    ],
+    "answer": 3,
+    "explanation": "The phrase 'building blocks' means the basic units or components of something."
+  },
+  {
+    "id": "eng579",
+    "subject": "English",
+    "question": "Comprehension: The B vitamins (4) ___________ in whole grains also help your body convert food (5) ____________ energy . Select the most appropriate option for blank(4)",
+    "options": [
+      "find",
+      "finding",
+      "founded",
+      "found"
+    ],
+    "answer": 3,
+    "explanation": "The past participle 'found' is used as an adjective to modify 'B vitamins', meaning located or present in."
+  },
+  {
+    "id": "eng580",
+    "subject": "English",
+    "question": "Comprehension: ...help your body convert food (5) ____________ energy . Select the most appropriate option for blank(5)",
+    "options": [
+      "in",
+      "on",
+      "onto",
+      "into"
+    ],
+    "answer": 3,
+    "explanation": "The preposition 'into' is used with 'convert' to indicate the result of the transformation."
+  },
+  {
+    "id": "eng581",
+    "subject": "English",
+    "question": "Select the most appropriate word to fill in the blank. _________ of the two boys turned up the next day.",
+    "options": [
+      "But",
+      "Neither",
+      "Not",
+      "Every"
+    ],
+    "answer": 1,
+    "explanation": "The pronoun 'Neither' is used to indicate that none of the two options occurred."
+  },
+  {
+    "id": "eng582",
+    "subject": "English",
+    "question": "Improve the underlined part of the sentence. Choose 'No improvement' as an answer if the sentence is grammatically correct. I saw Samuel yesterday, but he didn't see me.",
+    "options": [
+      "didn't saw me",
+      "sees me",
+      "No improvement",
+      "was seen me"
+    ],
+    "answer": 2,
+    "explanation": "The sentence is grammatically correct as given."
+  },
+  {
+    "id": "eng583",
+    "subject": "English",
+    "question": "Improve the underlined part of the sentence. Choose 'No improvement' as an answer if the sentence is grammatically correct. I has mailed you the invoice.",
+    "options": [
+      "has mail",
+      "No improvement",
+      "will mailed",
+      "will mail"
+    ],
+    "answer": 3,
+    "explanation": "The subject 'I' should not take 'has' in the present tense. 'Have mailed' or the future 'will mail' would be correct. 'Will mail' fits the context."
+  },
+  {
+    "id": "eng584",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose 'No error'. If you are stressed and upset, talking about your feelings can helped.",
+    "options": [
+      "No error",
+      "If you are stressed",
+      "your feelings can helped.",
+      "and upset, talking about"
+    ],
+    "answer": 2,
+    "explanation": "After the modal verb 'can', the base form of the verb 'help' should be used, not the past tense 'helped'."
+  },
+  {
+    "id": "eng585",
+    "subject": "English",
+    "question": "Choose the word that is opposite in meaning to the given word. Abundance",
+    "options": [
+      "Endemic",
+      "Scanty",
+      "Deluge",
+      "Epidemic"
+    ],
+    "answer": 1,
+    "explanation": "'Abundance' means a very large quantity of something. The antonym is 'Scanty', meaning small or insufficient in quantity."
+  },
+  {
+    "id": "eng586",
+    "subject": "English",
+    "question": "Choose the correct word to complete the sentence: It was one of the most ____________ incidents in aviation history during the Pacific War.",
+    "options": [
+      "colluding",
+      "archaic",
+      "mundane",
+      "bewildering"
+    ],
+    "answer": 3,
+    "explanation": "'Bewildering' means extremely confusing or puzzling, fitting the context of a notable incident."
+  },
+  {
+    "id": "eng587",
+    "subject": "English",
+    "question": "Choose the word that is opposite in meaning to the given word. Approach",
+    "options": [
+      "Restore",
+      "Advance",
+      "Mollify",
+      "Withdraw"
+    ],
+    "answer": 3,
+    "explanation": "'Approach' means to come near or closer to. The antonym is 'Withdraw', meaning to move away."
+  },
+  {
+    "id": "eng588",
+    "subject": "English",
+    "question": "Select the most appropriate synonym of the given word. Induction",
+    "options": [
+      "Capital",
+      "References",
+      "Expulsion",
+      "Inauguration"
+    ],
+    "answer": 3,
+    "explanation": "'Induction' means the process of formally introducing someone into a post or organization. 'Inauguration' is a synonym meaning the beginning or introduction."
+  },
+  {
+    "id": "eng589",
+    "subject": "English",
+    "question": "Select the most appropriate antonym of the given word. Detriment",
+    "options": [
+      "Dilemma",
+      "Advantage",
+      "Corner",
+      "Difficulty"
+    ],
+    "answer": 1,
+    "explanation": "'Detriment' means a cause of harm or damage. The antonym is 'Advantage', meaning a condition or circumstance that puts one in a favourable position."
+  },
+  {
+    "id": "eng590",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose 'No error'. He pressed her further about Arthur and she final answered.",
+    "options": [
+      "she final answered.",
+      "further about Arthur and",
+      "No error",
+      "He pressed her"
+    ],
+    "answer": 0,
+    "explanation": "The adverb 'finally' should be used to modify the verb 'answered', not the adjective 'final'."
+  },
+  {
+    "id": "eng591",
+    "subject": "English",
+    "question": "Select the sentence with no spelling errors.",
+    "options": [
+      "He leaned against that same stone column, thinking, serching in his mind, felling acutely.",
+      "He leaned aganst that same stone column, thinking, searching in his mind, feeling acutely.",
+      "He leened against that same stone column, thinking, searching in his mind, feeling acutely.",
+      "He leaned against that same stone column. thinking, searching in his mind, feeling acutely."
+    ],
+    "answer": 3,
+    "explanation": "Option 4 correctly spells 'leaned', 'against', 'searching', and 'feeling'."
+  },
+  {
+    "id": "eng592",
+    "subject": "English",
+    "question": "Find the part of the given sentence that has an error in it. If there is no error, choose 'No error'. No one knows that she comes from a richer family.",
+    "options": [
+      "from a richer family.",
+      "No one knows",
+      "No error",
+      "that she comes"
+    ],
+    "answer": 2,
+    "explanation": "The sentence is grammatically correct as given."
+  },
+  {
+    "id": "eng593",
+    "subject": "English",
+    "question": "Select the incorrectly spelt word from the given sentence. Despite inhuriting his father's principality, Babur had to flee from his own kingdom.",
+    "options": [
+      "Despite",
+      "inhuriting",
+      "principality",
+      "flee"
+    ],
+    "answer": 1,
+    "explanation": "The correct spelling is 'inheriting'."
+  },
+  {
+    "id": "eng594",
+    "subject": "English",
+    "question": "Choose the idiom/phrase that can substitute the highlighted group of words meaningfully. Both the countries finally decided to make peace.",
+    "options": [
+      "A piece of cake",
+      "Break a leg",
+      "Make ends meet",
+      "Bury the hatchet"
+    ],
+    "answer": 3,
+    "explanation": "The idiom 'Bury the hatchet' means to make peace or end a conflict."
+  },
+  {
+    "id": "eng595",
+    "subject": "English",
+    "question": "In the following question, out of the given four alternatives, select the alternative which best expresses the meaning of the Idiom Phrase. A wild cat strike",
+    "options": [
+      "A wrong action",
+      "Winsome situation",
+      "A strike that is started by a group of workers without the approval of their union",
+      "Protest by farmers"
+    ],
+    "answer": 2,
+    "explanation": "A 'wildcat strike' is a work stoppage that is not authorized by the leadership of the union."
+  },
+  {
+    "id": "eng596",
+    "subject": "English",
+    "question": "Comprehension: To better understand how native and non-native species (1) _________ to extreme weather events... Select the most appropriate option for blank(1)",
+    "options": [
+      "simulate",
+      "flirt",
+      "bargain",
+      "respond"
+    ],
+    "answer": 3,
+    "explanation": "The verb 'respond' means to react to something, fitting the context of species reacting to weather events."
+  },
+  {
+    "id": "eng597",
+    "subject": "English",
+    "question": "Comprehension: ...reanalysed information (2) _________ 443 peer-reviewed studies... Select the most appropriate option for blank(2)",
+    "options": [
+      "with",
+      "by",
+      "below",
+      "from"
+    ],
+    "answer": 3,
+    "explanation": "The preposition 'from' indicates the source of the information being reanalysed."
+  },
+  {
+    "id": "eng598",
+    "subject": "English",
+    "question": "Comprehension: ...how species responded to wildfires, droughts and (3) _______ Select the most appropriate option for blank(3)",
+    "options": [
+      "accidents",
+      "storms",
+      "curses",
+      "blasts"
+    ],
+    "answer": 1,
+    "explanation": "The noun 'storms' is a type of extreme weather event, fitting the context of the list including wildfires and droughts."
+  },
+  {
+    "id": "eng599",
+    "subject": "English",
+    "question": "Comprehension: In all, they (4) __________ data on 187 non-native species... Select the most appropriate option for blank(4)",
+    "options": [
+      "mingled",
+      "cooperated",
+      "separated",
+      "gathered"
+    ],
+    "answer": 3,
+    "explanation": "The verb 'gathered' means collected, fitting the context of accumulating data."
+  },
+  {
+    "id": "eng600",
+    "subject": "English",
+    "question": "Comprehension: ...and 1.852 native species from all major animal(5)____. Select the most appropriate option for blank(5)",
+    "options": [
+      "bands",
+      "flock",
+      "groups",
+      "troupes"
+    ],
+    "answer": 2,
+    "explanation": "The noun 'groups' refers to classifications or categories, fitting the context of animal classifications."
+  },
+
 {
     "id": "en-english-601",
     "subject": "English",
