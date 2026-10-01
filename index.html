@@ -418,96 +418,6 @@ html[data-theme="light"] .modal-ov{background:rgba(40,32,16,.35)}
   justify-content:flex-end;
   margin-top:20px;
 }
-  /* ============ FIRST LOGIN ============ */
-
-.first-login-overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.88);
-  backdrop-filter:blur(10px);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:20000;
-  padding:20px;
-}
-
-.first-login-box{
-  width:100%;
-  max-width:400px;
-  background:var(--bg2);
-  border:1px solid var(--line);
-  border-radius:20px;
-  padding:30px;
-  box-shadow:0 25px 80px rgba(0,0,0,.5);
-}
-
-.first-login-box h2{
-  margin:0 0 8px;
-  font-size:28px;
-}
-
-.first-login-box p{
-  color:var(--muted);
-  font-size:13px;
-  margin-bottom:24px;
-}
-
-.first-login-field{
-  margin-bottom:16px;
-}
-
-.first-login-field label{
-  display:block;
-  font-size:13px;
-  font-weight:700;
-  margin-bottom:7px;
-}
-
-.first-login-field input{
-  width:100%;
-  box-sizing:border-box;
-  padding:13px 14px;
-  border-radius:10px;
-  border:1px solid var(--line);
-  background:var(--bg);
-  color:var(--text);
-  outline:none;
-}
-
-.first-login-field input:focus{
-  border-color:var(--accent);
-}
-
-.first-login-error{
-  display:none;
-  color:var(--red);
-  font-size:13px;
-  margin-bottom:12px;
-}
-
-
-/* ============ INTRO VIDEO ============ */
-
-.intro-video-overlay{
-  position:fixed;
-  inset:0;
-  background:#000;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:21000;
-}
-
-.intro-video-overlay.show{
-  display:flex;
-}
-
-.intro-video-overlay video{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-}
 </style>
 </head>
 <body>
@@ -537,53 +447,6 @@ html[data-theme="light"] .modal-ov{background:rgba(40,32,16,.35)}
 <div id="toasts" class="toasts" aria-live="polite"></div>
 <input type="file" id="importFile" accept=".json,application/json" style="display:none">
 <noscript><p style="text-align:center;padding:40px">Please enable JavaScript to use SSC QUIZ.</p></noscript>
-  <!-- FIRST LOGIN -->
-<div id="firstLoginOverlay" class="first-login-overlay show">
-
-  <div class="first-login-box">
-
-    <h2>SSC QUIZ</h2>
-
-    <p>Enter your ID and Password to continue.</p>
-
-    <div class="first-login-field">
-      <label for="firstLoginId">ID</label>
-      <input
-        type="text"
-        id="firstLoginId"
-        placeholder="Enter ID"
-        autocomplete="username"
-      >
-    </div>
-
-    <div class="first-login-field">
-      <label for="firstLoginPassword">Password</label>
-      <input
-        type="password"
-        id="firstLoginPassword"
-        placeholder="Enter Password"
-        autocomplete="current-password"
-      >
-    </div>
-
-    <div id="firstLoginError" class="first-login-error">
-      Invalid ID or Password
-    </div>
-
-    <button
-      type="button"
-      class="btn btn-primary"
-      id="firstLoginSubmit">
-      Login
-    </button>
-
-  </div>
-
-</div>
-
-
-<!-- INTRO VIDEO -->
-
 <!-- QUESTION BANK LOGIN -->
 <div id="qbLoginOverlay" class="qb-login-overlay">
 
@@ -653,63 +516,6 @@ html[data-theme="light"] .modal-ov{background:rgba(40,32,16,.35)}
 const el = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pad2 = n => String(n).padStart(2,'0');
-  /* =========================================================
-   FIRST LOGIN + INTRO VIDEO
-   ========================================================= */
-
-let firstLoginDone = false;
-
-async function firstLogin(){
-
-  const id = el('firstLoginId').value.trim();
-  const password = el('firstLoginPassword').value;
-
-  const error = el('firstLoginError');
-
-  error.style.display = 'none';
-
-  try{
-
-    const response = await fetch('idpassword.json', {
-      cache:'no-store'
-    });
-
-    if(!response.ok){
-      throw new Error('Could not load idpassword.json');
-    }
-
-    const loginData = await response.json();
-
-    if(
-      id === String(loginData.id) &&
-      password === String(loginData.password)
-    ){
-
-      firstLoginDone = true;
-
-      // Hide login
-      el('firstLoginOverlay').style.display = 'none';
-
-      // Show video
-     go('home');
-
-      return;
-    }
-
-    error.textContent = 'Invalid ID or Password';
-    error.style.display = 'block';
-
-  }catch(err){
-
-    console.error(err);
-
-    error.textContent =
-      'Login configuration could not be loaded.';
-
-    error.style.display = 'block';
-  }
-}
-
 const fmtScore = n => String(parseFloat((Number(n)||0).toFixed(2)));          // 18.5 -> "18.5", 18 -> "18"
 const fmtTime = sec => { sec=Math.max(0,Math.round(sec)); const h=Math.floor(sec/3600), m=Math.floor((sec%3600)/60), s=sec%60;
   return h ? `${h}:${pad2(m)}:${pad2(s)}` : `${pad2(m)}:${pad2(s)}`; };
@@ -1938,35 +1744,6 @@ document.addEventListener('keydown', e => {
    ===================================================================== */
 async function boot(){
   applyTheme(lsGet(K.theme, 'dark'));
-    /* FIRST LOGIN */
-
-  el('firstLoginSubmit').addEventListener(
-    'click',
-    firstLogin
-  );
-
-  el('firstLoginPassword').addEventListener(
-    'keydown',
-    e => {
-      if(e.key === 'Enter'){
-        firstLogin();
-      }
-    }
-  );
-
-  el('firstLoginId').addEventListener(
-    'keydown',
-    e => {
-      if(e.key === 'Enter'){
-        firstLogin();
-      }
-    }
-  );
-
-  el('introVideo').addEventListener(
-    'ended',
-    finishIntroVideo
-  );
     /* Question Bank Login */
 
   el('qbLoginSubmit').addEventListener(
