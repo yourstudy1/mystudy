@@ -709,32 +709,6 @@ async function firstLogin(){
     error.style.display = 'block';
   }
 }
-
-
-function playIntroVideo(){
-
-  const overlay = el('introVideoOverlay');
-  const video = el('introVideo');
-
-  overlay.classList.add('show');
-
-  video.currentTime = 0;
-
-  video.play().catch(err => {
-    console.log('Video autoplay blocked:', err);
-  });
-}
-
-
-function finishIntroVideo(){
-
-  const overlay = el('introVideoOverlay');
-  const video = el('introVideo');
-
-  video.pause();
-
-  overlay.classList.remove('show');
-
   // Now open Home Page
   go('home');
 }
@@ -2043,6 +2017,7 @@ async function boot(){
 
   el('view').innerHTML = `<div class="boot"><div class="spinner"></div><p>Loading ${esc(state.language)} question banks…</p></div>`;
   await loadAllQuestions();
+  go('home');
 }
 boot();
 </script>
