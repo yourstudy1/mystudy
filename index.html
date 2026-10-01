@@ -340,6 +340,84 @@ html[data-theme="light"] .modal-ov{background:rgba(40,32,16,.35)}
 .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;flex-wrap:wrap}
 .foot{padding:28px 20px 36px;color:var(--muted);font-size:12px;border-top:1px solid var(--line);margin-top:34px;text-align:center;font-family:'JetBrains Mono',monospace;letter-spacing:.03em}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+/* ============ QUESTION BANK LOGIN ============ */
+
+.qb-login-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.72);
+  backdrop-filter:blur(8px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+  padding:20px;
+}
+
+.qb-login-overlay.show{
+  display:flex;
+}
+
+.qb-login-box{
+  width:100%;
+  max-width:400px;
+  background:var(--bg2);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:28px;
+  box-shadow:0 20px 60px rgba(0,0,0,.4);
+}
+
+.qb-login-box h3{
+  font-size:22px;
+  margin-bottom:6px;
+}
+
+.qb-login-box p{
+  color:var(--muted);
+  font-size:13px;
+  margin-bottom:22px;
+}
+
+.qb-login-field{
+  margin-bottom:15px;
+}
+
+.qb-login-field label{
+  display:block;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:7px;
+}
+
+.qb-login-field input{
+  width:100%;
+  box-sizing:border-box;
+  padding:12px 14px;
+  border-radius:10px;
+  border:1px solid var(--line);
+  background:var(--bg);
+  color:var(--text);
+  outline:none;
+}
+
+.qb-login-field input:focus{
+  border-color:var(--accent);
+}
+
+.qb-login-error{
+  color:var(--red);
+  font-size:13px;
+  margin-bottom:12px;
+  display:none;
+}
+
+.qb-login-actions{
+  display:flex;
+  gap:10px;
+  justify-content:flex-end;
+  margin-top:20px;
+}
 </style>
 </head>
 <body>
@@ -369,7 +447,62 @@ html[data-theme="light"] .modal-ov{background:rgba(40,32,16,.35)}
 <div id="toasts" class="toasts" aria-live="polite"></div>
 <input type="file" id="importFile" accept=".json,application/json" style="display:none">
 <noscript><p style="text-align:center;padding:40px">Please enable JavaScript to use SSC QUIZ.</p></noscript>
+<!-- QUESTION BANK LOGIN -->
+<div id="qbLoginOverlay" class="qb-login-overlay">
 
+  <div class="qb-login-box">
+
+    <h3>Question Bank Login</h3>
+
+    <p>
+      Enter your ID and password to access the Question Bank.
+    </p>
+
+    <div class="qb-login-field">
+      <label for="qbLoginId">ID</label>
+      <input
+        type="text"
+        id="qbLoginId"
+        placeholder="Enter ID"
+        autocomplete="username"
+      >
+    </div>
+
+    <div class="qb-login-field">
+      <label for="qbLoginPassword">Password</label>
+      <input
+        type="password"
+        id="qbLoginPassword"
+        placeholder="Enter Password"
+        autocomplete="current-password"
+      >
+    </div>
+
+    <div id="qbLoginError" class="qb-login-error">
+      Invalid ID or Password
+    </div>
+
+    <div class="qb-login-actions">
+
+      <button
+        type="button"
+        class="btn"
+        id="qbLoginCancel">
+        Cancel
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-primary"
+        id="qbLoginSubmit">
+        Login
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
 <script>
 'use strict';
 /* =====================================================================
@@ -388,7 +521,91 @@ const fmtTime = sec => { sec=Math.max(0,Math.round(sec)); const h=Math.floor(sec
   return h ? `${h}:${pad2(m)}:${pad2(s)}` : `${pad2(m)}:${pad2(s)}`; };
 const fmtDate = iso => { try { return new Date(iso).toLocaleString(undefined,{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}); } catch { return '—'; } };
 const shuffleArray = arr => { const a = Array.from(arr); for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+/* =========================================================
+   QUESTION BANK LOGIN
+   ========================================================= */
 
+let questionBankLoggedIn = false;
+
+function openQuestionBankLogin(){
+
+  const overlay = el('qbLoginOverlay');
+
+  if(!overlay) return;
+
+  el('qbLoginId').value = '';
+  el('qbLoginPassword').value = '';
+  el('qbLoginError').style.display = 'none';
+
+  overlay.classList.add('show');
+
+  setTimeout(() => {
+    el('qbLoginId').focus();
+  }, 100);
+
+}
+
+
+function closeQuestionBankLogin(){
+
+  const overlay = el('qbLoginOverlay');
+
+  if(overlay){
+    overlay.classList.remove('show');
+  }
+
+}
+
+
+async function loginQuestionBank(){
+
+  const id = el('qbLoginId').value.trim();
+  const password = el('qbLoginPassword').value;
+
+  const error = el('qbLoginError');
+
+  try{
+
+    const response = await fetch('id.json', {
+      cache:'no-store'
+    });
+
+    if(!response.ok){
+      throw new Error('Could not load id.json');
+    }
+
+    const loginData = await response.json();
+
+    if(
+      id === String(loginData.id) &&
+      password === String(loginData.password)
+    ){
+
+      questionBankLoggedIn = true;
+
+      closeQuestionBankLogin();
+
+      doGo('bank');
+
+      return;
+
+    }
+
+    error.textContent = 'Invalid ID or Password';
+    error.style.display = 'block';
+
+  }catch(err){
+
+    console.error(err);
+
+    error.textContent =
+      'Login configuration could not be loaded.';
+
+    error.style.display = 'block';
+
+  }
+
+}
 /* ---------- inline SVG icon set (no external icon libraries) ---------- */
 const ICONS = {
   clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
@@ -1448,7 +1665,19 @@ function handleAction(a, btn){
     case 'newsetup': go('setup'); break;
     case 'history': go('history'); break;
     case 'stats': go('stats'); break;
-    case 'bank': go('bank'); break;
+    case 'bank':
+
+  if(questionBankLoggedIn){
+
+    go('bank');
+
+  }else{
+
+    openQuestionBankLogin();
+
+  }
+
+  break;
     case 'backbank': go('bank'); break;
     case 'browsesubj': go('bankview', btn.dataset.ssubj); break;
     case 'loadmore': state.bankView.page++; renderBankView(); break;
@@ -1515,6 +1744,35 @@ document.addEventListener('keydown', e => {
    ===================================================================== */
 async function boot(){
   applyTheme(lsGet(K.theme, 'dark'));
+    /* Question Bank Login */
+
+  el('qbLoginSubmit').addEventListener(
+    'click',
+    loginQuestionBank
+  );
+
+  el('qbLoginCancel').addEventListener(
+    'click',
+    closeQuestionBankLogin
+  );
+
+  el('qbLoginPassword').addEventListener(
+    'keydown',
+    e => {
+      if(e.key === 'Enter'){
+        loginQuestionBank();
+      }
+    }
+  );
+
+  el('qbLoginId').addEventListener(
+    'keydown',
+    e => {
+      if(e.key === 'Enter'){
+        loginQuestionBank();
+      }
+    }
+  );
   el('themeBtn').addEventListener('click', toggleTheme);
   el('brandHome').addEventListener('click', () => go('home'));
   el('importFile').addEventListener('change', async e => {
