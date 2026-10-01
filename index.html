@@ -691,7 +691,7 @@ async function firstLogin(){
       el('firstLoginOverlay').style.display = 'none';
 
       // Show video
-      playIntroVideo();
+     go('home');
 
       return;
     }
@@ -709,9 +709,7 @@ async function firstLogin(){
     error.style.display = 'block';
   }
 }
-  // Now open Home Page
-  go('home');
-}
+
 const fmtScore = n => String(parseFloat((Number(n)||0).toFixed(2)));          // 18.5 -> "18.5", 18 -> "18"
 const fmtTime = sec => { sec=Math.max(0,Math.round(sec)); const h=Math.floor(sec/3600), m=Math.floor((sec%3600)/60), s=sec%60;
   return h ? `${h}:${pad2(m)}:${pad2(s)}` : `${pad2(m)}:${pad2(s)}`; };
